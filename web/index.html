@@ -39,6 +39,9 @@
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- docx.js CDN for Word document export -->
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -544,6 +547,36 @@
 
     <!-- TAB 6: SUMMARIES & REFERENCES -->
     <section id="pane-summaries" class="tab-pane hidden space-y-4">
+      <!-- Toolbar Header -->
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-file-word"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+              Tóm Tắt Học Phần & Tài Liệu Tham Khảo
+              <span class="text-[11px] font-normal px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">Hỗ trợ chỉnh sửa & Lưu trữ</span>
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Cho phép chỉnh sửa trực tiếp, lưu trữ tự động trên trình duyệt và xuất ra file Word (.docx) chuẩn mẫu ĐH Lạc Hồng</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="exportAllToDocx()" id="btnExportAllDocx" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-2 shadow-sm transition-all active:scale-95">
+            <i class="fa-solid fa-file-word text-sm"></i> Xuất Toàn Bộ Đề Cương (.docx)
+          </button>
+          <button onclick="exportCurrentToDocx()" id="btnExportCurrentDocx" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all">
+            <i class="fa-solid fa-download text-sm text-sky-500"></i> Xuất Môn Đang Xem (.docx)
+          </button>
+          <button onclick="exportSummariesJSON()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all" title="Tải file JSON dự phòng">
+            <i class="fa-solid fa-code text-sm text-amber-500"></i> Sao Lưu JSON
+          </button>
+          <button onclick="resetAllSummaries()" class="px-2.5 py-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all" title="Khôi phục toàn bộ các môn về nội dung gốc ban đầu">
+            <i class="fa-solid fa-rotate-left"></i> Khôi phục tất cả
+          </button>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-4 bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col h-[740px]">
           <div class="mb-3">
@@ -8176,8 +8209,73 @@ function filterEvidences() {
   if (counter) counter.textContent = `${count} / ${data.evidences.length} môn học cần giải pháp`;
 }
 
+// ==========================================
+// COURSE SUMMARIES EDITING & DOCX EXPORT
+// ==========================================
+
+const LOCAL_STORAGE_SUMMARIES_KEY = 'custom_course_summaries_2026';
+
+function initCustomSummaries() {
+  if (!window.ORIGINAL_COURSE_SUMMARIES && typeof data !== 'undefined' && data.courseSummaries) {
+    window.ORIGINAL_COURSE_SUMMARIES = JSON.parse(JSON.stringify(data.courseSummaries));
+  }
+  
+  const saved = getCustomSummaries();
+  Object.keys(saved).forEach(code => {
+    if (data.courseSummaries[code]) {
+      if (saved[code].description !== undefined) data.courseSummaries[code].description = saved[code].description;
+      if (saved[code].references !== undefined) data.courseSummaries[code].references = saved[code].references;
+    }
+    const m6 = data.matrix6.find(c => c.maMH === code);
+    if (m6) {
+      if (saved[code].description !== undefined) m6.summary = saved[code].description;
+      if (saved[code].references !== undefined) m6.references = saved[code].references;
+    }
+  });
+}
+
+function getCustomSummaries() {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_SUMMARIES_KEY) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function showToast(message, type = 'success') {
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  const isSuccess = type === 'success';
+  const icon = isSuccess ? 'fa-circle-check text-emerald-500' : 'fa-circle-exclamation text-amber-500';
+  const borderCol = isSuccess ? 'border-emerald-200 dark:border-emerald-800' : 'border-amber-200 dark:border-amber-800';
+  
+  toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-xl border ${borderCol} text-xs font-medium transition-all transform duration-300 translate-y-2 opacity-0`;
+  toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove('translate-y-2', 'opacity-0');
+  }, 10);
+
+  setTimeout(() => {
+    toast.classList.add('opacity-0', 'translate-y-2');
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+      else if (toast.remove) toast.remove();
+    }, 300);
+  }, 3500);
+}
+
 // Render Summaries list & view
 let selectedSummaryCode = null;
+let isEditingSummaryMode = false;
 
 function renderSummaryList() {
   const listEl = document.getElementById('summaryCoursesList');
@@ -8190,31 +8288,39 @@ function renderSummaryList() {
     return;
   }
 
+  const customEdits = getCustomSummaries();
+
   summaryKeys.forEach((code, idx) => {
     const item = data.courseSummaries[code];
+    const isCustomized = !!customEdits[code];
     const btn = document.createElement('button');
     btn.id = `summary-item-${code}`;
-    btn.className = `w-full text-left p-3 rounded-lg text-xs transition-all flex flex-col gap-0.5 summary-list-btn ${idx === 0 ? 'bg-sky-50 dark:bg-sky-950/60 border border-sky-300 dark:border-sky-800' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`;
-    btn.onclick = () => selectSummaryCourse(code);
+    const isActive = selectedSummaryCode ? (selectedSummaryCode === code) : (idx === 0);
+    btn.className = `w-full text-left p-3 rounded-lg text-xs transition-all flex flex-col gap-0.5 summary-list-btn ${isActive ? 'bg-sky-50 dark:bg-sky-950/60 border border-sky-300 dark:border-sky-800' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60'}`;
+    btn.onclick = () => selectSummaryCourse(code, false);
     btn.dataset.search = (item.code + ' ' + item.title).toLowerCase();
 
     btn.innerHTML = `
       <div class="flex items-center justify-between">
         <span class="font-mono font-bold text-sky-600 dark:text-sky-400">${item.code}</span>
-        <span class="text-[10px] text-slate-400"><i class="fa-solid fa-chevron-right"></i></span>
+        <div class="flex items-center gap-1.5">
+          ${isCustomized ? '<span class="text-[9px] bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 font-semibold px-1.5 py-0.2 rounded border border-emerald-300 dark:border-emerald-800" title="Đã có chỉnh sửa">Đã sửa</span>' : ''}
+          <span class="text-[10px] text-slate-400"><i class="fa-solid fa-chevron-right"></i></span>
+        </div>
       </div>
       <div class="font-semibold text-slate-800 dark:text-slate-200 line-clamp-1">${item.title}</div>
     `;
     listEl.appendChild(btn);
   });
 
-  if (summaryKeys.length > 0) {
-    selectSummaryCourse(summaryKeys[0]);
+  if (!selectedSummaryCode && summaryKeys.length > 0) {
+    selectSummaryCourse(summaryKeys[0], false);
   }
 }
 
-function selectSummaryCourse(code) {
+function selectSummaryCourse(code, editMode = false) {
   selectedSummaryCode = code;
+  isEditingSummaryMode = editMode;
   const item = data.courseSummaries[code];
   const detailEl = document.getElementById('summaryDetailContainer');
   if (!item || !detailEl) return;
@@ -8228,42 +8334,399 @@ function selectSummaryCourse(code) {
   }
 
   const plan = data.coursePlan[code] || {};
+  const customEdits = getCustomSummaries();
+  const isCustomized = !!customEdits[code];
 
-  detailEl.innerHTML = `
-    <div class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-5">
-      <div class="flex items-center space-x-3 mb-2">
-        <span class="font-mono text-sm font-bold bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 px-3 py-1 rounded-md border border-sky-200 dark:border-sky-800">${item.code}</span>
-        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${plan.semester || 'Học phần CTDT 2026'} • ${plan.credits || '3'} Tín chỉ${plan.totalHours ? ` • ${plan.totalHours} tiết (LT: ${plan.theoryHours ?? 0} • TH: ${plan.practiceHours ?? 0} • BT: ${plan.exerciseHours ?? 0})` : ''}</span>
+  if (editMode) {
+    // EDIT MODE
+    detailEl.innerHTML = `
+      <div class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div class="flex items-center space-x-3">
+            <span class="font-mono text-sm font-bold bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 px-3 py-1 rounded-md border border-sky-200 dark:border-sky-800">${item.code}</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${plan.semester || 'Học phần CTDT 2026'} • ${plan.credits || '3'} Tín chỉ${plan.totalHours ? ` • ${plan.totalHours} tiết` : ''}</span>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300 dark:border-amber-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-pen"></i> Chế Độ Chỉnh Sửa
+          </span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">${item.title}</h2>
       </div>
-      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">${item.title}</h2>
-    </div>
 
-    <div class="space-y-6 flex-1">
-      <div>
-        <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-2">
-          <i class="fa-solid fa-align-left text-sky-500"></i> Mục Tiêu & Tóm Tắt Nội Dung Học Phần
-        </h4>
-        <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
-          ${item.description || 'Chưa có mô tả tóm tắt cho học phần này.'}
+      <div class="bg-blue-50/80 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/60 rounded-xl p-3 mb-4 text-xs text-blue-800 dark:text-blue-300 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-circle-info text-blue-500 text-sm"></i>
+          <span>Bạn có thể chỉnh sửa mục tiêu và tài liệu tham khảo. Sau khi bấm <strong>"Lưu Thay Đổi"</strong>, dữ liệu sẽ được lưu trên trình duyệt và tự động đưa vào file Word xuất ra.</span>
         </div>
       </div>
 
-      <div>
-        <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-2">
-          <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Giáo Trình & Tài Liệu Tham Khảo
-        </h4>
-        <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-mono whitespace-pre-line">
-          ${item.references || 'Chưa có thông tin giáo trình tài liệu tham khảo.'}
+      <div class="space-y-4 flex-1 overflow-y-auto pr-1">
+        <div>
+          <label class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-1.5">
+            <i class="fa-solid fa-align-left text-sky-500"></i> Mục Tiêu & Tóm Tắt Nội Dung Học Phần:
+          </label>
+          <textarea id="editSummaryDesc" rows="8" class="w-full p-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-sky-500 focus:outline-none leading-relaxed transition-all resize-y" placeholder="Nhập tóm tắt mục tiêu, nội dung kiến thức của học phần...">${item.description || ''}</textarea>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-1.5">
+            <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Giáo Trình & Tài Liệu Tham Khảo:
+            <span class="text-[11px] font-normal text-slate-400">(Trình bày mỗi tài liệu trên một dòng dạng [1]. ...)</span>
+          </label>
+          <textarea id="editSummaryRefs" rows="6" class="w-full p-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-mono text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none leading-relaxed transition-all resize-y" placeholder="[1]. Tác giả, Tên tài liệu, NXB, Năm...&#10;[2]. ...">${item.references || ''}</textarea>
         </div>
       </div>
 
-      <div class="pt-4 flex items-center gap-3">
-        <button onclick="openCourseModal('${item.code}')" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-2">
-          <i class="fa-solid fa-list-check"></i> Xem bảng ánh xạ CLO của môn
-        </button>
+      <div class="pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3 mt-4">
+        <div class="flex items-center gap-2">
+          <button onclick="saveCurrentSummary('${code}')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-2 transition-all active:scale-95">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
+          </button>
+          <button onclick="selectSummaryCourse('${code}', false)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg transition-all">
+            Hủy Bỏ
+          </button>
+        </div>
+        ${isCustomized ? `
+          <button onclick="resetCurrentSummary('${code}')" class="px-3 py-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-rotate-left"></i> Khôi phục về bản gốc
+          </button>
+        ` : ''}
       </div>
-    </div>
-  `;
+    `;
+  } else {
+    // VIEW MODE
+    detailEl.innerHTML = `
+      <div class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-5">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div class="flex items-center space-x-3">
+            <span class="font-mono text-sm font-bold bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 px-3 py-1 rounded-md border border-sky-200 dark:border-sky-800">${item.code}</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${plan.semester || 'Học phần CTDT 2026'} • ${plan.credits || '3'} Tín chỉ${plan.totalHours ? ` • ${plan.totalHours} tiết (LT: ${plan.theoryHours ?? 0} • TH: ${plan.practiceHours ?? 0} • BT: ${plan.exerciseHours ?? 0})` : ''}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            ${isCustomized ? '<span class="text-xs bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 font-semibold px-2.5 py-1 rounded-full border border-emerald-300 dark:border-emerald-800 flex items-center gap-1"><i class="fa-solid fa-check"></i> Đã sửa</span>' : ''}
+            <button onclick="selectSummaryCourse('${code}', true)" class="px-3 py-1.5 bg-sky-50 dark:bg-sky-950/60 hover:bg-sky-100 dark:hover:bg-sky-900/80 text-sky-600 dark:text-sky-400 rounded-lg text-xs font-semibold border border-sky-200 dark:border-sky-800 flex items-center gap-1.5 shadow-sm transition-all active:scale-95">
+              <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa
+            </button>
+            <button onclick="exportCurrentToDocx('${code}')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all" title="Xuất học phần này ra Word">
+              <i class="fa-solid fa-file-word text-blue-500"></i> Xuất Word
+            </button>
+            ${isCustomized ? `
+              <button onclick="resetCurrentSummary('${code}')" class="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg text-xs transition-all" title="Khôi phục về nội dung gốc">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">${item.title}</h2>
+      </div>
+
+      <div class="space-y-6 flex-1 overflow-y-auto pr-1">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-align-left text-sky-500"></i> Mục Tiêu & Tóm Tắt Nội Dung Học Phần
+            </h4>
+            <button onclick="selectSummaryCourse('${code}', true)" class="text-xs text-sky-600 hover:text-sky-700 dark:text-sky-400 flex items-center gap-1 font-medium">
+              <i class="fa-solid fa-pen-to-square text-[10px]"></i> Sửa nội dung
+            </button>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+            ${item.description || 'Chưa có mô tả tóm tắt cho học phần này.'}
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Giáo Trình & Tài Liệu Tham Khảo
+            </h4>
+            <button onclick="selectSummaryCourse('${code}', true)" class="text-xs text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 flex items-center gap-1 font-medium">
+              <i class="fa-solid fa-pen-to-square text-[10px]"></i> Sửa tài liệu
+            </button>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-mono whitespace-pre-line">
+            ${item.references || 'Chưa có thông tin giáo trình tài liệu tham khảo.'}
+          </div>
+        </div>
+
+        <div class="pt-4 flex flex-wrap items-center gap-3">
+          <button onclick="selectSummaryCourse('${code}', true)" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-2 transition-all">
+            <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa nội dung học phần
+          </button>
+          <button onclick="openCourseModal('${item.code}')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-lg shadow-sm flex items-center gap-2 transition-all">
+            <i class="fa-solid fa-list-check"></i> Xem bảng ánh xạ CLO
+          </button>
+          <button onclick="exportCurrentToDocx('${code}')" class="px-4 py-2 bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-semibold rounded-lg shadow-sm flex items-center gap-2 transition-all">
+            <i class="fa-solid fa-file-word"></i> Xuất môn này (.docx)
+          </button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function saveCurrentSummary(code) {
+  const descEl = document.getElementById('editSummaryDesc');
+  const refsEl = document.getElementById('editSummaryRefs');
+  if (!descEl || !refsEl) return;
+
+  const desc = descEl.value.trim();
+  const refs = refsEl.value.trim();
+
+  // Save to memory
+  if (data.courseSummaries[code]) {
+    data.courseSummaries[code].description = desc;
+    data.courseSummaries[code].references = refs;
+  }
+  const m6 = data.matrix6.find(c => c.maMH === code);
+  if (m6) {
+    m6.summary = desc;
+    m6.references = refs;
+  }
+
+  // Save to localStorage
+  const custom = getCustomSummaries();
+  custom[code] = { description: desc, references: refs, updatedAt: new Date().toISOString() };
+  localStorage.setItem(LOCAL_STORAGE_SUMMARIES_KEY, JSON.stringify(custom));
+
+  showToast(`Đã lưu thành công tóm tắt & tài liệu học phần ${code}!`, 'success');
+  renderSummaryList();
+  selectSummaryCourse(code, false);
+}
+
+function resetCurrentSummary(code) {
+  if (!confirm(`Bạn có chắc muốn khôi phục tóm tắt và tài liệu học phần ${code} về bản gốc ban đầu?`)) return;
+
+  const custom = getCustomSummaries();
+  delete custom[code];
+  localStorage.setItem(LOCAL_STORAGE_SUMMARIES_KEY, JSON.stringify(custom));
+
+  if (window.ORIGINAL_COURSE_SUMMARIES && window.ORIGINAL_COURSE_SUMMARIES[code]) {
+    const orig = window.ORIGINAL_COURSE_SUMMARIES[code];
+    if (data.courseSummaries[code]) {
+      data.courseSummaries[code].description = orig.description;
+      data.courseSummaries[code].references = orig.references;
+    }
+    const m6 = data.matrix6.find(c => c.maMH === code);
+    if (m6) {
+      m6.summary = orig.description;
+      m6.references = orig.references;
+    }
+  }
+
+  showToast(`Đã khôi phục nội dung gốc học phần ${code}!`, 'success');
+  renderSummaryList();
+  selectSummaryCourse(code, false);
+}
+
+function resetAllSummaries() {
+  if (!confirm('Bạn có chắc chắn muốn khôi phục toàn bộ các môn học về nội dung gốc ban đầu trong file Word đề cương? Mọi nội dung đã chỉnh sửa sẽ bị xóa.')) return;
+
+  localStorage.removeItem(LOCAL_STORAGE_SUMMARIES_KEY);
+  if (window.ORIGINAL_COURSE_SUMMARIES) {
+    data.courseSummaries = JSON.parse(JSON.stringify(window.ORIGINAL_COURSE_SUMMARIES));
+    data.matrix6.forEach(c => {
+      if (data.courseSummaries[c.maMH]) {
+        c.summary = data.courseSummaries[c.maMH].description;
+        c.references = data.courseSummaries[c.maMH].references;
+      }
+    });
+  }
+
+  showToast('Đã khôi phục toàn bộ đề cương các môn về bản gốc ban đầu!', 'success');
+  renderSummaryList();
+  if (selectedSummaryCode) {
+    selectSummaryCourse(selectedSummaryCode, false);
+  }
+}
+
+// DOCX EXPORT LOGIC MATCHING TEMPLATE
+async function exportToDocx(singleCode = null) {
+  const docxLib = window.docx;
+  if (!docxLib) {
+    alert('Thư viện tạo file Word (docx.js) chưa sẵn sàng hoặc kết nối mạng bị gián đoạn. Vui lòng kiểm tra lại mạng hoặc tải lại trang!');
+    return;
+  }
+
+  const { Document, Paragraph, TextRun, HeadingLevel, AlignmentType, Packer } = docxLib;
+
+  // Filter courses to export
+  let targetCodes = [];
+  if (singleCode) {
+    if (data.courseSummaries[singleCode]) targetCodes.push(singleCode);
+  } else {
+    targetCodes = Object.keys(data.courseSummaries);
+  }
+
+  if (targetCodes.length === 0) {
+    alert('Không tìm thấy học phần nào để xuất!');
+    return;
+  }
+
+  const children = [
+    // Header matching 2026-CNTT-Tóm tắt học phần.docx
+    new Paragraph({
+      children: [new TextRun({ text: 'TRƯỜNG ĐẠI HỌC LẠC HỒNG', font: 'Times New Roman', size: 26 })]
+    }),
+    new Paragraph({
+      children: [new TextRun({ text: 'KHOA CÔNG NGHỆ THÔNG TIN', bold: true, font: 'Times New Roman', size: 26 })]
+    }),
+    new Paragraph({ text: '' }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'TÓM TẮT HỌC PHẦN', bold: true, font: 'Times New Roman', size: 28 })]
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: 'NGÀNH: CÔNG NGHỆ THÔNG TIN', bold: true, font: 'Times New Roman', size: 26 })]
+    }),
+    new Paragraph({ text: '' })
+  ];
+
+  targetCodes.forEach(code => {
+    const item = data.courseSummaries[code];
+    if (!item) return;
+
+    // Heading 1: <Code> - <Title>
+    children.push(new Paragraph({
+      heading: HeadingLevel.HEADING_1,
+      spacing: { before: 240, after: 120 },
+      children: [
+        new TextRun({
+          text: `${item.code} - ${item.title}`,
+          font: 'Times New Roman',
+          size: 26,
+          bold: true
+        })
+      ]
+    }));
+
+    // Description paragraphs
+    const desc = (item.description || '').trim();
+    if (desc) {
+      desc.split('\n\n').forEach(para => {
+        const pText = para.trim();
+        if (pText) {
+          children.push(new Paragraph({
+            spacing: { after: 120 },
+            children: [
+              new TextRun({
+                text: pText,
+                font: 'Times New Roman',
+                size: 24
+              })
+            ]
+          }));
+        }
+      });
+    }
+
+    // References
+    const refs = (item.references || '').trim();
+    if (refs) {
+      children.push(new Paragraph({
+        spacing: { before: 120, after: 60 },
+        children: [
+          new TextRun({
+            text: 'Tài liệu tham khảo:',
+            font: 'Times New Roman',
+            size: 24,
+            bold: true
+          })
+        ]
+      }));
+
+      refs.split('\n').forEach(rLine => {
+        const lineText = rLine.trim();
+        if (lineText) {
+          children.push(new Paragraph({
+            spacing: { after: 60 },
+            children: [
+              new TextRun({
+                text: lineText,
+                font: 'Times New Roman',
+                size: 24
+              })
+            ]
+          }));
+        }
+      });
+    }
+
+    // Space after course
+    children.push(new Paragraph({ text: '', spacing: { after: 180 } }));
+  });
+
+  try {
+    const doc = new Document({
+      sections: [{
+        properties: {
+          page: {
+            margin: {
+              top: 1440,    // 1 inch
+              bottom: 1440, // 1 inch
+              left: 1440,   // 1 inch
+              right: 1440   // 1 inch
+            }
+          }
+        },
+        children: children
+      }]
+    });
+
+    const blob = await Packer.toBlob(doc);
+    const fileName = singleCode ? `2026-CNTT-Tóm tắt học phần_${singleCode}.docx` : '2026-CNTT-Tóm tắt học phần.docx';
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast(`Đã xuất file Word (${fileName}) thành công!`, 'success');
+  } catch (err) {
+    console.error('Docx generation error:', err);
+    alert('Có lỗi khi tạo file Word: ' + err.message);
+  }
+}
+
+function exportAllToDocx() {
+  exportToDocx(null);
+}
+
+function exportCurrentToDocx(code = null) {
+  const target = code || selectedSummaryCode;
+  if (!target) {
+    alert('Vui lòng chọn một môn học để xuất!');
+    return;
+  }
+  exportToDocx(target);
+}
+
+function exportSummariesJSON() {
+  const custom = getCustomSummaries();
+  const exportData = {
+    dateExported: new Date().toISOString(),
+    totalCourses: Object.keys(data.courseSummaries).length,
+    customizedCount: Object.keys(custom).length,
+    courseSummaries: data.courseSummaries
+  };
+
+  const jsonStr = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '2026-CNTT-TomTatHocPhan_Backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showToast('Đã tải xuống file JSON sao lưu thành công!', 'success');
 }
 
 function filterSummaryList() {
@@ -8747,6 +9210,7 @@ document.getElementById('courseModal').addEventListener('click', (e) => {
 
 // On Load Initialization
 window.addEventListener('DOMContentLoaded', () => {
+  initCustomSummaries();
   renderOverviewTable();
   renderMatrix6Table();
   renderMatrix24Table();
