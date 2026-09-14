@@ -161,7 +161,10 @@ function renderMatrix6Table() {
         ${row.tenMH}
         ${row.hasSummary ? '<i class="fa-solid fa-file-lines ml-1 text-slate-300 text-xs" title="Có đề cương chi tiết"></i>' : ''}
       </td>
-      <td class="py-2.5 px-2 text-center font-semibold text-slate-700 dark:text-slate-300">${row.soTC}</td>
+      <td class="py-2.5 px-2 text-center font-semibold text-slate-700 dark:text-slate-300" title="Tổng ${row.totalHours || (row.soTC * 50)} tiết (LT: ${row.theoryHours ?? 0} tiết, TH: ${row.practiceHours ?? 0} tiết, BT: ${row.exerciseHours ?? 0} tiết)">
+        ${row.soTC}
+        <span class="block text-[10px] font-normal text-slate-400 dark:text-slate-500 font-mono">${row.theoryHours !== undefined && row.theoryHours !== null ? `${row.theoryHours}LT/${row.practiceHours}TH` : ''}</span>
+      </td>
       <td class="py-2.5 px-3 text-xs text-slate-600 dark:text-slate-400">${row.khoiKT}</td>
       <td class="py-2 px-3 text-center">${getLevelBadge(row.m1)}</td>
       <td class="py-2 px-3 text-center">${getLevelBadge(row.m2)}</td>
@@ -472,7 +475,7 @@ function selectSummaryCourse(code) {
     <div class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-5">
       <div class="flex items-center space-x-3 mb-2">
         <span class="font-mono text-sm font-bold bg-sky-100 dark:bg-sky-900/60 text-sky-700 dark:text-sky-300 px-3 py-1 rounded-md border border-sky-200 dark:border-sky-800">${item.code}</span>
-        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${plan.semester || 'Học phần CTDT 2026'} • ${plan.credits || '3'} Tín chỉ</span>
+        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${plan.semester || 'Học phần CTDT 2026'} • ${plan.credits || '3'} Tín chỉ${plan.totalHours ? ` • ${plan.totalHours} tiết (LT: ${plan.theoryHours ?? 0} • TH: ${plan.practiceHours ?? 0} • BT: ${plan.exerciseHours ?? 0})` : ''}</span>
       </div>
       <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">${item.title}</h2>
     </div>
@@ -587,7 +590,8 @@ function openCourseModal(courseCode) {
 
   document.getElementById('modalCourseCode').textContent = courseCode;
   document.getElementById('modalCourseTitle').textContent = m6.tenMH || plan.name || summary.title || 'Thông tin học phần';
-  document.getElementById('modalCourseSubtitle').textContent = `${m6.soTC || plan.credits || '3'} Tín chỉ • ${m6.khoiKT || 'Khối kiến thức'} • ${plan.semester || 'CTDT 2026'}`;
+  const totalH = (plan.totalHours !== undefined && plan.totalHours !== null) ? ` • ${plan.totalHours} tiết` : '';
+  document.getElementById('modalCourseSubtitle').textContent = `${plan.credits || m6.soTC || '3'} Tín chỉ${totalH} • ${m6.khoiKT || 'Khối kiến thức'} • ${plan.semester || 'CTDT 2026'}`;
 
   switchModalTab('info');
   document.getElementById('courseModal').classList.remove('hidden');
@@ -624,22 +628,36 @@ function switchModalTab(tab) {
 
   if (tab === 'info') {
     body.innerHTML = `
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
         <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
           <span class="text-[11px] text-slate-500 block">Số tín chỉ</span>
-          <span class="text-xl font-bold text-slate-800 dark:text-slate-200">${m6.soTC || plan.credits || '3'} TC</span>
+          <span class="text-lg font-bold text-slate-800 dark:text-slate-200">${plan.credits !== undefined && plan.credits !== null ? plan.credits : (m6.soTC || '3')} TC</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5 font-mono">LT:${plan.theoryCredits ?? 0} • TH:${plan.practiceCredits ?? 0}</span>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+          <span class="text-[11px] text-slate-500 block">Tổng số tiết</span>
+          <span class="text-lg font-bold text-indigo-600 dark:text-indigo-400">${plan.totalHours !== undefined && plan.totalHours !== null ? plan.totalHours : 0} tiết</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">Toàn khóa</span>
         </div>
         <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
           <span class="text-[11px] text-slate-500 block">Lý thuyết lên lớp</span>
-          <span class="text-xl font-bold text-sky-600 dark:text-sky-400">${plan.theoryHours || '30'} tiết</span>
+          <span class="text-lg font-bold text-sky-600 dark:text-sky-400">${plan.theoryHours !== undefined && plan.theoryHours !== null ? plan.theoryHours : 0} tiết</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">LT trực tiếp</span>
         </div>
         <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
           <span class="text-[11px] text-slate-500 block">Thực hành lên lớp</span>
-          <span class="text-xl font-bold text-emerald-600 dark:text-emerald-400">${plan.practiceHours || '30'} tiết</span>
+          <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">${plan.practiceHours !== undefined && plan.practiceHours !== null ? plan.practiceHours : 0} tiết</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">TH phòng máy</span>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+          <span class="text-[11px] text-slate-500 block">BT / Tự học</span>
+          <span class="text-lg font-bold text-amber-600 dark:text-amber-400">${plan.exerciseHours !== undefined && plan.exerciseHours !== null ? plan.exerciseHours : 0} tiết</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">Bài tập / Tự học</span>
         </div>
         <div class="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
           <span class="text-[11px] text-slate-500 block">Mức NLS đạt</span>
-          <span class="text-xl font-bold text-purple-600 dark:text-purple-400">${m6.mucDoMax || 'Mức 3'}</span>
+          <span class="text-lg font-bold text-purple-600 dark:text-purple-400">${m6.mucDoMax || 'Mức 3'}</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">Theo TT 02</span>
         </div>
       </div>
 

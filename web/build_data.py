@@ -195,44 +195,121 @@ def build_data():
     wb_bm03 = openpyxl.load_workbook('BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx', data_only=True)
     ws_bm03 = wb_bm03['CTDT_2026']
     course_plan = {}
-    cur_semester = "Chưa phân loại"
+    current_sem = "Học kỳ 1"
+    sem_idx = 1
     
-    for r in range(9, 140):
-        val0 = str(ws_bm03.cell(r, 1).value or '').strip()
-        val1 = str(ws_bm03.cell(r, 2).value or '').strip()
+    # Defaults for elective courses paired with an earlier elective where BM03 leaves credits blank
+    elective_defaults = {
+        '111179': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 30, 'practiceHours': 30, 'exerciseHours': 90},
+        '111243': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 30, 'practiceHours': 30, 'exerciseHours': 90},
+        '111186': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 15, 'practiceHours': 45, 'exerciseHours': 90},
+        '199007': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 15, 'practiceHours': 45, 'exerciseHours': 90},
+        '199008': {'credits': 3, 'theoryCredits': 2, 'practiceCredits': 0, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 45, 'practiceHours': 0, 'exerciseHours': 105}
+    }
+    
+    # Aliases for legacy course codes in matrix6/clos mapping to updated BM03 course codes
+    legacy_aliases = {
+        '111212': '111245',
+        '111211': '111242',
+        '111185': '111244',
+        '111187': '199005'
+    }
+
+    def to_clean_num(val):
+        if val is None:
+            return 0
+        try:
+            f = float(val)
+            return int(f) if f == int(f) else round(f, 2)
+        except (ValueError, TypeError):
+            return val
+
+    for r in range(9, 85):
+        val0 = ws_bm03.cell(r, 1).value
+        val1 = ws_bm03.cell(r, 2).value
+        val0_str = str(val0 or '').strip()
         
-        if 'HỌC KỲ' in val0.upper() or 'HỌC KỲ' in val1.upper():
-            cur_semester = val0 if 'HỌC KỲ' in val0.upper() else val1
+        m_sem = re.search(r'TỔNG CỘNG HỌC KỲ\s*(\d+)', val0_str, re.IGNORECASE)
+        if m_sem:
+            sem_idx = int(m_sem.group(1)) + 1
+            current_sem = f"Học kỳ {sem_idx}"
             continue
+        if 'TỔNG CỘNG TOÀN KHÓA' in val0_str.upper():
+            break
             
         try:
             code_int = int(float(val0))
             code = str(code_int)
+            
+            # BM03 columns:
+            # Col 1: Mã MH, Col 2: Môn học
+            # Col 3: Tổng TC, Col 4: TC Lý thuyết, Col 5: TC Thực hành, Col 6: TC Bài tập
+            # Col 7: Số tiết tổng, Col 8: Số tiết LT lên lớp, Col 9: Số tiết TH lên lớp, Col 10: Số tiết BT / Tự học
+            # Col 11: Ghi chú
+            c_credits = to_clean_num(ws_bm03.cell(r, 3).value)
+            c_tc_lt = to_clean_num(ws_bm03.cell(r, 4).value)
+            c_tc_th = to_clean_num(ws_bm03.cell(r, 5).value)
+            c_tc_bt = to_clean_num(ws_bm03.cell(r, 6).value)
+            c_total_h = to_clean_num(ws_bm03.cell(r, 7).value)
+            c_lt_h = to_clean_num(ws_bm03.cell(r, 8).value)
+            c_th_h = to_clean_num(ws_bm03.cell(r, 9).value)
+            c_bt_h = to_clean_num(ws_bm03.cell(r, 10).value)
+            c_note = str(ws_bm03.cell(r, 11).value or '').strip()
+
+            if (c_credits == 0 or c_total_h == 0) and code in elective_defaults:
+                ed = elective_defaults[code]
+                c_credits = ed['credits']
+                c_tc_lt = ed['theoryCredits']
+                c_tc_th = ed['practiceCredits']
+                c_tc_bt = ed['exerciseCredits']
+                c_total_h = ed['totalHours']
+                c_lt_h = ed['theoryHours']
+                c_th_h = ed['practiceHours']
+                c_bt_h = ed['exerciseHours']
+
             course_plan[code] = {
                 "code": code,
-                "name": val1,
-                "credits": ws_bm03.cell(r, 3).value,
-                "totalHours": ws_bm03.cell(r, 4).value,
-                "theoryHours": ws_bm03.cell(r, 5).value,
-                "practiceHours": ws_bm03.cell(r, 6).value,
-                "exerciseHours": ws_bm03.cell(r, 7).value,
-                "note": str(ws_bm03.cell(r, 8).value or '').strip(),
-                "semester": cur_semester
+                "name": str(val1 or '').strip(),
+                "credits": c_credits,
+                "theoryCredits": c_tc_lt,
+                "practiceCredits": c_tc_th,
+                "exerciseCredits": c_tc_bt,
+                "totalHours": c_total_h,
+                "theoryHours": c_lt_h,
+                "practiceHours": c_th_h,
+                "exerciseHours": c_bt_h,
+                "note": c_note,
+                "semester": current_sem
             }
-        except:
+        except (ValueError, TypeError):
             pass
+
+    # Ensure legacy codes also have course plan entries
+    for old_c, new_c in legacy_aliases.items():
+        if new_c in course_plan and old_c not in course_plan:
+            course_plan[old_c] = dict(course_plan[new_c], code=old_c)
 
     # Enrich Matrix 6 with Course Plan and Docx Info
     for c in matrix_6:
         code = c["maMH"]
-        if code in course_plan:
-            c["semester"] = course_plan[code]["semester"]
-            c["theoryHours"] = course_plan[code]["theoryHours"]
-            c["practiceHours"] = course_plan[code]["practiceHours"]
+        plan_item = course_plan.get(code) or course_plan.get(legacy_aliases.get(code))
+        if plan_item:
+            c["semester"] = plan_item["semester"]
+            c["credits"] = plan_item["credits"]
+            c["theoryCredits"] = plan_item["theoryCredits"]
+            c["practiceCredits"] = plan_item["practiceCredits"]
+            c["totalHours"] = plan_item["totalHours"]
+            c["theoryHours"] = plan_item["theoryHours"]
+            c["practiceHours"] = plan_item["practiceHours"]
+            c["exerciseHours"] = plan_item["exerciseHours"]
         else:
             c["semester"] = "N/A"
             c["theoryHours"] = None
             c["practiceHours"] = None
+            c["totalHours"] = None
+            c["exerciseHours"] = None
+            c["theoryCredits"] = None
+            c["practiceCredits"] = None
             
         if code in course_summaries:
             c["hasSummary"] = True
@@ -250,7 +327,7 @@ def build_data():
             "faculty": "KHOA CÔNG NGHỆ THÔNG TIN",
             "program": "CHƯƠNG TRÌNH ĐÀO TẠO CÔNG NGHỆ THÔNG TIN KHÓA 2026",
             "framework": "Thông tư 02/2025/TT-BGDĐT & Khung trình độ quốc gia VQF",
-            "dateUpdated": "2026-09-13",
+            "dateUpdated": "2026-09-14",
             "totalCourses": len(matrix_6),
             "totalCLOMappings": len(clo_mappings),
             "totalDomains": 6,
@@ -269,10 +346,47 @@ def build_data():
         "coursePlan": course_plan
     }
 
+    json_str = json.dumps(unified_data, ensure_ascii=False, indent=2)
+
+    # 1. Save curriculum_data.json
     with open('curriculum_data.json', 'w', encoding='utf-8') as f:
-        json.dump(unified_data, f, ensure_ascii=False, indent=2)
-        
+        f.write(json_str)
     print("Done! Saved curriculum_data.json successfully.")
+
+    # 2. Save data.js
+    with open('data.js', 'w', encoding='utf-8') as f:
+        f.write("window.CURRICULUM_DATA = " + json_str + ";\n")
+    print("Done! Saved data.js successfully.")
+
+    # 3. Update embedded data and app scripts in index.html
+    if os.path.exists('index.html'):
+        with open('index.html', 'r', encoding='utf-8') as f:
+            html = f.read()
+        
+        # Replace data script block safely without regex escaping corruption
+        marker_data = 'window.CURRICULUM_DATA ='
+        idx_data = html.find(marker_data)
+        if idx_data != -1:
+            end_script = html.find('</script>', idx_data)
+            if end_script != -1:
+                html = html[:idx_data] + "window.CURRICULUM_DATA = " + json_str + ";\n  " + html[end_script:]
+                print("Done! Updated embedded data in index.html.")
+        else:
+            print("Warning: Could not locate window.CURRICULUM_DATA in index.html")
+
+        # Also sync app.js into index.html if app.js exists
+        if os.path.exists('app.js'):
+            with open('app.js', 'r', encoding='utf-8') as f_app:
+                app_code = f_app.read().strip()
+            marker = 'const data = window.CURRICULUM_DATA;'
+            idx = html.find(marker)
+            end_idx = html.rfind('</script>')
+            if idx != -1 and end_idx != -1:
+                html = html[:idx] + app_code + '\n  ' + html[end_idx:]
+                print("Done! Synced app.js into index.html.")
+
+        with open('index.html', 'w', encoding='utf-8') as f:
+            f.write(html)
 
 if __name__ == "__main__":
     build_data()
