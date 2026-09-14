@@ -1,6 +1,332 @@
 const data = window.CURRICULUM_DATA;
-let currentTab = 'dashboard';
-let chartsInitialized = false;
+
+let currentProgram = 'chinhquy'; // 'chinhquy' | 'tuxa'
+let currentTuxaTrack = 'tich_hop'; // 'tich_hop' (Default)
+let currentPlanSemester = 'all';
+let currentPlanSearch = '';
+
+function getActiveSummaries() {
+  if (currentProgram === 'tuxa' && data.tuxa && data.tuxa.courseSummaries) {
+    return data.tuxa.courseSummaries;
+  }
+  return data.courseSummaries || {};
+}
+
+function getActiveCoursePlan() {
+  if (currentProgram === 'tuxa' && data.tuxa && data.tuxa.curriculum_by_track) {
+    const trackSems = data.tuxa.curriculum_by_track[currentTuxaTrack] || data.tuxa.curriculum_by_track['tich_hop'] || [];
+    const planMap = {};
+    trackSems.forEach(s => {
+      s.courses.forEach(c => {
+        planMap[c.code] = c;
+      });
+    });
+    return planMap;
+  }
+  return data.coursePlan || {};
+}
+
+function switchProgramMode(mode) {
+  currentProgram = mode;
+  const btnCq = document.getElementById('btn-prog-chinhquy');
+  const btnTx = document.getElementById('btn-prog-tuxa');
+  const badgeEl = document.getElementById('header-program-badge');
+
+  if (mode === 'tuxa') {
+    if (btnCq) {
+      btnCq.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-1.5';
+    }
+    if (btnTx) {
+      btnTx.className = 'px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-600/30 flex items-center space-x-1.5';
+    }
+    if (badgeEl) {
+      badgeEl.textContent = 'Hệ ĐTTX Tích Hợp - 150 TC';
+      badgeEl.className = 'hidden md:inline-flex text-xs bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800';
+    }
+    showToast('Đã chuyển sang: Hệ ĐTTX Tích hợp 3 Hướng (150 Tín chỉ)', 'info');
+  } else {
+    if (btnCq) {
+      btnCq.className = 'px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-sky-600 text-white shadow-md shadow-sky-600/30 flex items-center space-x-1.5';
+    }
+    if (btnTx) {
+      btnTx.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-1.5';
+    }
+    if (badgeEl) {
+      badgeEl.textContent = 'Khóa 2026 - 2030';
+      badgeEl.className = 'hidden md:inline-flex text-xs bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800';
+    }
+    showToast('Đã chuyển sang: Hệ Chính quy (Khóa 2026 - 2030)', 'info');
+  }
+
+  selectedSummaryCode = null;
+  renderBM03PlanTable();
+  renderSummaryList();
+}
+
+function filterBM03Semester(sem) {
+  currentPlanSemester = sem;
+  renderBM03PlanTable();
+}
+
+function filterBM03Search(query) {
+  currentPlanSearch = query.toLowerCase().trim();
+  renderBM03PlanTable();
+}
+
+function renderBM03PlanTable() {
+  const container = document.getElementById('bm03PlanTableContainer');
+  const headerCard = document.getElementById('bm03-plan-header-card');
+  if (!container) return;
+
+  // Header Card
+  if (headerCard) {
+    if (currentProgram === 'tuxa') {
+      headerCard.className = 'bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-900 rounded-2xl p-6 text-white shadow-xl border border-white/10';
+      headerCard.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-layer-group"></i> Hệ Đào Tạo Từ Xa (ĐTTX) - Chuẩn 150 Tín Chỉ
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight flex items-center gap-2">
+              <i class="fa-solid fa-cubes-stacked text-emerald-400"></i> KẾ HOẠCH ĐÀO TẠO BM03 TÍCH HỢP 3 HƯỚNG CHUYÊN SÂU
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-200 mt-2 max-w-4xl leading-relaxed">
+              Chương trình đào tạo từ xa 150 tín chỉ tích hợp trọn vẹn cả 3 mũi nhọn công nghệ: 
+              <strong class="text-sky-300">Lập trình phát triển ứng dụng (Vibe Coding)</strong>, 
+              <strong class="text-emerald-300">Mạng máy tính (Cisco NetAcad CCNA & CyberOps & DevNet)</strong> và 
+              <strong class="text-amber-300">Phân tích số liệu (Data Warehouse, Power BI PL-300 & GenAI)</strong>.
+            </p>
+          </div>
+          <div class="flex items-center space-x-2 flex-wrap gap-2">
+            <a href="BM03-Ke hoach dao tao_CNTT-2026_TuXa_TichHop.xlsx" download class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
+              <i class="fa-solid fa-file-excel"></i>
+              <span>Xuất File Excel BM03 Tích Hợp</span>
+            </a>
+            <a href="2026-CNTT-TuXa-TichHop-Tom tat hoc phan.docx" download class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
+              <i class="fa-solid fa-file-word"></i>
+              <span>Xuất Tóm Tắt Học Phần (.docx)</span>
+            </a>
+          </div>
+        </div>
+      `;
+    } else {
+      headerCard.className = 'bg-gradient-to-r from-sky-900 via-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-xl border border-sky-800/40';
+      headerCard.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center space-x-2 bg-sky-500/20 text-sky-200 border border-sky-400/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-graduation-cap"></i> Hệ Chính Quy Khóa 2026 - 2030
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black tracking-tight">
+              KẾ HOẠCH ĐÀO TẠO BM03 CHUẨN - NGÀNH CÔNG NGHỆ THÔNG TIN
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-200 mt-2 max-w-4xl leading-relaxed">
+              Toàn bộ kế hoạch đào tạo 8 học kỳ theo học chế tín chỉ niên khóa 2026 - 2030 theo biểu mẫu BM03 quy định của Trường Đại học Lạc Hồng.
+            </p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="switchProgramMode('tuxa')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
+              <i class="fa-solid fa-laptop-code"></i>
+              <span>Xem CTDT Từ Xa Tích Hợp (150 TC)</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // Get Semesters Data
+  let semestersList = [];
+
+  if (currentProgram === 'tuxa' && data.tuxa && data.tuxa.curriculum_by_track) {
+    semestersList = data.tuxa.curriculum_by_track['tich_hop'] || [];
+  } else if (data.coursePlan) {
+    const grouped = {};
+    for (let i = 1; i <= 8; i++) {
+      grouped[`Học kỳ ${i}`] = [];
+    }
+    Object.values(data.coursePlan).forEach(c => {
+      const sem = c.semester || 'Học kỳ 1';
+      if (!grouped[sem]) grouped[sem] = [];
+      grouped[sem].push(c);
+    });
+    semestersList = Object.keys(grouped).map(k => ({
+      name: k,
+      courses: grouped[k]
+    }));
+  }
+
+  if (currentPlanSemester !== 'all') {
+    semestersList = semestersList.filter(s => s.name === currentPlanSemester);
+  }
+
+  if (semestersList.length === 0) {
+    container.innerHTML = '<div class="bg-white dark:bg-slate-800 rounded-xl p-8 text-center text-slate-500 text-sm">Không tìm thấy dữ liệu học phần phù hợp.</div>';
+    return;
+  }
+
+  let html = '';
+  let grandTotalCredits = 0;
+  let grandTotalHours = 0;
+
+  semestersList.forEach((sem, s_idx) => {
+    let courses = sem.courses || [];
+    
+    if (currentPlanSearch) {
+      courses = courses.filter(c => 
+        (c.code && c.code.toLowerCase().includes(currentPlanSearch)) ||
+        (c.name && c.name.toLowerCase().includes(currentPlanSearch)) ||
+        (c.note && c.note.toLowerCase().includes(currentPlanSearch))
+      );
+    }
+
+    if (courses.length === 0 && currentPlanSearch) return;
+
+    let semCredits = 0;
+    let semLtHours = 0;
+    let semThHours = 0;
+    let semBtHours = 0;
+    let semTotalHours = 0;
+
+    courses.forEach(c => {
+      semCredits += Number(c.credits) || 0;
+      semLtHours += Number(c.theoryHours) || 0;
+      semThHours += Number(c.practiceHours) || 0;
+      semBtHours += Number(c.exerciseHours) || 0;
+      semTotalHours += Number(c.totalHours) || 0;
+    });
+
+    grandTotalCredits += semCredits;
+    grandTotalHours += semTotalHours;
+
+    html += `
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <!-- Semester Header -->
+        <div class="bg-slate-100 dark:bg-slate-750 px-5 py-3.5 border-b border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full ${currentProgram === 'tuxa' ? 'bg-emerald-500' : 'bg-sky-500'}"></span>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base uppercase tracking-tight">
+              ${sem.name}
+            </h3>
+            <span class="text-xs bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded-full">
+              ${courses.length} học phần
+            </span>
+          </div>
+          <div class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center space-x-3">
+            <span>Tổng TC: <strong class="text-sky-600 dark:text-sky-400 font-black text-sm">${semCredits} TC</strong></span>
+            <span>Tổng số tiết: <strong class="text-emerald-600 dark:text-emerald-400 font-black text-sm">${semTotalHours}h</strong></span>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-600 text-[11px] font-bold uppercase">
+              <tr>
+                <th class="py-2.5 px-3 text-center w-24 border-r border-slate-200 dark:border-slate-600">Mã MH</th>
+                <th class="py-2.5 px-4 border-r border-slate-200 dark:border-slate-600 min-w-[240px]">Tên Môn Học</th>
+                <th class="py-2.5 px-2 text-center border-r border-slate-200 dark:border-slate-600" title="Tổng số tín chỉ">Tổng TC</th>
+                <th class="py-2.5 px-2 text-center border-r border-slate-200 dark:border-slate-600" title="Tín chỉ Lý thuyết">TC LT</th>
+                <th class="py-2.5 px-2 text-center border-r border-slate-200 dark:border-slate-600" title="Tín chỉ Thực hành">TC TH</th>
+                <th class="py-2.5 px-2 text-center border-r border-slate-200 dark:border-slate-600" title="Tín chỉ Bài tập">TC BT</th>
+                <th class="py-2.5 px-2.5 text-center font-bold bg-slate-100 dark:bg-slate-700 border-r border-slate-200 dark:border-slate-600">Tổng Tiết</th>
+                <th class="py-2.5 px-2.5 text-center border-r border-slate-200 dark:border-slate-600">${currentProgram === 'tuxa' ? 'LT (Live LMS)' : 'LT Lên lớp'}</th>
+                <th class="py-2.5 px-2.5 text-center border-r border-slate-200 dark:border-slate-600">${currentProgram === 'tuxa' ? 'TH (Virtual Lab)' : 'TH Lên lớp'}</th>
+                <th class="py-2.5 px-2.5 text-center border-r border-slate-200 dark:border-slate-600">${currentProgram === 'tuxa' ? 'BT / Tự học LMS' : 'BT / Tự học'}</th>
+                <th class="py-2.5 px-3 text-center border-r border-slate-200 dark:border-slate-600">Ghi chú định hướng</th>
+                <th class="py-2.5 px-2 text-center w-16">Chi tiết</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-700 text-slate-700 dark:text-slate-200">
+    `;
+
+    courses.forEach(c => {
+      let badgeHtml = '';
+      const noteStr = c.note || 'Cơ sở';
+      if (noteStr.includes('Vibe Coding')) {
+        badgeHtml = '<span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800"><i class="fa-solid fa-laptop-code mr-1"></i>Vibe Coding</span>';
+      } else if (noteStr.includes('Mạng Cisco')) {
+        badgeHtml = '<span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800"><i class="fa-solid fa-network-wired mr-1"></i>Mạng Cisco</span>';
+      } else if (noteStr.includes('Phân tích')) {
+        badgeHtml = '<span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-100 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800"><i class="fa-solid fa-chart-line mr-1"></i>Phân tích số liệu</span>';
+      } else if (noteStr.includes('Thực tập') || noteStr.includes('Tốt nghiệp')) {
+        badgeHtml = `<span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800">${noteStr}</span>`;
+      } else {
+        badgeHtml = `<span class="text-[10px] px-2 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">${noteStr}</span>`;
+      }
+
+      html += `
+        <tr class="hover:bg-sky-50/50 dark:hover:bg-slate-700/40 transition-colors">
+          <td class="py-2 px-3 font-mono font-bold text-center text-sky-600 dark:text-sky-400 border-r border-slate-100 dark:border-slate-700">${c.code}</td>
+          <td class="py-2 px-4 font-semibold text-slate-900 dark:text-white border-r border-slate-100 dark:border-slate-700">${c.name}</td>
+          <td class="py-2 px-2 font-bold text-center text-sky-700 dark:text-sky-300 border-r border-slate-100 dark:border-slate-700">${c.credits}</td>
+          <td class="py-2 px-2 text-center border-r border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400">${c.theoryCredits !== undefined ? c.theoryCredits : (c.lt || 0)}</td>
+          <td class="py-2 px-2 text-center border-r border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400">${c.practiceCredits !== undefined ? c.practiceCredits : (c.th || 0)}</td>
+          <td class="py-2 px-2 text-center border-r border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400">${c.exerciseCredits !== undefined ? c.exerciseCredits : (c.bt || 0)}</td>
+          <td class="py-2 px-2.5 font-bold text-center bg-slate-50/60 dark:bg-slate-750 border-r border-slate-100 dark:border-slate-700">${c.totalHours}</td>
+          <td class="py-2 px-2.5 text-center border-r border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300">${c.theoryHours}</td>
+          <td class="py-2 px-2.5 text-center border-r border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300">${c.practiceHours}</td>
+          <td class="py-2 px-2.5 text-center border-r border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300">${c.exerciseHours}</td>
+          <td class="py-2 px-3 text-center border-r border-slate-100 dark:border-slate-700">
+            ${badgeHtml}
+          </td>
+          <td class="py-2 px-2 text-center">
+            <button onclick="showCourseModal('${c.code}')" title="Xem đề cương chi tiết" class="p-1 text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 rounded transition-colors">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+
+    // Subtotal Row
+    html += `
+            </tbody>
+            <tfoot class="bg-slate-50 dark:bg-slate-700/80 font-bold border-t-2 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100">
+              <tr>
+                <td colspan="2" class="py-2.5 px-4 text-center border-r border-slate-200 dark:border-slate-600 font-bold uppercase tracking-wider text-xs">
+                  TỔNG CỘNG ${sem.name}
+                </td>
+                <td class="py-2.5 px-2 text-center text-sky-700 dark:text-sky-300 font-black border-r border-slate-200 dark:border-slate-600">${semCredits}</td>
+                <td colspan="3" class="border-r border-slate-200 dark:border-slate-600"></td>
+                <td class="py-2.5 px-2.5 text-center font-black bg-slate-100 dark:bg-slate-650 border-r border-slate-200 dark:border-slate-600">${semTotalHours}</td>
+                <td class="py-2.5 px-2.5 text-center border-r border-slate-200 dark:border-slate-600">${semLtHours}</td>
+                <td class="py-2.5 px-2.5 text-center border-r border-slate-200 dark:border-slate-600">${semThHours}</td>
+                <td class="py-2.5 px-2.5 text-center border-r border-slate-200 dark:border-slate-600">${semBtHours}</td>
+                <td colspan="2"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    `;
+  });
+
+  if (currentPlanSemester === 'all' && !currentPlanSearch) {
+    html += `
+      <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 dark:from-emerald-950/40 dark:via-teal-950/40 dark:to-sky-950/40 rounded-2xl p-6 border-2 border-emerald-300 dark:border-emerald-800 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+        <div>
+          <span class="text-xs uppercase font-extrabold text-emerald-700 dark:text-emerald-400 tracking-wider">Tổng kết kế hoạch đào tạo toàn khóa</span>
+          <h4 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
+            TỔNG CỘNG TOÀN KHÓA 8 HỌC KỲ: <span class="text-emerald-600 dark:text-emerald-400">${grandTotalCredits} TÍN CHỈ</span>
+          </h4>
+          <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+            Tổng số giờ: <strong>${grandTotalHours} tiết quy chuẩn</strong> (1 TC = 50 tiết). Đảm bảo chuẩn 150 tín chỉ theo quy định của Bộ Giáo dục & Đào tạo.
+          </p>
+        </div>
+        <div class="flex items-center space-x-3">
+          <a href="${currentProgram === 'tuxa' ? 'BM03-Ke hoach dao tao_CNTT-2026_TuXa_TichHop.xlsx' : 'BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx'}" download class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center space-x-2 shadow-lg shadow-emerald-600/30">
+            <i class="fa-solid fa-download"></i>
+            <span>Tải Bảng BM03 ${currentProgram === 'tuxa' ? 'Từ Xa Tích Hợp' : 'Chính Quy'}</span>
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
 
 // Domain color mappings
 const domainColors = {
@@ -47,6 +373,9 @@ function toggleDarkMode() {
     icon.className = 'fa-solid fa-sun text-base';
     localStorage.setItem('theme', 'dark');
   }
+  if (typeof initCharts === 'function') {
+    initCharts(true);
+  }
 }
 
 // Initialize Theme
@@ -73,6 +402,11 @@ function switchTab(tabId) {
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (tabId === 'dashboard') {
+    setTimeout(() => {
+      Object.values(chartInstances).forEach(c => c && c.resize && c.resize());
+    }, 100);
+  }
 }
 
 // Render Dashboard Overview Table
@@ -491,7 +825,8 @@ function renderSummaryList() {
   if (!listEl) return;
   listEl.innerHTML = '';
 
-  const summaryKeys = Object.keys(data.courseSummaries);
+  const activeSummaries = getActiveSummaries();
+  const summaryKeys = Object.keys(activeSummaries);
   if (summaryKeys.length === 0) {
     listEl.innerHTML = '<p class="text-xs text-slate-400 p-3">Chưa có dữ liệu tóm tắt</p>';
     return;
@@ -500,7 +835,8 @@ function renderSummaryList() {
   const customEdits = getCustomSummaries();
 
   summaryKeys.forEach((code, idx) => {
-    const item = data.courseSummaries[code];
+    const activeSummaries = getActiveSummaries();
+    const item = activeSummaries[code];
     const isCustomized = !!customEdits[code];
     const btn = document.createElement('button');
     btn.id = `summary-item-${code}`;
@@ -530,7 +866,8 @@ function renderSummaryList() {
 function selectSummaryCourse(code, editMode = false) {
   selectedSummaryCode = code;
   isEditingSummaryMode = editMode;
-  const item = data.courseSummaries[code];
+  const activeSummaries = getActiveSummaries();
+    const item = activeSummaries[code];
   const detailEl = document.getElementById('summaryDetailContainer');
   if (!item || !detailEl) return;
 
@@ -542,7 +879,8 @@ function selectSummaryCourse(code, editMode = false) {
     activeBtn.className = 'w-full text-left p-3 rounded-lg text-xs transition-all flex flex-col gap-0.5 summary-list-btn bg-sky-50 dark:bg-sky-950/60 border border-sky-300 dark:border-sky-800';
   }
 
-  const plan = data.coursePlan[code] || {};
+  const activePlan = getActiveCoursePlan();
+  const plan = activePlan[code] || {};
   const customEdits = getCustomSummaries();
   const isCustomized = !!customEdits[code];
 
@@ -762,9 +1100,9 @@ async function exportToDocx(singleCode = null) {
   // Filter courses to export
   let targetCodes = [];
   if (singleCode) {
-    if (data.courseSummaries[singleCode]) targetCodes.push(singleCode);
+    if (getActiveSummaries()[singleCode]) targetCodes.push(singleCode);
   } else {
-    targetCodes = Object.keys(data.courseSummaries);
+    targetCodes = Object.keys(getActiveSummaries());
   }
 
   if (targetCodes.length === 0) {
@@ -793,7 +1131,8 @@ async function exportToDocx(singleCode = null) {
   ];
 
   targetCodes.forEach(code => {
-    const item = data.courseSummaries[code];
+    const activeSummaries = getActiveSummaries();
+    const item = activeSummaries[code];
     if (!item) return;
 
     // Heading 1: <Code> - <Title>
@@ -1227,13 +1566,36 @@ function downloadBlob(content, filename) {
 }
 
 // Initialize Charts
-function initCharts() {
-  if (chartsInitialized) return;
+let chartInstances = {};
+let chartsInitialized = false;
+
+function initCharts(force = false) {
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js đang được tải, chuẩn bị khởi tạo...');
+    if (!window._loadingChartJs) {
+      window._loadingChartJs = true;
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+      script.onload = () => initCharts(true);
+      document.head.appendChild(script);
+    }
+    setTimeout(() => initCharts(force), 250);
+    return;
+  }
+
+  if (chartsInitialized && !force) return;
   chartsInitialized = true;
 
+  const isDark = document.documentElement.classList.contains('dark');
+  const textColor = isDark ? '#cbd5e1' : '#475569';
+  const gridColor = isDark ? 'rgba(148, 163, 184, 0.12)' : 'rgba(148, 163, 184, 0.2)';
+
   // 1. Radar Chart
-  const radarCtx = document.getElementById('radarDomainsChart');
-  if (radarCtx) {
+  const radarCanvas = document.getElementById('radarDomainsChart');
+  if (radarCanvas) {
+    if (chartInstances['radar']) {
+      chartInstances['radar'].destroy();
+    }
     const domainLabels = ['Miền I: Dữ liệu', 'Miền II: Giao tiếp', 'Miền III: Sáng tạo', 'Miền IV: An toàn', 'Miền V: Vấn đề', 'Miền VI: AI & GenAI'];
     const domainClos = [0, 0, 0, 0, 0, 0];
     const domainCourses = [0, 0, 0, 0, 0, 0];
@@ -1251,7 +1613,7 @@ function initCharts() {
       });
     });
 
-    new Chart(radarCtx, {
+    chartInstances['radar'] = new Chart(radarCanvas, {
       type: 'radar',
       data: {
         labels: domainLabels,
@@ -1264,7 +1626,8 @@ function initCharts() {
             pointBackgroundColor: 'rgb(14, 165, 233)',
             pointBorderColor: '#fff',
             pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgb(14, 165, 233)'
+            pointHoverBorderColor: 'rgb(14, 165, 233)',
+            borderWidth: 2
           },
           {
             label: 'Số môn học phủ',
@@ -1274,7 +1637,8 @@ function initCharts() {
             pointBackgroundColor: 'rgb(139, 92, 246)',
             pointBorderColor: '#fff',
             pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgb(139, 92, 246)'
+            pointHoverBorderColor: 'rgb(139, 92, 246)',
+            borderWidth: 2
           }
         ]
       },
@@ -1285,19 +1649,23 @@ function initCharts() {
           r: {
             beginAtZero: true,
             ticks: { display: false },
-            grid: { color: 'rgba(148, 163, 184, 0.2)' }
+            grid: { color: gridColor },
+            pointLabels: { color: textColor, font: { size: 11, weight: 'bold' } }
           }
         },
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, color: textColor } }
         }
       }
     });
   }
 
   // 2. Bar Chart Domains
-  const barCtx = document.getElementById('barDomainsChart');
-  if (barCtx) {
+  const barCanvas = document.getElementById('barDomainsChart');
+  if (barCanvas) {
+    if (chartInstances['barDomains']) {
+      chartInstances['barDomains'].destroy();
+    }
     const domainLabels = ['Miền I', 'Miền II', 'Miền III', 'Miền IV', 'Miền V', 'Miền VI'];
     const domainClos = [0, 0, 0, 0, 0, 0];
     const domainCourses = [0, 0, 0, 0, 0, 0];
@@ -1313,19 +1681,19 @@ function initCharts() {
       });
     });
 
-    new Chart(barCtx, {
+    chartInstances['barDomains'] = new Chart(barCanvas, {
       type: 'bar',
       data: {
         labels: domainLabels,
         datasets: [
           {
-            label: 'Số lượng môn học phủ',
+            label: 'Số môn học phủ',
             data: domainCourses,
             backgroundColor: '#0284c7',
             borderRadius: 6
           },
           {
-            label: 'Số lượng CLO ánh xạ',
+            label: 'Số CLO ánh xạ',
             data: domainClos,
             backgroundColor: '#10b981',
             borderRadius: 6
@@ -1336,26 +1704,29 @@ function initCharts() {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: { grid: { display: false } },
-          y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.15)' } }
+          x: { grid: { display: false }, ticks: { color: textColor, font: { weight: 'bold' } } },
+          y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } }
         },
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, color: textColor } }
         }
       }
     });
   }
 
   // 3. Doughnut Blocks
-  const doughnutCtx = document.getElementById('doughnutBlocksChart');
-  if (doughnutCtx) {
+  const doughnutCanvas = document.getElementById('doughnutBlocksChart');
+  if (doughnutCanvas) {
+    if (chartInstances['doughnut']) {
+      chartInstances['doughnut'].destroy();
+    }
     const blocks = {};
     data.matrix6.forEach(c => {
       const b = c.khoiKT || 'Khác';
       blocks[b] = (blocks[b] || 0) + 1;
     });
 
-    new Chart(doughnutCtx, {
+    chartInstances['doughnut'] = new Chart(doughnutCanvas, {
       type: 'doughnut',
       data: {
         labels: Object.keys(blocks),
@@ -1368,22 +1739,25 @@ function initCharts() {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, color: textColor } }
         }
       }
     });
   }
 
   // 4. Bar Levels
-  const levelsCtx = document.getElementById('barLevelsChart');
-  if (levelsCtx) {
+  const levelsCanvas = document.getElementById('barLevelsChart');
+  if (levelsCanvas) {
+    if (chartInstances['barLevels']) {
+      chartInstances['barLevels'].destroy();
+    }
     const levelCounts = { 'Mức 1': 0, 'Mức 2': 0, 'Mức 3': 0, 'Mức 4': 0, 'Mức 5': 0 };
     data.cloMappings.forEach(m => {
       const lvl = m.mucDoNLS;
       if (levelCounts[lvl] !== undefined) levelCounts[lvl]++;
     });
 
-    new Chart(levelsCtx, {
+    chartInstances['barLevels'] = new Chart(levelsCanvas, {
       type: 'bar',
       data: {
         labels: Object.keys(levelCounts),
@@ -1398,8 +1772,8 @@ function initCharts() {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: { grid: { display: false } },
-          y: { beginAtZero: true, grid: { color: 'rgba(148, 163, 184, 0.15)' } }
+          x: { grid: { display: false }, ticks: { color: textColor, font: { weight: 'bold' } } },
+          y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: textColor } }
         },
         plugins: {
           legend: { display: false }
@@ -1420,6 +1794,7 @@ document.getElementById('courseModal').addEventListener('click', (e) => {
 // On Load Initialization
 window.addEventListener('DOMContentLoaded', () => {
   initCustomSummaries();
+  renderBM03PlanTable();
   renderOverviewTable();
   renderMatrix6Table();
   renderMatrix24Table();

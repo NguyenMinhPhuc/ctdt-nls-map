@@ -7086,5 +7086,1487 @@ window.CURRICULUM_DATA = {
       "note": "",
       "semester": "Học kỳ 7"
     }
+  },
+  "tuxa": {
+    "metadata": {
+      "program_name": "Chương trình Đào tạo Từ xa Ngành Công nghệ Thông tin (Tích hợp 3 Định hướng)",
+      "major": "Công nghệ Thông tin",
+      "cohort": "2026 - 2030",
+      "standard_credits": 150,
+      "total_courses": 51,
+      "description": "Chương trình đào tạo từ xa 150 tín chỉ tích hợp hài hòa cả 3 định hướng công nghệ mũi nhọn: Lập trình phát triển ứng dụng (Vibe Coding), Mạng máy tính (Học viện Cisco NetAcad) và Phân tích số liệu (Data Analysis & Engineering)."
+    },
+    "curriculum_by_track": {
+      "tich_hop": [
+        {
+          "name": "Học kỳ 1",
+          "courses": [
+            {
+              "code": "102113",
+              "name": "Toán cao cấp 1 {CNTT}",
+              "credits": 4,
+              "lt": 2.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Học phần trang bị kiến thức nền tảng về giải tích hàm một biến, ma trận, định thức và hệ phương trình tuyến tính ứng dụng trong công nghệ thông tin. Đào tạo qua nền tảng LMS với video bài giảng tương tác, diễn đàn giải đáp và hệ thống bài tập trắc nghiệm số hóa.",
+              "refs": [
+                "[1]. Toán cao cấp cho các nhà kinh tế và kỹ thuật - NXB ĐHQG TPHCM, 2023.",
+                "[2]. Gilbert Strang, 'Linear Algebra and Its Applications', 5th Edition, Cengage Learning, 2021."
+              ],
+              "totalHours": 200,
+              "theoryHours": 30,
+              "practiceHours": 60,
+              "exerciseHours": 110,
+              "theoryCredits": 2.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            },
+            {
+              "code": "102146",
+              "name": "Ngoại ngữ 1",
+              "credits": 2,
+              "lt": 1.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Cung cấp nền tảng tiếng Anh giao tiếp và các cấu trúc ngữ pháp cơ bản, từ vựng kỹ thuật ban đầu, phát triển kỹ năng nghe, đọc qua hệ thống bài học tương tác trên hệ thống E-learning.",
+              "refs": [
+                "[1]. English for Information Technology 1 - Pearson Longman, 2022.",
+                "[2]. Cambridge English Grammar in Use - Raymond Murphy, Cambridge University Press, 2022."
+              ],
+              "totalHours": 100,
+              "theoryHours": 15,
+              "practiceHours": 30,
+              "exerciseHours": 55,
+              "theoryCredits": 1.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            },
+            {
+              "code": "111154",
+              "name": "Nhập môn Ngành",
+              "credits": 3,
+              "lt": 3.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Giới thiệu toàn cảnh ngành Công nghệ thông tin, xu hướng chuyển đổi số, điện toán đám mây và trí tuệ nhân tạo. Rèn luyện phương pháp học đại học từ xa hiệu quả, kỹ năng tự học suốt đời, văn hóa công nghệ và định hướng nghề nghiệp trong kỷ nguyên AI.",
+              "refs": [
+                "[1]. Giáo trình Nhập môn Công nghệ Thông tin - NXB Đại học Quốc gia, 2023.",
+                "[2]. Peter Norton, 'Introduction to Computers', 8th Edition, McGraw-Hill, 2021."
+              ],
+              "totalHours": 150,
+              "theoryHours": 45,
+              "practiceHours": 0,
+              "exerciseHours": 105,
+              "theoryCredits": 3.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            },
+            {
+              "code": "111155",
+              "name": "Nhập môn lập trình",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Khai phá tư duy logic và thuật toán nền tảng bằng ngôn ngữ Python. Sinh viên làm quen với biến, kiểu dữ liệu, các cấu trúc điều khiển, mảng, hàm và tệp tin. Kết hợp mô hình học tập đảo ngược trên LMS và kỹ nghệ Prompt AI (Vibe Coding) để giải thích lỗi và viết mã chuẩn mực.",
+              "refs": [
+                "[1]. 'Lập trình C cơ bản' của Nguyễn Văn Hiên - NXB Thế giới, 2022.",
+                "[2]. 'Nhập môn lập trình Python' của Bùi Văn Minh - NXB ĐHQG TPHCM, 2022.",
+                "[3]. Eric Matthes, 'Python Crash Course', 3rd Edition, No Starch Press, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            },
+            {
+              "code": "111156",
+              "name": "Lắp ráp và tối ưu hệ thống máy tính",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Kiến trúc phần cứng máy tính, nguyên lý hoạt động của CPU, RAM, bo mạch chủ, lưu trữ và thiết bị ngoại vi. Thực hành lắp ráp, cấu hình BIOS/UEFI, phân vùng ổ đĩa và tối ưu hóa hệ điều hành qua phần mềm mô phỏng 3D tương tác.",
+              "refs": [
+                "[1]. Computer architecture curriculum, Vu Duc Lung, 2024.",
+                "[2]. IT Essentials: PC Hardware and Software Companion Guide v8, Cisco Networking Academy, Cisco Press, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            },
+            {
+              "code": "111157",
+              "name": "Phần mềm mã nguồn mở",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Triết lý nguồn mở, giấy phép mã nguồn mở (MIT, Apache, GPL), hệ điều hành Linux, dòng lệnh Bash, quản lý gói phần mềm, quản lý phiên bản với Git và nền tảng GitHub/GitLab, chuẩn bị nền tảng làm việc từ xa cộng tác.",
+              "refs": [
+                "[1]. The Linux Command Line: A Complete Introduction - William E. Shotts, 2nd Edition, No Starch Press, 2022.",
+                "[2]. Pro Git - Scott Chacon and Ben Straub, Apress, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            },
+            {
+              "code": "111158",
+              "name": "Vật lý thực hành",
+              "credits": 2,
+              "lt": 0.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Kỹ năng đo đạc các đại lượng vật lý, xử lý số liệu sai số, các thí nghiệm ảo về mạch điện, từ trường và sóng điện từ ứng dụng trong truyền thông tín hiệu máy tính.",
+              "refs": [
+                "[1]. Hướng dẫn Thí nghiệm Vật lý đại cương - NXB ĐHQG, 2023.",
+                "[2]. PhET Interactive Simulations - University of Colorado Boulder."
+              ],
+              "totalHours": 100,
+              "theoryHours": 0,
+              "practiceHours": 60,
+              "exerciseHours": 40,
+              "theoryCredits": 0.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 1"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 2",
+          "courses": [
+            {
+              "code": "102087",
+              "name": "Xác suất thống kê",
+              "credits": 2,
+              "lt": 2.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Kiến thức về biến ngẫu nhiên, phân phối xác suất, ước lượng tham số và kiểm định giả thuyết thống kê, tạo nền móng vững chắc cho khoa học dữ liệu và học máy.",
+              "refs": [
+                "[1]. Xác suất Thống kê ứng dụng trong CNTT - Đào Hữu Hồ, NXB ĐHQG Hà Nội, 2022.",
+                "[2]. Sheldon M. Ross, 'Introductory Statistics', 5th Edition, Academic Press, 2022."
+              ],
+              "totalHours": 100,
+              "theoryHours": 30,
+              "practiceHours": 0,
+              "exerciseHours": 70,
+              "theoryCredits": 2.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            },
+            {
+              "code": "102147",
+              "name": "Ngoại ngữ 2",
+              "credits": 2,
+              "lt": 1.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Đọc hiểu tài liệu kỹ thuật, tra cứu thuật ngữ chuyên ngành CNTT, giao tiếp viết email và báo cáo tiến độ công việc kỹ thuật trực tuyến.",
+              "refs": [
+                "[1]. Oxford English for Information Technology - Eric H. Glendinning, Oxford University Press, 2022.",
+                "[2]. B1 Preliminary English Handbook, Cambridge Assessment English, 2023."
+              ],
+              "totalHours": 100,
+              "theoryHours": 15,
+              "practiceHours": 30,
+              "exerciseHours": 55,
+              "theoryCredits": 1.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            },
+            {
+              "code": "102112",
+              "name": "Tin học đại cương",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Biểu diễn dữ liệu máy tính, hệ nhị phân, logic Boole, ứng dụng xử lý bảng tính số liệu chuyên sâu và soạn thảo kỹ thuật trực tuyến phục vụ học tập từ xa.",
+              "refs": [
+                "[1]. Giáo trình Tin học đại cương - NXB Thống kê, 2022.",
+                "[2]. Microsoft Office 365 Specialist Guide, Microsoft Press, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            },
+            {
+              "code": "111159",
+              "name": "Điện tử trong IoT",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Linh kiện điện tử, cảm biến, vi điều khiển (ESP32/Arduino), giao thức truyền thông không dây (Wi-Fi, Bluetooth). Thực hành mô phỏng mạch trên Tinkercad/Wokwi trực tuyến.",
+              "refs": [
+                "[1]. Giáo trình Điện tử ứng dụng và Vi điều khiển IoT - NXB Thông tin và Truyền thông, 2023.",
+                "[2]. Make: Electronics - Charles Platt, 3rd Edition, Maker Media, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            },
+            {
+              "code": "111174",
+              "name": "Toán rời rạc và LTDT",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Logic mệnh đề, tập hợp, đại số Boole, lý thuyết đồ thị (Dijkstra, cây khung Prim/Kruskal), ứng dụng trực tiếp vào cấu trúc dữ liệu và định tuyến mạng máy tính.",
+              "refs": [
+                "[1]. Toán rời rạc ứng dụng trong Tin học - Kenneth H. Rosen, NXB Giáo dục, 2022.",
+                "[2]. Discrete Mathematics and Its Applications - Kenneth H. Rosen, 8th Edition, McGraw-Hill, 2021."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            },
+            {
+              "code": "111161",
+              "name": "Kỹ thuật lập trình",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Con trỏ, cấp phát bộ nhớ động, đệ quy, kỹ thuật chia để trị, quy hoạch động và lập trình hướng module. Thực hành trên hệ thống chấm bài tự động Auto-grader trên LMS.",
+              "refs": [
+                "[1]. Kỹ thuật lập trình C/C++ nâng cao - Phạm Văn Ất, NXB KHKT, 2022.",
+                "[2]. Robert Sedgewick, 'Algorithms in C++', Addison-Wesley, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            },
+            {
+              "code": "111162",
+              "name": "Thiết kế UI/UX",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Phương pháp luận thiết kế trải nghiệm người dùng (UX) và giao diện (UI). Thực hành tạo mẫu Figma và sử dụng Generative AI (v0.dev, Relume) tạo prototype trực tuyến.",
+              "refs": [
+                "[1]. Don Norman, 'The Design of Everyday Things', Revised Edition, Basic Books.",
+                "[2]. Figma for UI/UX Design, O'Reilly Media, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 2"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 3",
+          "courses": [
+            {
+              "code": "102063",
+              "name": "Triết học Mác - Lênin",
+              "credits": 3,
+              "lt": 3.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Thế giới quan duy vật biện chứng và phương pháp luận biện chứng duy vật, phát triển tư duy phản biện và giải quyết vấn đề khoa học.",
+              "refs": [
+                "[1]. Giáo trình Triết học Mác - Lênin - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 45,
+              "practiceHours": 0,
+              "exerciseHours": 105,
+              "theoryCredits": 3.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "102064",
+              "name": "Kinh tế chính trị Mác - Lênin",
+              "credits": 2,
+              "lt": 2.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Quy luật kinh tế thị trường định hướng xã hội chủ nghĩa, kinh tế số và cách mạng công nghiệp 4.0 tại Việt Nam.",
+              "refs": [
+                "[1]. Giáo trình Kinh tế chính trị Mác - Lênin - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+              ],
+              "totalHours": 100,
+              "theoryHours": 30,
+              "practiceHours": 0,
+              "exerciseHours": 70,
+              "theoryCredits": 2.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "102065",
+              "name": "Chủ nghĩa xã hội khoa học",
+              "credits": 2,
+              "lt": 2.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Nguyên lý cơ bản về sứ mệnh lịch sử giai cấp công nhân, thời kỳ quá độ, dân chủ và nhà nước xã hội chủ nghĩa.",
+              "refs": [
+                "[1]. Giáo trình Chủ nghĩa xã hội khoa học - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+              ],
+              "totalHours": 100,
+              "theoryHours": 30,
+              "practiceHours": 0,
+              "exerciseHours": 70,
+              "theoryCredits": 2.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "102148",
+              "name": "Ngoại ngữ 3",
+              "credits": 2,
+              "lt": 1.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Kỹ năng thuyết trình kỹ thuật, viết tài liệu hướng dẫn sử dụng phần mềm, giao tiếp chuyên môn qua các công cụ họp trực tuyến.",
+              "refs": [
+                "[1]. Technical Communication: A Practical Approach - William Pfeiffer, Pearson, 2022.",
+                "[2]. Business Partner B1+ Coursebook, Pearson Education, 2023."
+              ],
+              "totalHours": 100,
+              "theoryHours": 15,
+              "practiceHours": 30,
+              "exerciseHours": 55,
+              "theoryCredits": 1.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "111160",
+              "name": "Mạng máy tính (Cisco CCNA 1)",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Chuẩn hóa theo giáo trình Cisco Networking Academy (Introduction to Networks - ITN): mô hình OSI, TCP/IP, Ethernet, IPv4/IPv6, ICMP, DHCP, DNS. Thực hành giả lập trên Cisco Packet Tracer.",
+              "refs": [
+                "[1]. Introduction to Networks Companion Guide v7.02 (ITN), Cisco Networking Academy, Cisco Press, 2022.",
+                "[2]. James F. Kurose, Keith W. Ross, 'Computer Networking: A Top-Down Approach', 8th Edition, Pearson, 2021."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "111163",
+              "name": "Tín hiệu số cơ bản",
+              "credits": 2,
+              "lt": 1.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Tín hiệu số, biến đổi Fourier rời rạc (DFT/FFT), lọc số, và các ứng dụng trong truyền thông đa phương tiện số.",
+              "refs": [
+                "[1]. Xử lý tín hiệu số - Nguyễn Quốc Trung, NXB Khoa học và Kỹ thuật, 2022.",
+                "[2]. Alan V. Oppenheim, 'Discrete-Time Signal Processing', Pearson, 2021."
+              ],
+              "totalHours": 100,
+              "theoryHours": 15,
+              "practiceHours": 30,
+              "exerciseHours": 55,
+              "theoryCredits": 1.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "111164",
+              "name": "Thiết kế web",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Web standards: HTML5 ngữ nghĩa, CSS3 hiện đại (Flexbox, Grid, Responsive), JavaScript ES6+ và DOM manipulation. Triển khai web lên GitHub Pages/Vercel.",
+              "refs": [
+                "[1]. Jon Duckett, 'HTML and CSS: Design and Build Websites', Wiley, 2022.",
+                "[2]. David Flanagan, 'JavaScript: The Definitive Guide', 7th Edition, O'Reilly Media, 2021."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "111166",
+              "name": "Cơ sở dữ liệu",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Mô hình dữ liệu quan hệ, SQL (DDL, DML, DQL), chuẩn hóa CSDL (1NF, 2NF, 3NF), thiết kế lược đồ ERD. Thực hành trên MySQL / PostgreSQL.",
+              "refs": [
+                "[1]. Giáo trình Cơ sở dữ liệu - Trần Đức Khánh, NXB ĐHQG TPHCM, 2023.",
+                "[2]. Abraham Silberschatz, 'Database System Concepts', 7th Edition, McGraw-Hill, 2020."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            },
+            {
+              "code": "111167",
+              "name": "Cấu trúc dữ liệu và giải thuật",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Cấu trúc dữ liệu cốt lõi (danh sách liên kết, stack, queue, cây tìm kiếm, bảng băm, đồ thị), thuật toán kinh điển và đánh giá độ phức tạp O(n).",
+              "refs": [
+                "[1]. Cấu trúc dữ liệu và giải thuật - Đinh Mạnh Tường, NXB ĐHQG Hà Nội, 2022.",
+                "[2]. Thomas H. Cormen et al., 'Introduction to Algorithms' (CLRS), 4th Edition, MIT Press, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 3"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 4",
+          "courses": [
+            {
+              "code": "102033",
+              "name": "Tư tưởng Hồ Chí Minh",
+              "credits": 2,
+              "lt": 2.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Nguồn gốc, nội dung cơ bản và giá trị thời đại của tư tưởng Hồ Chí Minh về độc lập dân tộc gắn liền với chủ nghĩa xã hội và đạo đức cách mạng.",
+              "refs": [
+                "[1]. Giáo trình Tư tưởng Hồ Chí Minh - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+              ],
+              "totalHours": 100,
+              "theoryHours": 30,
+              "practiceHours": 0,
+              "exerciseHours": 70,
+              "theoryCredits": 2.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "102153",
+              "name": "Pháp luật đại cương",
+              "credits": 3,
+              "lt": 3.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Lý luận về nhà nước và pháp luật, luật an ninh mạng, luật giao dịch điện tử và bảo vệ dữ liệu cá nhân (Nghị định 13/2023/NĐ-CP).",
+              "refs": [
+                "[1]. Giáo trình Pháp luật đại cương - NXB Đại học Quốc gia, 2023.",
+                "[2]. Luật An ninh mạng và các văn bản pháp luật số hiện hành."
+              ],
+              "totalHours": 150,
+              "theoryHours": 45,
+              "practiceHours": 0,
+              "exerciseHours": 105,
+              "theoryCredits": 3.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "102149",
+              "name": "Ngoại ngữ 4",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Kỹ năng tiếng Anh nghề nghiệp: viết CV kỹ thuật, phỏng vấn xin việc từ xa, thuyết minh giải pháp phần mềm và phản biện kỹ thuật.",
+              "refs": [
+                "[1]. Professional English in Use ICT - Elena Marco Fabre, Cambridge, 2022.",
+                "[2]. B2 First English Handbook, Cambridge Assessment English, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "111165",
+              "name": "Mạng máy tính nâng cao",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Phân mạng VLSM, định tuyến tĩnh/động OSPF, VLAN, 802.1Q, Inter-VLAN, ACLs và NAT/PAT. Thực hành trên Cisco Packet Tracer và EVE-NG.",
+              "refs": [
+                "[1]. Switching, Routing, and Wireless Essentials Companion Guide (CCNAv7), Cisco Press, 2022.",
+                "[2]. CCNA 200-301 Official Cert Guide - Wendell Odom, Cisco Press, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "111170",
+              "name": "Hệ quản trị CSDL",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Kiến trúc RDBMS, Stored Procedures, Triggers, Views, Transactions (ACID), Indexes (B-Tree) và kỹ thuật tối ưu hóa câu truy vấn Query Optimization.",
+              "refs": [
+                "[1]. Quản trị CSDL quan hệ nâng cao - NXB Thông tin và Truyền thông, 2023.",
+                "[2]. High Performance MySQL, 4th Edition, O'Reilly Media, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "111171",
+              "name": "Lập trình Front-End",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Lập trình Web hiện đại với TypeScript, TailwindCSS, kiến trúc Component, State Management và kết nối RESTful APIs.",
+              "refs": [
+                "[1]. Alex Banks & Eve Porcello, 'Learning React', 2nd Edition, O'Reilly Media, 2022.",
+                "[2]. Programming TypeScript - Boris Cherny, O'Reilly Media, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "111172",
+              "name": "Lập trình hướng đối tượng",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Nguyên lý cốt lõi OOP (Đóng gói, Kế thừa, Đa hình, Trừu tượng), các nguyên lý thiết kế SOLID và Design Patterns kinh điển bằng C#/Java.",
+              "refs": [
+                "[1]. Giáo trình Lập trình hướng đối tượng - NXB ĐHQG TPHCM, 2023.",
+                "[2]. Clean Code: A Handbook of Agile Software Craftsmanship - Robert C. Martin, Pearson, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            },
+            {
+              "code": "111173",
+              "name": "Kiến tập từ xa & Trải nghiệm thực tế",
+              "credits": 2,
+              "lt": 0.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Tiếp cận môi trường thực tế của các doanh nghiệp CNTT qua chuỗi Tech Webinars trực tuyến, tìm hiểu văn hóa làm việc Remote / Hybrid và quy trình Agile/Scrum.",
+              "refs": [
+                "[1]. Báo cáo Thị trường Nhân lực CNTT Việt Nam 2024 - 2026.",
+                "[2]. Sổ tay Kiến tập Doanh nghiệp Công nghệ - ĐH Lạc Hồng, 2026."
+              ],
+              "totalHours": 100,
+              "theoryHours": 0,
+              "practiceHours": 60,
+              "exerciseHours": 40,
+              "theoryCredits": 0.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 4"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 5",
+          "courses": [
+            {
+              "code": "102066",
+              "name": "Lịch sử Đảng Cộng sản Việt Nam",
+              "credits": 2,
+              "lt": 2.0,
+              "th": 0.0,
+              "bt": 0.0,
+              "note": "Môn cơ bản",
+              "desc": "Lịch sử lãnh đạo cách mạng của Đảng Cộng sản Việt Nam qua các thời kỳ đấu tranh giành độc lập, thống nhất đất nước và công cuộc đổi mới hội nhập.",
+              "refs": [
+                "[1]. Giáo trình Lịch sử Đảng Cộng sản Việt Nam - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+              ],
+              "totalHours": 100,
+              "theoryHours": 30,
+              "practiceHours": 0,
+              "exerciseHours": 70,
+              "theoryCredits": 2.0,
+              "practiceCredits": 0.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 5"
+            },
+            {
+              "code": "102150",
+              "name": "Ngoại ngữ 5",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Ngoại ngữ chuyên ngành: phân tích và viết tài liệu kiến trúc kỹ thuật (TDD), đặc tả yêu cầu phần mềm (SRS) và giao tiếp trong nhóm kỹ thuật phân tán.",
+              "refs": [
+                "[1]. Oxford English for Information Technology 2 - Eric H. Glendinning, Oxford University Press, 2023.",
+                "[2]. Writing Software Documentation, Thomas T. Barker, Longman."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 5"
+            },
+            {
+              "code": "111168",
+              "name": "Quản lý dự án CNTT & Nhập môn kỹ thuật",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Phương pháp quản lý dự án phần mềm theo Agile/Scrum, Kanban. Sử dụng công cụ Jira, GitHub Projects để lập kế hoạch, ước lượng chi phí và điều phối nhóm làm việc từ xa.",
+              "refs": [
+                "[1]. The Scrum Guide - Ken Schwaber & Jeff Sutherland, Scrum.org, 2022.",
+                "[2]. Information Technology Project Management - Kathy Schwalbe, 9th Edition, Cengage Learning, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 5"
+            },
+            {
+              "code": "111301",
+              "name": "Lập trình Back-End hiện đại với AI",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Vibe Coding",
+              "desc": "[HƯỚNG 1 - VIBE CODING]: Xây dựng dịch vụ Back-End hiệu năng cao với NodeJS (NestJS) hoặc Python FastAPI. Sinh viên ứng dụng AI Code Generators thiết kế Clean Architecture, sinh mã CRUD tự động, tối ưu hóa ORM (Prisma/SQLAlchemy) và xử lý bất đồng bộ.",
+              "refs": [
+                "[1]. Kamil Mysliwiec, 'NestJS Documentation and Enterprise Patterns', 2024.",
+                "[2]. Tiangolo, 'FastAPI: Modern Python Web Framework', 2024.",
+                "[3]. Martin Fowler, 'Patterns of Enterprise Application Architecture', Addison-Wesley, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 5"
+            },
+            {
+              "code": "111401",
+              "name": "CCNA: Chuyển mạch, định tuyến và không dây (SRWE)",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Mạng Cisco",
+              "desc": "[HƯỚNG 2 - MẠNG CISCO]: Chuẩn hóa theo Cisco NetAcad: Switching, Routing, and Wireless Essentials (SRWE). Cấu hình chuyển mạch nâng cao (VLAN, STP, EtherChannel), định tuyến tĩnh/động trên Router Cisco, mạng không dây WLAN với Wireless LAN Controller (WLC).",
+              "refs": [
+                "[1]. Switching, Routing, and Wireless Essentials Companion Guide (CCNAv7), Cisco Press, 2022.",
+                "[2]. CCNA 200-301 Official Cert Guide, Volume 1 - Wendell Odom, Cisco Press, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 5"
+            },
+            {
+              "code": "111501",
+              "name": "Kỹ thuật tiền xử lý và làm sạch dữ liệu với Python",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Phân tích số liệu",
+              "desc": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: Kỹ năng cốt lõi của nhà phân tích dữ liệu: thu thập dữ liệu (Web Scraping, API), xử lý dữ liệu khuyết thiếu, chuẩn hóa dữ liệu dị biệt, làm chủ thư viện Pandas và NumPy chuyên sâu phục vụ phân tích kinh doanh.",
+              "refs": [
+                "[1]. Wes McKinney, 'Python for Data Analysis: Data Wrangling with pandas, NumPy & Jupyter', 3rd Edition, O'Reilly Media, 2022.",
+                "[2]. Matt Harrison, 'Effective Pandas: Patterns for Data Manipulation', 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 5"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 6",
+          "courses": [
+            {
+              "code": "102151",
+              "name": "Ngoại ngữ 6",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Chuẩn đầu ra ngoại ngữ: hoàn thiện kỹ năng thuyết trình dự án tốt nghiệp, viết báo cáo nghiên cứu kỹ thuật, đọc hiểu tài liệu tiêu chuẩn quốc tế (RFC, ISO, IEEE).",
+              "refs": [
+                "[1]. IELTS Preparation and Practice - Oxford University Press, 2023.",
+                "[2]. IEEE Standards Style Manual & Technical Writing Guide, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 6"
+            },
+            {
+              "code": "111201",
+              "name": "An toàn và bảo mật thông tin",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "An toàn thông tin tổng thể: nguyên lý CIA triad, mật mã học (AES, RSA), chữ ký số, xác thực OAuth2/JWT, kiểm tra lỗ hổng bảo mật web OWASP Top 10 và chính sách bảo mật cho người dùng từ xa.",
+              "refs": [
+                "[1]. William Stallings, 'Cryptography and Network Security', 8th Edition, Pearson, 2022.",
+                "[2]. OWASP Top 10 Web Application Security Risks, OWASP Foundation, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 6"
+            },
+            {
+              "code": "111302",
+              "name": "Phát triển ứng dụng Web Front-End nâng cao & AI UI",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Vibe Coding",
+              "desc": "[HƯỚNG 1 - VIBE CODING]: Kiến trúc Web Fullstack hiện đại với React 19 / Next.js (App Router), Server Components (RSC), tối ưu SEO. Kết hợp công cụ Generative UI (v0 by Vercel, Bolt.new, TailwindCSS) tăng tốc phát triển giao diện người dùng 10x.",
+              "refs": [
+                "[1]. Lee Robinson & Vercel Team, 'Next.js 15: The Comprehensive Guide', 2024.",
+                "[2]. Alex Banks & Eve Porcello, 'Learning React: Modern Patterns', O'Reilly Media, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 6"
+            },
+            {
+              "code": "111405",
+              "name": "CCNA: Kết nối và tối ưu hóa mạng doanh nghiệp (ENSA)",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Mạng Cisco",
+              "desc": "[HƯỚNG 2 - MẠNG CISCO]: Hoàn thiện chương trình CCNA: Enterprise Networking, Security, and Automation (ENSA). Định tuyến OSPF đa vùng, công nghệ WAN, VPN IPsec, QoS, quản trị mạng (SNMP, Syslog) và ảo hóa mạng doanh nghiệp.",
+              "refs": [
+                "[1]. Enterprise Networking, Security, and Automation Companion Guide (CCNAv7), Cisco Press, 2022.",
+                "[2]. CCNA 200-301 Official Cert Guide, Volume 2 - Wendell Odom, Cisco Press, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 6"
+            },
+            {
+              "code": "111402",
+              "name": "Quản trị hệ thống Linux và Dịch vụ mạng nguồn mở",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Mạng Cisco",
+              "desc": "[HƯỚNG 2 - MẠNG CISCO & SYSADMIN]: Quản trị máy chủ Linux (RedHat/Ubuntu): quản lý người dùng, phân quyền, viết Bash Script tự động hóa. Cấu hình dịch vụ mạng nền tảng: DNS (BIND9), Web (Apache/Nginx), DHCP, NFS/Samba chia sẻ dữ liệu an toàn.",
+              "refs": [
+                "[1]. Sander van Vugt, 'Red Hat RHCSA 8 Cert Guide: EX200', Pearson, 2022.",
+                "[2]. Evi Nemeth et al., 'UNIX and Linux System Administration Handbook', 5th Edition, Addison-Wesley, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 6"
+            },
+            {
+              "code": "111502",
+              "name": "Hệ cơ sở dữ liệu nâng cao và Kho dữ liệu",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Phân tích số liệu",
+              "desc": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: SQL nâng cao phục vụ phân tích (Window Functions, CTEs). Nghiên cứu kiến trúc Kho dữ liệu (Data Warehouse), mô hình hóa chiều (Star/Snowflake Schema) và xây dựng quy trình ETL/ELT tổng hợp dữ liệu doanh nghiệp.",
+              "refs": [
+                "[1]. Ralph Kimball & Margy Ross, 'The Data Warehouse Toolkit', 3rd Edition, Wiley.",
+                "[2]. Joe Celko, 'SQL for Smarties: Advanced SQL Programming', 5th Edition, Morgan Kaufmann, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 6"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 7",
+          "courses": [
+            {
+              "code": "199008",
+              "name": "Khởi nghiệp công nghệ và Đổi mới sáng tạo",
+              "credits": 3,
+              "lt": 2.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Môn cơ sở",
+              "desc": "Tinh thần khởi nghiệp công nghệ (Tech Startup). Phương pháp tư duy thiết kế (Design Thinking), mô hình tinh gọn (Lean Canvas), xây dựng sản phẩm mẫu MVP, gọi vốn đầu tư và sở hữu trí tuệ công nghệ số.",
+              "refs": [
+                "[1]. Eric Ries, 'The Lean Startup', Crown Business, 2022.",
+                "[2]. Alexander Osterwalder, 'Business Model Generation', John Wiley & Sons, 2021."
+              ],
+              "totalHours": 150,
+              "theoryHours": 30,
+              "practiceHours": 30,
+              "exerciseHours": 90,
+              "theoryCredits": 2.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 7"
+            },
+            {
+              "code": "111303",
+              "name": "Công nghệ Vibe Coding & Kỹ nghệ Prompt trong SE",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Vibe Coding",
+              "desc": "[HƯỚNG 1 - VIBE CODING]: Làm việc chuyên sâu với các AI Coding Agents thế hệ mới (Cursor AI, Windsurf, GitHub Copilot Workspace, Claude Code, Devin). Xây dựng Context kỹ thuật (.cursorrules), kỹ nghệ prompt kiến trúc hệ thống và quy trình phát triển Specs-first.",
+              "refs": [
+                "[1]. Andrej Karpathy, 'The Philosophy and Practice of Vibe Coding', Essays, 2025.",
+                "[2]. Cursor Team, 'Cursor Official Documentation: AI-First Code Editor', 2024-2025.",
+                "[3]. Balaram Panda, 'Prompt Engineering for Software Engineers', Packt, 2024."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 7"
+            },
+            {
+              "code": "111305",
+              "name": "Phát triển ứng dụng Di động đa nền tảng với AI",
+              "credits": 3,
+              "lt": 1.0,
+              "th": 2.0,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Vibe Coding",
+              "desc": "[HƯỚNG 1 - VIBE CODING]: Phát triển ứng dụng di động iOS và Android sử dụng Flutter (Dart) hoặc React Native. Sử dụng trợ lý AI tạo nhanh màn hình UI, tích hợp bản đồ, camera, push notifications và kiến trúc Offline-first.",
+              "refs": [
+                "[1]. Google Flutter Team, 'Flutter Complete Reference', 2024.",
+                "[2]. Alberto Miola, 'Flutter in Action', Manning Publications, 2023."
+              ],
+              "totalHours": 150,
+              "theoryHours": 15,
+              "practiceHours": 60,
+              "exerciseHours": 75,
+              "theoryCredits": 1.0,
+              "practiceCredits": 2.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 7"
+            },
+            {
+              "code": "111406",
+              "name": "Vận hành an ninh mạng Cisco CyberOps & DevNet",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Mạng Cisco",
+              "desc": "[HƯỚNG 2 - MẠNG CISCO]: Tích hợp chuẩn chứng chỉ quốc tế Cisco Certified CyberOps Associate (200-201) và Cisco DevNet: giám sát tác chiến an ninh mạng (SOC Tier 1), phát hiện xâm nhập, phân tích mã độc và lập trình tự động hóa mạng bằng Python & REST APIs.",
+              "refs": [
+                "[1]. Cisco Certified CyberOps Associate CBROPS 200-201 Official Cert Guide - Omar Santos, Cisco Press, 2022.",
+                "[2]. Cisco Certified DevNet Associate DEVASC 200-901 Official Cert Guide, Cisco Press, 2022."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 7"
+            },
+            {
+              "code": "111503",
+              "name": "Phân tích kinh doanh và Trực quan hóa với Power BI",
+              "credits": 3,
+              "lt": 1.5,
+              "th": 1.5,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Phân tích số liệu",
+              "desc": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: Chuẩn hóa kỹ năng chứng chỉ Microsoft Certified: Power BI Data Analyst (PL-300). Kết nối đa nguồn dữ liệu, chuẩn hóa Power Query (M code), thiết kế mô hình dữ liệu quan hệ, viết công thức DAX nâng cao và thiết kế Dashboard trực quan tương tác cao.",
+              "refs": [
+                "[1]. Marco Russo & Alberto Ferrari, 'The Definitive Guide to DAX', 2nd Edition, Microsoft Press.",
+                "[2]. Microsoft Official Courseware: Exam PL-300 Microsoft Power BI Data Analyst, 2024."
+              ],
+              "totalHours": 150,
+              "theoryHours": 22,
+              "practiceHours": 45,
+              "exerciseHours": 83,
+              "theoryCredits": 1.5,
+              "practiceCredits": 1.5,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 7"
+            },
+            {
+              "code": "111505",
+              "name": "Khai phá dữ liệu & Ứng dụng GenAI trong Phân tích",
+              "credits": 2,
+              "lt": 1.0,
+              "th": 1.0,
+              "bt": 0.0,
+              "note": "Chuyên ngành - Phân tích số liệu",
+              "desc": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: Thuật toán học máy ứng dụng (Hồi quy, Phân lớp, Phân cụm) và ứng dụng Generative AI / Copilot trong tự động hóa phân tích số liệu, tạo báo cáo số liệu tự động từ ngôn ngữ tự nhiên.",
+              "refs": [
+                "[1]. Aurélien Géron, 'Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow', 3rd Edition, O'Reilly Media, 2023.",
+                "[2]. Austin Henley, 'AI-Powered Data Analysis: Supercharge Analytics with LLMs', O'Reilly Media, 2024."
+              ],
+              "totalHours": 100,
+              "theoryHours": 15,
+              "practiceHours": 30,
+              "exerciseHours": 55,
+              "theoryCredits": 1.0,
+              "practiceCredits": 1.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 7"
+            }
+          ]
+        },
+        {
+          "name": "Học kỳ 8",
+          "courses": [
+            {
+              "code": "111192",
+              "name": "Thực tập tốt nghiệp từ xa / Dự án doanh nghiệp",
+              "credits": 6,
+              "lt": 0.0,
+              "th": 6.0,
+              "bt": 0.0,
+              "note": "Thực tập",
+              "desc": "Sinh viên tham gia thực tập hoặc thực hiện dự án thực tế tại doanh nghiệp công nghệ thông tin theo hình thức Remote / Hybrid dưới sự đồng hướng dẫn của giảng viên khoa CNTT và chuyên gia doanh nghiệp. Trải nghiệm quy trình phát triển thực tế và giải quyết bài toán nghiệp vụ cụ thể.",
+              "refs": [
+                "[1]. Quy định Thực tập tốt nghiệp Khoa CNTT - Đại học Lạc Hồng, 2026.",
+                "[2]. Sổ tay Hướng dẫn Báo cáo Thực tập Doanh nghiệp Công nghệ, 2026."
+              ],
+              "totalHours": 300,
+              "theoryHours": 0,
+              "practiceHours": 300,
+              "exerciseHours": 0,
+              "theoryCredits": 0.0,
+              "practiceCredits": 6.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 8"
+            },
+            {
+              "code": "111193",
+              "name": "Khóa luận tốt nghiệp / Đồ án tốt nghiệp tích hợp",
+              "credits": 8,
+              "lt": 0.0,
+              "th": 8.0,
+              "bt": 0.0,
+              "note": "Tốt nghiệp",
+              "desc": "Công trình tổng kết toàn diện quá trình đào tạo cử nhân/kỹ sư CNTT hệ đào tạo từ xa. Sinh viên độc lập nghiên cứu và xây dựng giải pháp công nghệ hoàn chỉnh tích hợp các kỹ năng chuyên môn (Ứng dụng Vibe Coding / Hệ thống mạng Cisco / Phân tích số liệu), viết báo cáo khoa học và bảo vệ trực tuyến trước Hội đồng chấm tốt nghiệp.",
+              "refs": [
+                "[1]. Quy định Khóa luận Tốt nghiệp Đại học - Đại học Lạc Hồng, 2026.",
+                "[2]. IEEE Standards for Software and System Documentation, IEEE Computer Society, 2024."
+              ],
+              "totalHours": 400,
+              "theoryHours": 0,
+              "practiceHours": 400,
+              "exerciseHours": 0,
+              "theoryCredits": 0.0,
+              "practiceCredits": 8.0,
+              "exerciseCredits": 0.0,
+              "semester": "Học kỳ 8"
+            }
+          ]
+        }
+      ]
+    },
+    "courseSummaries": {
+      "102113": {
+        "code": "102113",
+        "title": "Toán cao cấp 1 {CNTT}",
+        "description": "Học phần trang bị kiến thức nền tảng về giải tích hàm một biến, ma trận, định thức và hệ phương trình tuyến tính ứng dụng trong công nghệ thông tin. Đào tạo qua nền tảng LMS với video bài giảng tương tác, diễn đàn giải đáp và hệ thống bài tập trắc nghiệm số hóa.",
+        "references": "[1]. Toán cao cấp cho các nhà kinh tế và kỹ thuật - NXB ĐHQG TPHCM, 2023.\n[2]. Gilbert Strang, 'Linear Algebra and Its Applications', 5th Edition, Cengage Learning, 2021."
+      },
+      "102146": {
+        "code": "102146",
+        "title": "Ngoại ngữ 1",
+        "description": "Cung cấp nền tảng tiếng Anh giao tiếp và các cấu trúc ngữ pháp cơ bản, từ vựng kỹ thuật ban đầu, phát triển kỹ năng nghe, đọc qua hệ thống bài học tương tác trên hệ thống E-learning.",
+        "references": "[1]. English for Information Technology 1 - Pearson Longman, 2022.\n[2]. Cambridge English Grammar in Use - Raymond Murphy, Cambridge University Press, 2022."
+      },
+      "111154": {
+        "code": "111154",
+        "title": "Nhập môn Ngành",
+        "description": "Giới thiệu toàn cảnh ngành Công nghệ thông tin, xu hướng chuyển đổi số, điện toán đám mây và trí tuệ nhân tạo. Rèn luyện phương pháp học đại học từ xa hiệu quả, kỹ năng tự học suốt đời, văn hóa công nghệ và định hướng nghề nghiệp trong kỷ nguyên AI.",
+        "references": "[1]. Giáo trình Nhập môn Công nghệ Thông tin - NXB Đại học Quốc gia, 2023.\n[2]. Peter Norton, 'Introduction to Computers', 8th Edition, McGraw-Hill, 2021."
+      },
+      "111155": {
+        "code": "111155",
+        "title": "Nhập môn lập trình",
+        "description": "Khai phá tư duy logic và thuật toán nền tảng bằng ngôn ngữ Python. Sinh viên làm quen với biến, kiểu dữ liệu, các cấu trúc điều khiển, mảng, hàm và tệp tin. Kết hợp mô hình học tập đảo ngược trên LMS và kỹ nghệ Prompt AI (Vibe Coding) để giải thích lỗi và viết mã chuẩn mực.",
+        "references": "[1]. 'Lập trình C cơ bản' của Nguyễn Văn Hiên - NXB Thế giới, 2022.\n[2]. 'Nhập môn lập trình Python' của Bùi Văn Minh - NXB ĐHQG TPHCM, 2022.\n[3]. Eric Matthes, 'Python Crash Course', 3rd Edition, No Starch Press, 2023."
+      },
+      "111156": {
+        "code": "111156",
+        "title": "Lắp ráp và tối ưu hệ thống máy tính",
+        "description": "Kiến trúc phần cứng máy tính, nguyên lý hoạt động của CPU, RAM, bo mạch chủ, lưu trữ và thiết bị ngoại vi. Thực hành lắp ráp, cấu hình BIOS/UEFI, phân vùng ổ đĩa và tối ưu hóa hệ điều hành qua phần mềm mô phỏng 3D tương tác.",
+        "references": "[1]. Computer architecture curriculum, Vu Duc Lung, 2024.\n[2]. IT Essentials: PC Hardware and Software Companion Guide v8, Cisco Networking Academy, Cisco Press, 2023."
+      },
+      "111157": {
+        "code": "111157",
+        "title": "Phần mềm mã nguồn mở",
+        "description": "Triết lý nguồn mở, giấy phép mã nguồn mở (MIT, Apache, GPL), hệ điều hành Linux, dòng lệnh Bash, quản lý gói phần mềm, quản lý phiên bản với Git và nền tảng GitHub/GitLab, chuẩn bị nền tảng làm việc từ xa cộng tác.",
+        "references": "[1]. The Linux Command Line: A Complete Introduction - William E. Shotts, 2nd Edition, No Starch Press, 2022.\n[2]. Pro Git - Scott Chacon and Ben Straub, Apress, 2023."
+      },
+      "111158": {
+        "code": "111158",
+        "title": "Vật lý thực hành",
+        "description": "Kỹ năng đo đạc các đại lượng vật lý, xử lý số liệu sai số, các thí nghiệm ảo về mạch điện, từ trường và sóng điện từ ứng dụng trong truyền thông tín hiệu máy tính.",
+        "references": "[1]. Hướng dẫn Thí nghiệm Vật lý đại cương - NXB ĐHQG, 2023.\n[2]. PhET Interactive Simulations - University of Colorado Boulder."
+      },
+      "102087": {
+        "code": "102087",
+        "title": "Xác suất thống kê",
+        "description": "Kiến thức về biến ngẫu nhiên, phân phối xác suất, ước lượng tham số và kiểm định giả thuyết thống kê, tạo nền móng vững chắc cho khoa học dữ liệu và học máy.",
+        "references": "[1]. Xác suất Thống kê ứng dụng trong CNTT - Đào Hữu Hồ, NXB ĐHQG Hà Nội, 2022.\n[2]. Sheldon M. Ross, 'Introductory Statistics', 5th Edition, Academic Press, 2022."
+      },
+      "102147": {
+        "code": "102147",
+        "title": "Ngoại ngữ 2",
+        "description": "Đọc hiểu tài liệu kỹ thuật, tra cứu thuật ngữ chuyên ngành CNTT, giao tiếp viết email và báo cáo tiến độ công việc kỹ thuật trực tuyến.",
+        "references": "[1]. Oxford English for Information Technology - Eric H. Glendinning, Oxford University Press, 2022.\n[2]. B1 Preliminary English Handbook, Cambridge Assessment English, 2023."
+      },
+      "102112": {
+        "code": "102112",
+        "title": "Tin học đại cương",
+        "description": "Biểu diễn dữ liệu máy tính, hệ nhị phân, logic Boole, ứng dụng xử lý bảng tính số liệu chuyên sâu và soạn thảo kỹ thuật trực tuyến phục vụ học tập từ xa.",
+        "references": "[1]. Giáo trình Tin học đại cương - NXB Thống kê, 2022.\n[2]. Microsoft Office 365 Specialist Guide, Microsoft Press, 2023."
+      },
+      "111159": {
+        "code": "111159",
+        "title": "Điện tử trong IoT",
+        "description": "Linh kiện điện tử, cảm biến, vi điều khiển (ESP32/Arduino), giao thức truyền thông không dây (Wi-Fi, Bluetooth). Thực hành mô phỏng mạch trên Tinkercad/Wokwi trực tuyến.",
+        "references": "[1]. Giáo trình Điện tử ứng dụng và Vi điều khiển IoT - NXB Thông tin và Truyền thông, 2023.\n[2]. Make: Electronics - Charles Platt, 3rd Edition, Maker Media, 2022."
+      },
+      "111174": {
+        "code": "111174",
+        "title": "Toán rời rạc và LTDT",
+        "description": "Logic mệnh đề, tập hợp, đại số Boole, lý thuyết đồ thị (Dijkstra, cây khung Prim/Kruskal), ứng dụng trực tiếp vào cấu trúc dữ liệu và định tuyến mạng máy tính.",
+        "references": "[1]. Toán rời rạc ứng dụng trong Tin học - Kenneth H. Rosen, NXB Giáo dục, 2022.\n[2]. Discrete Mathematics and Its Applications - Kenneth H. Rosen, 8th Edition, McGraw-Hill, 2021."
+      },
+      "111161": {
+        "code": "111161",
+        "title": "Kỹ thuật lập trình",
+        "description": "Con trỏ, cấp phát bộ nhớ động, đệ quy, kỹ thuật chia để trị, quy hoạch động và lập trình hướng module. Thực hành trên hệ thống chấm bài tự động Auto-grader trên LMS.",
+        "references": "[1]. Kỹ thuật lập trình C/C++ nâng cao - Phạm Văn Ất, NXB KHKT, 2022.\n[2]. Robert Sedgewick, 'Algorithms in C++', Addison-Wesley, 2022."
+      },
+      "111162": {
+        "code": "111162",
+        "title": "Thiết kế UI/UX",
+        "description": "Phương pháp luận thiết kế trải nghiệm người dùng (UX) và giao diện (UI). Thực hành tạo mẫu Figma và sử dụng Generative AI (v0.dev, Relume) tạo prototype trực tuyến.",
+        "references": "[1]. Don Norman, 'The Design of Everyday Things', Revised Edition, Basic Books.\n[2]. Figma for UI/UX Design, O'Reilly Media, 2023."
+      },
+      "102063": {
+        "code": "102063",
+        "title": "Triết học Mác - Lênin",
+        "description": "Thế giới quan duy vật biện chứng và phương pháp luận biện chứng duy vật, phát triển tư duy phản biện và giải quyết vấn đề khoa học.",
+        "references": "[1]. Giáo trình Triết học Mác - Lênin - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+      },
+      "102064": {
+        "code": "102064",
+        "title": "Kinh tế chính trị Mác - Lênin",
+        "description": "Quy luật kinh tế thị trường định hướng xã hội chủ nghĩa, kinh tế số và cách mạng công nghiệp 4.0 tại Việt Nam.",
+        "references": "[1]. Giáo trình Kinh tế chính trị Mác - Lênin - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+      },
+      "102065": {
+        "code": "102065",
+        "title": "Chủ nghĩa xã hội khoa học",
+        "description": "Nguyên lý cơ bản về sứ mệnh lịch sử giai cấp công nhân, thời kỳ quá độ, dân chủ và nhà nước xã hội chủ nghĩa.",
+        "references": "[1]. Giáo trình Chủ nghĩa xã hội khoa học - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+      },
+      "102148": {
+        "code": "102148",
+        "title": "Ngoại ngữ 3",
+        "description": "Kỹ năng thuyết trình kỹ thuật, viết tài liệu hướng dẫn sử dụng phần mềm, giao tiếp chuyên môn qua các công cụ họp trực tuyến.",
+        "references": "[1]. Technical Communication: A Practical Approach - William Pfeiffer, Pearson, 2022.\n[2]. Business Partner B1+ Coursebook, Pearson Education, 2023."
+      },
+      "111160": {
+        "code": "111160",
+        "title": "Mạng máy tính (Cisco CCNA 1)",
+        "description": "Chuẩn hóa theo giáo trình Cisco Networking Academy (Introduction to Networks - ITN): mô hình OSI, TCP/IP, Ethernet, IPv4/IPv6, ICMP, DHCP, DNS. Thực hành giả lập trên Cisco Packet Tracer.",
+        "references": "[1]. Introduction to Networks Companion Guide v7.02 (ITN), Cisco Networking Academy, Cisco Press, 2022.\n[2]. James F. Kurose, Keith W. Ross, 'Computer Networking: A Top-Down Approach', 8th Edition, Pearson, 2021."
+      },
+      "111163": {
+        "code": "111163",
+        "title": "Tín hiệu số cơ bản",
+        "description": "Tín hiệu số, biến đổi Fourier rời rạc (DFT/FFT), lọc số, và các ứng dụng trong truyền thông đa phương tiện số.",
+        "references": "[1]. Xử lý tín hiệu số - Nguyễn Quốc Trung, NXB Khoa học và Kỹ thuật, 2022.\n[2]. Alan V. Oppenheim, 'Discrete-Time Signal Processing', Pearson, 2021."
+      },
+      "111164": {
+        "code": "111164",
+        "title": "Thiết kế web",
+        "description": "Web standards: HTML5 ngữ nghĩa, CSS3 hiện đại (Flexbox, Grid, Responsive), JavaScript ES6+ và DOM manipulation. Triển khai web lên GitHub Pages/Vercel.",
+        "references": "[1]. Jon Duckett, 'HTML and CSS: Design and Build Websites', Wiley, 2022.\n[2]. David Flanagan, 'JavaScript: The Definitive Guide', 7th Edition, O'Reilly Media, 2021."
+      },
+      "111166": {
+        "code": "111166",
+        "title": "Cơ sở dữ liệu",
+        "description": "Mô hình dữ liệu quan hệ, SQL (DDL, DML, DQL), chuẩn hóa CSDL (1NF, 2NF, 3NF), thiết kế lược đồ ERD. Thực hành trên MySQL / PostgreSQL.",
+        "references": "[1]. Giáo trình Cơ sở dữ liệu - Trần Đức Khánh, NXB ĐHQG TPHCM, 2023.\n[2]. Abraham Silberschatz, 'Database System Concepts', 7th Edition, McGraw-Hill, 2020."
+      },
+      "111167": {
+        "code": "111167",
+        "title": "Cấu trúc dữ liệu và giải thuật",
+        "description": "Cấu trúc dữ liệu cốt lõi (danh sách liên kết, stack, queue, cây tìm kiếm, bảng băm, đồ thị), thuật toán kinh điển và đánh giá độ phức tạp O(n).",
+        "references": "[1]. Cấu trúc dữ liệu và giải thuật - Đinh Mạnh Tường, NXB ĐHQG Hà Nội, 2022.\n[2]. Thomas H. Cormen et al., 'Introduction to Algorithms' (CLRS), 4th Edition, MIT Press, 2022."
+      },
+      "102033": {
+        "code": "102033",
+        "title": "Tư tưởng Hồ Chí Minh",
+        "description": "Nguồn gốc, nội dung cơ bản và giá trị thời đại của tư tưởng Hồ Chí Minh về độc lập dân tộc gắn liền với chủ nghĩa xã hội và đạo đức cách mạng.",
+        "references": "[1]. Giáo trình Tư tưởng Hồ Chí Minh - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+      },
+      "102153": {
+        "code": "102153",
+        "title": "Pháp luật đại cương",
+        "description": "Lý luận về nhà nước và pháp luật, luật an ninh mạng, luật giao dịch điện tử và bảo vệ dữ liệu cá nhân (Nghị định 13/2023/NĐ-CP).",
+        "references": "[1]. Giáo trình Pháp luật đại cương - NXB Đại học Quốc gia, 2023.\n[2]. Luật An ninh mạng và các văn bản pháp luật số hiện hành."
+      },
+      "102149": {
+        "code": "102149",
+        "title": "Ngoại ngữ 4",
+        "description": "Kỹ năng tiếng Anh nghề nghiệp: viết CV kỹ thuật, phỏng vấn xin việc từ xa, thuyết minh giải pháp phần mềm và phản biện kỹ thuật.",
+        "references": "[1]. Professional English in Use ICT - Elena Marco Fabre, Cambridge, 2022.\n[2]. B2 First English Handbook, Cambridge Assessment English, 2023."
+      },
+      "111165": {
+        "code": "111165",
+        "title": "Mạng máy tính nâng cao",
+        "description": "Phân mạng VLSM, định tuyến tĩnh/động OSPF, VLAN, 802.1Q, Inter-VLAN, ACLs và NAT/PAT. Thực hành trên Cisco Packet Tracer và EVE-NG.",
+        "references": "[1]. Switching, Routing, and Wireless Essentials Companion Guide (CCNAv7), Cisco Press, 2022.\n[2]. CCNA 200-301 Official Cert Guide - Wendell Odom, Cisco Press, 2023."
+      },
+      "111170": {
+        "code": "111170",
+        "title": "Hệ quản trị CSDL",
+        "description": "Kiến trúc RDBMS, Stored Procedures, Triggers, Views, Transactions (ACID), Indexes (B-Tree) và kỹ thuật tối ưu hóa câu truy vấn Query Optimization.",
+        "references": "[1]. Quản trị CSDL quan hệ nâng cao - NXB Thông tin và Truyền thông, 2023.\n[2]. High Performance MySQL, 4th Edition, O'Reilly Media, 2022."
+      },
+      "111171": {
+        "code": "111171",
+        "title": "Lập trình Front-End",
+        "description": "Lập trình Web hiện đại với TypeScript, TailwindCSS, kiến trúc Component, State Management và kết nối RESTful APIs.",
+        "references": "[1]. Alex Banks & Eve Porcello, 'Learning React', 2nd Edition, O'Reilly Media, 2022.\n[2]. Programming TypeScript - Boris Cherny, O'Reilly Media, 2022."
+      },
+      "111172": {
+        "code": "111172",
+        "title": "Lập trình hướng đối tượng",
+        "description": "Nguyên lý cốt lõi OOP (Đóng gói, Kế thừa, Đa hình, Trừu tượng), các nguyên lý thiết kế SOLID và Design Patterns kinh điển bằng C#/Java.",
+        "references": "[1]. Giáo trình Lập trình hướng đối tượng - NXB ĐHQG TPHCM, 2023.\n[2]. Clean Code: A Handbook of Agile Software Craftsmanship - Robert C. Martin, Pearson, 2022."
+      },
+      "111173": {
+        "code": "111173",
+        "title": "Kiến tập từ xa & Trải nghiệm thực tế",
+        "description": "Tiếp cận môi trường thực tế của các doanh nghiệp CNTT qua chuỗi Tech Webinars trực tuyến, tìm hiểu văn hóa làm việc Remote / Hybrid và quy trình Agile/Scrum.",
+        "references": "[1]. Báo cáo Thị trường Nhân lực CNTT Việt Nam 2024 - 2026.\n[2]. Sổ tay Kiến tập Doanh nghiệp Công nghệ - ĐH Lạc Hồng, 2026."
+      },
+      "102066": {
+        "code": "102066",
+        "title": "Lịch sử Đảng Cộng sản Việt Nam",
+        "description": "Lịch sử lãnh đạo cách mạng của Đảng Cộng sản Việt Nam qua các thời kỳ đấu tranh giành độc lập, thống nhất đất nước và công cuộc đổi mới hội nhập.",
+        "references": "[1]. Giáo trình Lịch sử Đảng Cộng sản Việt Nam - Bộ GD&ĐT, NXB Chính trị quốc gia Sự thật, 2022."
+      },
+      "102150": {
+        "code": "102150",
+        "title": "Ngoại ngữ 5",
+        "description": "Ngoại ngữ chuyên ngành: phân tích và viết tài liệu kiến trúc kỹ thuật (TDD), đặc tả yêu cầu phần mềm (SRS) và giao tiếp trong nhóm kỹ thuật phân tán.",
+        "references": "[1]. Oxford English for Information Technology 2 - Eric H. Glendinning, Oxford University Press, 2023.\n[2]. Writing Software Documentation, Thomas T. Barker, Longman."
+      },
+      "111168": {
+        "code": "111168",
+        "title": "Quản lý dự án CNTT & Nhập môn kỹ thuật",
+        "description": "Phương pháp quản lý dự án phần mềm theo Agile/Scrum, Kanban. Sử dụng công cụ Jira, GitHub Projects để lập kế hoạch, ước lượng chi phí và điều phối nhóm làm việc từ xa.",
+        "references": "[1]. The Scrum Guide - Ken Schwaber & Jeff Sutherland, Scrum.org, 2022.\n[2]. Information Technology Project Management - Kathy Schwalbe, 9th Edition, Cengage Learning, 2022."
+      },
+      "111301": {
+        "code": "111301",
+        "title": "Lập trình Back-End hiện đại với AI",
+        "description": "[HƯỚNG 1 - VIBE CODING]: Xây dựng dịch vụ Back-End hiệu năng cao với NodeJS (NestJS) hoặc Python FastAPI. Sinh viên ứng dụng AI Code Generators thiết kế Clean Architecture, sinh mã CRUD tự động, tối ưu hóa ORM (Prisma/SQLAlchemy) và xử lý bất đồng bộ.",
+        "references": "[1]. Kamil Mysliwiec, 'NestJS Documentation and Enterprise Patterns', 2024.\n[2]. Tiangolo, 'FastAPI: Modern Python Web Framework', 2024.\n[3]. Martin Fowler, 'Patterns of Enterprise Application Architecture', Addison-Wesley, 2023."
+      },
+      "111401": {
+        "code": "111401",
+        "title": "CCNA: Chuyển mạch, định tuyến và không dây (SRWE)",
+        "description": "[HƯỚNG 2 - MẠNG CISCO]: Chuẩn hóa theo Cisco NetAcad: Switching, Routing, and Wireless Essentials (SRWE). Cấu hình chuyển mạch nâng cao (VLAN, STP, EtherChannel), định tuyến tĩnh/động trên Router Cisco, mạng không dây WLAN với Wireless LAN Controller (WLC).",
+        "references": "[1]. Switching, Routing, and Wireless Essentials Companion Guide (CCNAv7), Cisco Press, 2022.\n[2]. CCNA 200-301 Official Cert Guide, Volume 1 - Wendell Odom, Cisco Press, 2023."
+      },
+      "111501": {
+        "code": "111501",
+        "title": "Kỹ thuật tiền xử lý và làm sạch dữ liệu với Python",
+        "description": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: Kỹ năng cốt lõi của nhà phân tích dữ liệu: thu thập dữ liệu (Web Scraping, API), xử lý dữ liệu khuyết thiếu, chuẩn hóa dữ liệu dị biệt, làm chủ thư viện Pandas và NumPy chuyên sâu phục vụ phân tích kinh doanh.",
+        "references": "[1]. Wes McKinney, 'Python for Data Analysis: Data Wrangling with pandas, NumPy & Jupyter', 3rd Edition, O'Reilly Media, 2022.\n[2]. Matt Harrison, 'Effective Pandas: Patterns for Data Manipulation', 2022."
+      },
+      "102151": {
+        "code": "102151",
+        "title": "Ngoại ngữ 6",
+        "description": "Chuẩn đầu ra ngoại ngữ: hoàn thiện kỹ năng thuyết trình dự án tốt nghiệp, viết báo cáo nghiên cứu kỹ thuật, đọc hiểu tài liệu tiêu chuẩn quốc tế (RFC, ISO, IEEE).",
+        "references": "[1]. IELTS Preparation and Practice - Oxford University Press, 2023.\n[2]. IEEE Standards Style Manual & Technical Writing Guide, 2023."
+      },
+      "111201": {
+        "code": "111201",
+        "title": "An toàn và bảo mật thông tin",
+        "description": "An toàn thông tin tổng thể: nguyên lý CIA triad, mật mã học (AES, RSA), chữ ký số, xác thực OAuth2/JWT, kiểm tra lỗ hổng bảo mật web OWASP Top 10 và chính sách bảo mật cho người dùng từ xa.",
+        "references": "[1]. William Stallings, 'Cryptography and Network Security', 8th Edition, Pearson, 2022.\n[2]. OWASP Top 10 Web Application Security Risks, OWASP Foundation, 2023."
+      },
+      "111302": {
+        "code": "111302",
+        "title": "Phát triển ứng dụng Web Front-End nâng cao & AI UI",
+        "description": "[HƯỚNG 1 - VIBE CODING]: Kiến trúc Web Fullstack hiện đại với React 19 / Next.js (App Router), Server Components (RSC), tối ưu SEO. Kết hợp công cụ Generative UI (v0 by Vercel, Bolt.new, TailwindCSS) tăng tốc phát triển giao diện người dùng 10x.",
+        "references": "[1]. Lee Robinson & Vercel Team, 'Next.js 15: The Comprehensive Guide', 2024.\n[2]. Alex Banks & Eve Porcello, 'Learning React: Modern Patterns', O'Reilly Media, 2023."
+      },
+      "111405": {
+        "code": "111405",
+        "title": "CCNA: Kết nối và tối ưu hóa mạng doanh nghiệp (ENSA)",
+        "description": "[HƯỚNG 2 - MẠNG CISCO]: Hoàn thiện chương trình CCNA: Enterprise Networking, Security, and Automation (ENSA). Định tuyến OSPF đa vùng, công nghệ WAN, VPN IPsec, QoS, quản trị mạng (SNMP, Syslog) và ảo hóa mạng doanh nghiệp.",
+        "references": "[1]. Enterprise Networking, Security, and Automation Companion Guide (CCNAv7), Cisco Press, 2022.\n[2]. CCNA 200-301 Official Cert Guide, Volume 2 - Wendell Odom, Cisco Press, 2023."
+      },
+      "111402": {
+        "code": "111402",
+        "title": "Quản trị hệ thống Linux và Dịch vụ mạng nguồn mở",
+        "description": "[HƯỚNG 2 - MẠNG CISCO & SYSADMIN]: Quản trị máy chủ Linux (RedHat/Ubuntu): quản lý người dùng, phân quyền, viết Bash Script tự động hóa. Cấu hình dịch vụ mạng nền tảng: DNS (BIND9), Web (Apache/Nginx), DHCP, NFS/Samba chia sẻ dữ liệu an toàn.",
+        "references": "[1]. Sander van Vugt, 'Red Hat RHCSA 8 Cert Guide: EX200', Pearson, 2022.\n[2]. Evi Nemeth et al., 'UNIX and Linux System Administration Handbook', 5th Edition, Addison-Wesley, 2022."
+      },
+      "111502": {
+        "code": "111502",
+        "title": "Hệ cơ sở dữ liệu nâng cao và Kho dữ liệu",
+        "description": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: SQL nâng cao phục vụ phân tích (Window Functions, CTEs). Nghiên cứu kiến trúc Kho dữ liệu (Data Warehouse), mô hình hóa chiều (Star/Snowflake Schema) và xây dựng quy trình ETL/ELT tổng hợp dữ liệu doanh nghiệp.",
+        "references": "[1]. Ralph Kimball & Margy Ross, 'The Data Warehouse Toolkit', 3rd Edition, Wiley.\n[2]. Joe Celko, 'SQL for Smarties: Advanced SQL Programming', 5th Edition, Morgan Kaufmann, 2022."
+      },
+      "199008": {
+        "code": "199008",
+        "title": "Khởi nghiệp công nghệ và Đổi mới sáng tạo",
+        "description": "Tinh thần khởi nghiệp công nghệ (Tech Startup). Phương pháp tư duy thiết kế (Design Thinking), mô hình tinh gọn (Lean Canvas), xây dựng sản phẩm mẫu MVP, gọi vốn đầu tư và sở hữu trí tuệ công nghệ số.",
+        "references": "[1]. Eric Ries, 'The Lean Startup', Crown Business, 2022.\n[2]. Alexander Osterwalder, 'Business Model Generation', John Wiley & Sons, 2021."
+      },
+      "111303": {
+        "code": "111303",
+        "title": "Công nghệ Vibe Coding & Kỹ nghệ Prompt trong SE",
+        "description": "[HƯỚNG 1 - VIBE CODING]: Làm việc chuyên sâu với các AI Coding Agents thế hệ mới (Cursor AI, Windsurf, GitHub Copilot Workspace, Claude Code, Devin). Xây dựng Context kỹ thuật (.cursorrules), kỹ nghệ prompt kiến trúc hệ thống và quy trình phát triển Specs-first.",
+        "references": "[1]. Andrej Karpathy, 'The Philosophy and Practice of Vibe Coding', Essays, 2025.\n[2]. Cursor Team, 'Cursor Official Documentation: AI-First Code Editor', 2024-2025.\n[3]. Balaram Panda, 'Prompt Engineering for Software Engineers', Packt, 2024."
+      },
+      "111305": {
+        "code": "111305",
+        "title": "Phát triển ứng dụng Di động đa nền tảng với AI",
+        "description": "[HƯỚNG 1 - VIBE CODING]: Phát triển ứng dụng di động iOS và Android sử dụng Flutter (Dart) hoặc React Native. Sử dụng trợ lý AI tạo nhanh màn hình UI, tích hợp bản đồ, camera, push notifications và kiến trúc Offline-first.",
+        "references": "[1]. Google Flutter Team, 'Flutter Complete Reference', 2024.\n[2]. Alberto Miola, 'Flutter in Action', Manning Publications, 2023."
+      },
+      "111406": {
+        "code": "111406",
+        "title": "Vận hành an ninh mạng Cisco CyberOps & DevNet",
+        "description": "[HƯỚNG 2 - MẠNG CISCO]: Tích hợp chuẩn chứng chỉ quốc tế Cisco Certified CyberOps Associate (200-201) và Cisco DevNet: giám sát tác chiến an ninh mạng (SOC Tier 1), phát hiện xâm nhập, phân tích mã độc và lập trình tự động hóa mạng bằng Python & REST APIs.",
+        "references": "[1]. Cisco Certified CyberOps Associate CBROPS 200-201 Official Cert Guide - Omar Santos, Cisco Press, 2022.\n[2]. Cisco Certified DevNet Associate DEVASC 200-901 Official Cert Guide, Cisco Press, 2022."
+      },
+      "111503": {
+        "code": "111503",
+        "title": "Phân tích kinh doanh và Trực quan hóa với Power BI",
+        "description": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: Chuẩn hóa kỹ năng chứng chỉ Microsoft Certified: Power BI Data Analyst (PL-300). Kết nối đa nguồn dữ liệu, chuẩn hóa Power Query (M code), thiết kế mô hình dữ liệu quan hệ, viết công thức DAX nâng cao và thiết kế Dashboard trực quan tương tác cao.",
+        "references": "[1]. Marco Russo & Alberto Ferrari, 'The Definitive Guide to DAX', 2nd Edition, Microsoft Press.\n[2]. Microsoft Official Courseware: Exam PL-300 Microsoft Power BI Data Analyst, 2024."
+      },
+      "111505": {
+        "code": "111505",
+        "title": "Khai phá dữ liệu & Ứng dụng GenAI trong Phân tích",
+        "description": "[HƯỚNG 3 - PHÂN TÍCH SỐ LIỆU]: Thuật toán học máy ứng dụng (Hồi quy, Phân lớp, Phân cụm) và ứng dụng Generative AI / Copilot trong tự động hóa phân tích số liệu, tạo báo cáo số liệu tự động từ ngôn ngữ tự nhiên.",
+        "references": "[1]. Aurélien Géron, 'Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow', 3rd Edition, O'Reilly Media, 2023.\n[2]. Austin Henley, 'AI-Powered Data Analysis: Supercharge Analytics with LLMs', O'Reilly Media, 2024."
+      },
+      "111192": {
+        "code": "111192",
+        "title": "Thực tập tốt nghiệp từ xa / Dự án doanh nghiệp",
+        "description": "Sinh viên tham gia thực tập hoặc thực hiện dự án thực tế tại doanh nghiệp công nghệ thông tin theo hình thức Remote / Hybrid dưới sự đồng hướng dẫn của giảng viên khoa CNTT và chuyên gia doanh nghiệp. Trải nghiệm quy trình phát triển thực tế và giải quyết bài toán nghiệp vụ cụ thể.",
+        "references": "[1]. Quy định Thực tập tốt nghiệp Khoa CNTT - Đại học Lạc Hồng, 2026.\n[2]. Sổ tay Hướng dẫn Báo cáo Thực tập Doanh nghiệp Công nghệ, 2026."
+      },
+      "111193": {
+        "code": "111193",
+        "title": "Khóa luận tốt nghiệp / Đồ án tốt nghiệp tích hợp",
+        "description": "Công trình tổng kết toàn diện quá trình đào tạo cử nhân/kỹ sư CNTT hệ đào tạo từ xa. Sinh viên độc lập nghiên cứu và xây dựng giải pháp công nghệ hoàn chỉnh tích hợp các kỹ năng chuyên môn (Ứng dụng Vibe Coding / Hệ thống mạng Cisco / Phân tích số liệu), viết báo cáo khoa học và bảo vệ trực tuyến trước Hội đồng chấm tốt nghiệp.",
+        "references": "[1]. Quy định Khóa luận Tốt nghiệp Đại học - Đại học Lạc Hồng, 2026.\n[2]. IEEE Standards for Software and System Documentation, IEEE Computer Society, 2024."
+      }
+    }
   }
 };

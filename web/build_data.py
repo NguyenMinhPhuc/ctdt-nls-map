@@ -320,6 +320,16 @@ def build_data():
             c["summary"] = ""
             c["references"] = ""
 
+    # Load distance learning curriculum (Tu Xa) data if available
+    tuxa_data = None
+    if os.path.exists('curriculum_tuxa_data.json'):
+        try:
+            with open('curriculum_tuxa_data.json', 'r', encoding='utf-8') as f_tx:
+                tuxa_data = json.load(f_tx)
+            print("Loaded curriculum_tuxa_data.json successfully.")
+        except Exception as e:
+            print("Could not load curriculum_tuxa_data.json:", e)
+
     # Generate complete dataset
     unified_data = {
         "metadata": {
@@ -343,7 +353,8 @@ def build_data():
         "evidences": evidences,
         "cloMappings": clo_mappings,
         "courseSummaries": course_summaries,
-        "coursePlan": course_plan
+        "coursePlan": course_plan,
+        "tuxa": tuxa_data
     }
 
     json_str = json.dumps(unified_data, ensure_ascii=False, indent=2)
