@@ -1,0 +1,104 @@
+{
+  "metadata": {
+    "university": "TRƯỜNG ĐẠI HỌC LẠC HỒNG",
+    "faculty": "KHOA CÔNG NGHỆ THÔNG TIN",
+    "program": "CHƯƠNG TRÌNH ĐÀO TẠO CÔNG NGHỆ THÔNG TIN KHÓA 2026",
+    "programBadge": "Khóa 2026 - 2030",
+    "modeLabel": "Hệ Chính Quy (2026 - 2030)",
+    "coursePlanHeading": "KẾ HOẠCH ĐÀO TẠO BM03 CHUẨN - NGÀNH CÔNG NGHỆ THÔNG TIN",
+    "coursePlanDescription": "Toàn bộ kế hoạch đào tạo 8 học kỳ theo học chế tín chỉ niên khóa 2026 - 2030 theo biểu mẫu BM03 quy định của Trường Đại học Lạc Hồng.",
+    "distanceLearningLabel": "Hệ Từ Xa Tích Hợp 3 Hướng (150 TC)",
+    "distanceLearningBadge": "Hệ ĐTTX Tích Hợp - 150 TC",
+    "coursePlanDownloadLabel": "Chính Quy",
+    "distanceLearningPlanLabel": "Từ Xa Tích Hợp",
+    "distanceLearningSummaryLabel": "Tải Tóm Tắt Học Phần (.docx)",
+    "distanceLearningHeading": "KẾ HOẠCH ĐÀO TẠO BM03 TÍCH HỢP 3 HƯỚNG CHUYÊN SÂU",
+    "distanceLearningDescription": "Chương trình đào tạo từ xa 150 tín chỉ tích hợp trọn vẹn cả 3 mũi nhọn công nghệ: Lập trình phát triển ứng dụng (Vibe Coding), Mạng máy tính (Cisco NetAcad CCNA & CyberOps & DevNet) và Phân tích số liệu (Data Warehouse, Power BI PL-300 & GenAI).",
+    "framework": "Thông tư 02/2025/TT-BGDĐT & Khung trình độ quốc gia VQF",
+    "dateUpdated": "2026-09-14",
+    "semesterCount": 8,
+    "targetCredits": 150,
+    "creditHoursPerCredit": 50,
+    "downloads": {
+      "coursePlan": "BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx",
+      "distanceLearningPlan": "BM03-Ke hoach dao tao_CNTT-2026_TuXa_TichHop.xlsx",
+      "distanceLearningSummary": "2026-CNTT-TuXa-TichHop-Tom tat hoc phan.docx"
+    }
+  },
+  "files": {
+    "mappingWorkbook": "Map_MonHoc_NLS_CapNhat.xlsx",
+    "cloTemplate": "Template_Map.xlsx",
+    "courseSummaries": "2026-CNTT-Tóm tắt học phần.docx",
+    "coursePlan": "BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx",
+    "distanceLearningData": "curriculum_tuxa_data.json"
+  },
+  "sheets": {
+    "nlsFramework": "Tra Cứu Khung NLS (TT 02)",
+    "matrix6": "Ma Trận Môn Học - 6 Miền NLS",
+    "matrix24": "Ma Trận Môn Học - 24 NLTP",
+    "evidences": "Gợi Ý Bổ Sung & Minh Chứng NLS",
+    "cloMappings": "NLS - CNTT",
+    "coursePlan": "CTDT_2026"
+  },
+  "courseCodeOverrides": {
+    "electiveDefaults": {
+      "111179": {
+        "credits": 3,
+        "theoryCredits": 1,
+        "practiceCredits": 2,
+        "exerciseCredits": 0,
+        "totalHours": 150,
+        "theoryHours": 30,
+        "practiceHours": 30,
+        "exerciseHours": 90
+      },
+      "111243": {
+        "credits": 3,
+        "theoryCredits": 1,
+        "practiceCredits": 2,
+        "exerciseCredits": 0,
+        "totalHours": 150,
+        "theoryHours": 30,
+        "practiceHours": 30,
+        "exerciseHours": 90
+      },
+      "111186": {
+        "credits": 3,
+        "theoryCredits": 1,
+        "practiceCredits": 2,
+        "exerciseCredits": 0,
+        "totalHours": 150,
+        "theoryHours": 15,
+        "practiceHours": 45,
+        "exerciseHours": 90
+      },
+      "199007": {
+        "credits": 3,
+        "theoryCredits": 1,
+        "practiceCredits": 2,
+        "exerciseCredits": 0,
+        "totalHours": 150,
+        "theoryHours": 15,
+        "practiceHours": 45,
+        "exerciseHours": 90
+      },
+      "199008": {
+        "credits": 3,
+        "theoryCredits": 2,
+        "practiceCredits": 0,
+        "exerciseCredits": 0,
+        "totalHours": 150,
+        "theoryHours": 45,
+        "practiceHours": 0,
+        "exerciseHours": 105
+      }
+    },
+    "legacyCourseAliases": {
+      "111212": "111245",
+      "111211": "111242",
+      "111185": "111244",
+      "111187": "199005"
+    }
+  },
+  "outputDirectory": "."
+}

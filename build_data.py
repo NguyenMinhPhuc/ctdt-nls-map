@@ -2,14 +2,49 @@ import openpyxl
 import docx
 import json
 import re
-import os
+import argparse
+import sys
+from pathlib import Path
 
-def build_data():
-    print("Parsing Map_MonHoc_NLS_CapNhat.xlsx...")
-    wb_capnhat = openpyxl.load_workbook('Map_MonHoc_NLS_CapNhat.xlsx', data_only=True)
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+def load_program_config(config_path):
+    config_path = Path(config_path).resolve()
+    with config_path.open('r', encoding='utf-8') as config_file:
+        config = json.load(config_file)
+
+    for key in ('university', 'faculty', 'program', 'framework', 'dateUpdated'):
+        if not config.get('metadata', {}).get(key):
+            raise ValueError(f"Missing required metadata field: metadata.{key}")
+    if not config.get('files', {}).get('mappingWorkbook'):
+        raise ValueError("Missing required file setting: files.mappingWorkbook")
+    if not config.get('files', {}).get('cloTemplate'):
+        raise ValueError("Missing required file setting: files.cloTemplate")
+
+    base_dir = config_path.parent
+    files = {
+        key: (base_dir / value).resolve() if value else None
+        for key, value in config.get('files', {}).items()
+    }
+    for key, file_path in files.items():
+        if file_path and not file_path.is_file():
+            raise FileNotFoundError(f"Configured source file for files.{key} does not exist: {file_path}")
+    return config, files, base_dir
+
+
+def build_data(config_path='program_config.json'):
+    config, files, base_dir = load_program_config(config_path)
+    sheets = config.get('sheets', {})
+    metadata = config['metadata']
+    special_cases = config.get('courseCodeOverrides', {})
+
+    print(f"Building dataset for {metadata['program']}...")
+    print(f"Parsing {files['mappingWorkbook'].name}...")
+    wb_capnhat = openpyxl.load_workbook(files['mappingWorkbook'], data_only=True)
     
     # 1. Tra cứu Khung NLS
-    ws_nls = wb_capnhat['Tra Cứu Khung NLS (TT 02)']
+    ws_nls = wb_capnhat[sheets.get('nlsFramework', 'Tra Cứu Khung NLS (TT 02)')]
     domains = {
         "I": "Khai thác dữ liệu và thông tin",
         "II": "Giao tiếp và hợp tác trong môi trường số",
@@ -52,7 +87,7 @@ def build_data():
             })
 
     # 2. Ma trận 6 Miền
-    ws_m6 = wb_capnhat['Ma Trận Môn Học - 6 Miền NLS']
+    ws_m6 = wb_capnhat[sheets.get('matrix6', 'Ma Trận Môn Học - 6 Miền NLS')]
     matrix_6 = []
     for r in range(5, ws_m6.max_row+1):
         stt = ws_m6.cell(r, 1).value
@@ -77,7 +112,7 @@ def build_data():
         })
 
     # 3. Ma trận 24 NLTP
-    ws_m24 = wb_capnhat['Ma Trận Môn Học - 24 NLTP']
+    ws_m24 = wb_capnhat[sheets.get('matrix24', 'Ma Trận Môn Học - 24 NLTP')]
     nltp_codes = [str(ws_m24.cell(5, c).value).strip() for c in range(6, 30)]
     matrix_24 = []
     for r in range(6, ws_m24.max_row+1):
@@ -98,7 +133,7 @@ def build_data():
         })
 
     # 4. Gợi ý & Minh chứng
-    ws_ev = wb_capnhat['Gợi Ý Bổ Sung & Minh Chứng NLS']
+    ws_ev = wb_capnhat[sheets.get('evidences', 'Gợi Ý Bổ Sung & Minh Chứng NLS')]
     evidences = []
     for r in range(5, ws_ev.max_row+1):
         ma_hp = ws_ev.cell(r, 2).value
@@ -119,9 +154,9 @@ def build_data():
         })
 
     # 5. Ánh xạ chi tiết CLO từ Template_Map.xlsx
-    print("Parsing Template_Map.xlsx...")
-    wb_tmpl = openpyxl.load_workbook('Template_Map.xlsx', data_only=True)
-    ws_clo = wb_tmpl['NLS - CNTT']
+    print(f"Parsing {files['cloTemplate'].name}...")
+    wb_tmpl = openpyxl.load_workbook(files['cloTemplate'], data_only=True)
+    ws_clo = wb_tmpl[sheets.get('cloMappings', 'NLS - CNTT')]
     clo_mappings = []
     for r in range(18, ws_clo.max_row+1):
         ten_mh = ws_clo.cell(r, 2).value
@@ -146,8 +181,6 @@ def build_data():
         })
 
     # 6. Tóm tắt học phần từ docx
-    print("Parsing 2026-CNTT-Tóm tắt học phần.docx...")
-    doc = docx.Document('2026-CNTT-Tóm tắt học phần.docx')
     course_summaries = {}
     current_code = None
     current_title = None
@@ -155,8 +188,16 @@ def build_data():
     current_refs = []
     in_refs = False
 
-    pattern = re.compile(r'^(\d{6})\s*[-–]\s*(.+)$')
-    for p in doc.paragraphs:
+    summary_file = files.get('courseSummaries')
+    if summary_file:
+        print(f"Parsing {summary_file.name}...")
+        doc = docx.Document(summary_file)
+        summary_paragraphs = doc.paragraphs
+    else:
+        summary_paragraphs = []
+
+    pattern = re.compile(config.get('courseSummaryPattern', r'^(\d{6})(?:\s*[-–]\s*|\s+)(.+)$'))
+    for p in summary_paragraphs:
         txt = p.text.strip()
         if not txt:
             continue
@@ -191,29 +232,12 @@ def build_data():
         }
 
     # 7. Kế hoạch đào tạo từ BM03
-    print("Parsing BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx...")
-    wb_bm03 = openpyxl.load_workbook('BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx', data_only=True)
-    ws_bm03 = wb_bm03['CTDT_2026']
     course_plan = {}
     current_sem = "Học kỳ 1"
     sem_idx = 1
     
-    # Defaults for elective courses paired with an earlier elective where BM03 leaves credits blank
-    elective_defaults = {
-        '111179': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 30, 'practiceHours': 30, 'exerciseHours': 90},
-        '111243': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 30, 'practiceHours': 30, 'exerciseHours': 90},
-        '111186': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 15, 'practiceHours': 45, 'exerciseHours': 90},
-        '199007': {'credits': 3, 'theoryCredits': 1, 'practiceCredits': 2, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 15, 'practiceHours': 45, 'exerciseHours': 90},
-        '199008': {'credits': 3, 'theoryCredits': 2, 'practiceCredits': 0, 'exerciseCredits': 0, 'totalHours': 150, 'theoryHours': 45, 'practiceHours': 0, 'exerciseHours': 105}
-    }
-    
-    # Aliases for legacy course codes in matrix6/clos mapping to updated BM03 course codes
-    legacy_aliases = {
-        '111212': '111245',
-        '111211': '111242',
-        '111185': '111244',
-        '111187': '199005'
-    }
+    elective_defaults = special_cases.get('electiveDefaults', {})
+    legacy_aliases = special_cases.get('legacyCourseAliases', {})
 
     def to_clean_num(val):
         if val is None:
@@ -224,22 +248,31 @@ def build_data():
         except (ValueError, TypeError):
             return val
 
-    for r in range(9, 85):
-        val0 = ws_bm03.cell(r, 1).value
-        val1 = ws_bm03.cell(r, 2).value
-        val0_str = str(val0 or '').strip()
+    plan_file = files.get('coursePlan')
+    if plan_file:
+        print(f"Parsing {plan_file.name}...")
+        wb_bm03 = openpyxl.load_workbook(plan_file, data_only=True)
+        ws_bm03 = wb_bm03[sheets.get('coursePlan', 'CTDT_2026')]
+        for r in range(9, ws_bm03.max_row + 1):
+            val0 = ws_bm03.cell(r, 1).value
+            val1 = ws_bm03.cell(r, 2).value
+            val0_str = str(val0 or '').strip()
         
-        m_sem = re.search(r'TỔNG CỘNG HỌC KỲ\s*(\d+)', val0_str, re.IGNORECASE)
-        if m_sem:
-            sem_idx = int(m_sem.group(1)) + 1
-            current_sem = f"Học kỳ {sem_idx}"
-            continue
-        if 'TỔNG CỘNG TOÀN KHÓA' in val0_str.upper():
-            break
+            m_sem = re.search(r'TỔNG CỘNG HỌC KỲ\s*(\d+)', val0_str, re.IGNORECASE)
+            if m_sem:
+                sem_idx = int(m_sem.group(1)) + 1
+                current_sem = f"Học kỳ {sem_idx}"
+                continue
+            if 'TỔNG CỘNG TOÀN KHÓA' in val0_str.upper():
+                break
             
-        try:
-            code_int = int(float(val0))
-            code = str(code_int)
+            try:
+                code_value = float(val0)
+                code = str(int(code_value)) if code_value.is_integer() else str(val0).strip()
+            except (ValueError, TypeError):
+                code = str(val0 or '').strip()
+            if not code:
+                continue
             
             # BM03 columns:
             # Col 1: Mã MH, Col 2: Môn học
@@ -281,8 +314,6 @@ def build_data():
                 "note": c_note,
                 "semester": current_sem
             }
-        except (ValueError, TypeError):
-            pass
 
     # Ensure legacy codes also have course plan entries
     for old_c, new_c in legacy_aliases.items():
@@ -322,22 +353,16 @@ def build_data():
 
     # Load distance learning curriculum (Tu Xa) data if available
     tuxa_data = None
-    if os.path.exists('curriculum_tuxa_data.json'):
-        try:
-            with open('curriculum_tuxa_data.json', 'r', encoding='utf-8') as f_tx:
-                tuxa_data = json.load(f_tx)
-            print("Loaded curriculum_tuxa_data.json successfully.")
-        except Exception as e:
-            print("Could not load curriculum_tuxa_data.json:", e)
+    tuxa_file = files.get('distanceLearningData')
+    if tuxa_file and tuxa_file.exists():
+        with tuxa_file.open('r', encoding='utf-8') as f_tx:
+            tuxa_data = json.load(f_tx)
+        print(f"Loaded {tuxa_file.name} successfully.")
 
     # Generate complete dataset
     unified_data = {
         "metadata": {
-            "university": "TRƯỜNG ĐẠI HỌC LẠC HỒNG",
-            "faculty": "KHOA CÔNG NGHỆ THÔNG TIN",
-            "program": "CHƯƠNG TRÌNH ĐÀO TẠO CÔNG NGHỆ THÔNG TIN KHÓA 2026",
-            "framework": "Thông tư 02/2025/TT-BGDĐT & Khung trình độ quốc gia VQF",
-            "dateUpdated": "2026-09-14",
+            **metadata,
             "totalCourses": len(matrix_6),
             "totalCLOMappings": len(clo_mappings),
             "totalDomains": 6,
@@ -358,20 +383,24 @@ def build_data():
     }
 
     json_str = json.dumps(unified_data, ensure_ascii=False, indent=2)
+    output_dir = (base_dir / config.get('outputDirectory', '.')).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. Save curriculum_data.json
-    with open('curriculum_data.json', 'w', encoding='utf-8') as f:
+    with (output_dir / 'curriculum_data.json').open('w', encoding='utf-8') as f:
         f.write(json_str)
-    print("Done! Saved curriculum_data.json successfully.")
+    print(f"Done! Saved {output_dir / 'curriculum_data.json'} successfully.")
 
     # 2. Save data.js
-    with open('data.js', 'w', encoding='utf-8') as f:
+    with (output_dir / 'data.js').open('w', encoding='utf-8') as f:
         f.write("window.CURRICULUM_DATA = " + json_str + ";\n")
-    print("Done! Saved data.js successfully.")
+    print(f"Done! Saved {output_dir / 'data.js'} successfully.")
 
     # 3. Update embedded data and app scripts in index.html
-    if os.path.exists('index.html'):
-        with open('index.html', 'r', encoding='utf-8') as f:
+    html_path = output_dir / 'index.html'
+    app_path = output_dir / 'app.js'
+    if html_path.exists():
+        with html_path.open('r', encoding='utf-8') as f:
             html = f.read()
         
         # Replace data script block safely without regex escaping corruption
@@ -386,8 +415,8 @@ def build_data():
             print("Warning: Could not locate window.CURRICULUM_DATA in index.html")
 
         # Also sync app.js into index.html if app.js exists
-        if os.path.exists('app.js'):
-            with open('app.js', 'r', encoding='utf-8') as f_app:
+        if app_path.exists():
+            with app_path.open('r', encoding='utf-8') as f_app:
                 app_code = f_app.read().strip()
             marker = 'const data = window.CURRICULUM_DATA;'
             idx = html.find(marker)
@@ -396,8 +425,15 @@ def build_data():
                 html = html[:idx] + app_code + '\n  ' + html[end_idx:]
                 print("Done! Synced app.js into index.html.")
 
-        with open('index.html', 'w', encoding='utf-8') as f:
+        with html_path.open('w', encoding='utf-8') as f:
             f.write(html)
 
 if __name__ == "__main__":
-    build_data()
+    parser = argparse.ArgumentParser(description='Build the curriculum/NLS website data from a program configuration.')
+    parser.add_argument(
+        '--config',
+        default=Path(__file__).with_name('program_config.json'),
+        help='Path to program_config.json (input file paths are relative to this file).'
+    )
+    args = parser.parse_args()
+    build_data(args.config)

@@ -3,8 +3,27 @@ window.CURRICULUM_DATA = {
     "university": "TRƯỜNG ĐẠI HỌC LẠC HỒNG",
     "faculty": "KHOA CÔNG NGHỆ THÔNG TIN",
     "program": "CHƯƠNG TRÌNH ĐÀO TẠO CÔNG NGHỆ THÔNG TIN KHÓA 2026",
+    "programBadge": "Khóa 2026 - 2030",
+    "modeLabel": "Hệ Chính Quy (2026 - 2030)",
+    "coursePlanHeading": "KẾ HOẠCH ĐÀO TẠO BM03 CHUẨN - NGÀNH CÔNG NGHỆ THÔNG TIN",
+    "coursePlanDescription": "Toàn bộ kế hoạch đào tạo 8 học kỳ theo học chế tín chỉ niên khóa 2026 - 2030 theo biểu mẫu BM03 quy định của Trường Đại học Lạc Hồng.",
+    "distanceLearningLabel": "Hệ Từ Xa Tích Hợp 3 Hướng (150 TC)",
+    "distanceLearningBadge": "Hệ ĐTTX Tích Hợp - 150 TC",
+    "coursePlanDownloadLabel": "Chính Quy",
+    "distanceLearningPlanLabel": "Từ Xa Tích Hợp",
+    "distanceLearningSummaryLabel": "Tải Tóm Tắt Học Phần (.docx)",
+    "distanceLearningHeading": "KẾ HOẠCH ĐÀO TẠO BM03 TÍCH HỢP 3 HƯỚNG CHUYÊN SÂU",
+    "distanceLearningDescription": "Chương trình đào tạo từ xa 150 tín chỉ tích hợp trọn vẹn cả 3 mũi nhọn công nghệ: Lập trình phát triển ứng dụng (Vibe Coding), Mạng máy tính (Cisco NetAcad CCNA & CyberOps & DevNet) và Phân tích số liệu (Data Warehouse, Power BI PL-300 & GenAI).",
     "framework": "Thông tư 02/2025/TT-BGDĐT & Khung trình độ quốc gia VQF",
     "dateUpdated": "2026-09-14",
+    "semesterCount": 8,
+    "targetCredits": 150,
+    "creditHoursPerCredit": 50,
+    "downloads": {
+      "coursePlan": "BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx",
+      "distanceLearningPlan": "BM03-Ke hoach dao tao_CNTT-2026_TuXa_TichHop.xlsx",
+      "distanceLearningSummary": "2026-CNTT-TuXa-TichHop-Tom tat hoc phan.docx"
+    },
     "totalCourses": 47,
     "totalCLOMappings": 167,
     "totalDomains": 6,
@@ -642,7 +661,7 @@ window.CURRICULUM_DATA = {
       "exerciseHours": 90,
       "hasSummary": true,
       "summary": "Học phần giới thiệu về sự cần thiết trong việc tổ chức và quản lý cơ sở dữ liệu, đặc biệt áp dụng trong công nghệ. Cơ bản về cơ sở dữ liệu, hệ thống quản lý cơ sở dữ liệu và mô hình dữ liệu. Các khái niệm phụ thuộc vào dữ liệu, phụ thuộc chức năng và chuẩn hóa dữ liệu để có thể thiết kế một cơ sở dữ liệu phù hợp; Khóa học cũng giới thiệu việc sử dụng ngôn ngữ truy vấn có cấu trúc (SQL) để thực hiện dữ liệu truy vấn ở mức cơ bản.",
-      "references": "[1]. Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Fundamental of database, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2024\n111165\tMạng máy tính nâng cao\nHọc phần giới thiệu cho sinh viên kiến trúc, thành phần và hoạt động của Router, Switch. Nắm rõ các loại địa chỉ IPv4 và IPv6. Cơ bản về an toàn mạng. Hoạt động cấu hình căn bản của LAN Switch, Router. Hiểu về xây dựng hệ thống mạng vừa và nhỏ.\nMỗi sinh viên được cấp tài khoản trên hệ thống của Cisco để tham khảo tài liệu, trao đổi nội dung học phần, cuối mỗi chương sinh viên được làm các câu hỏi, bài tập trắc nghiệm kiểm tra lý thuyết online, hướng dẫn xây dựng lab, thực hành cấu hình triển khai gỡ lỗi.\n[1]. CCNA Routing and Switching ver 7.0, Cisco Networking Academy, 2024 (Online: netacad.com)\n[2]. Other supplemental materials: Materials (Curriculums, Labs, Assessments, Quizzes…) on netacad.com of Cisco\n111175\tDịch vụ mạng\nTrang bị những kiến thức cơ sở các loại đường truyền mạng LAN, các thiết bị mạng LAN, cách chọn thiết bị mạng LAN, đường truyền mạng LAN, các bước thiết kế và thi công hệ thống mạng LAN, kết nối thiết bị mạng LAN, thiết kế IP cho mạng và kiểm thử mạng LAN. Học theo chương trình CCNA\n[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 <https://developer.android.com/guide>\n111172\tLập trình hướng đối tượng\nHọc phần trang bị cho sinh viên các nguyên lý cốt lõi của phương pháp luận lập trình hướng đối tượng (OOP) sử dụng ngôn ngữ Python, bao gồm: sự khác biệt giữa lập trình hướng đối tượng và lập trình thủ tục; các cột trụ chính của OOP như tính đóng gói (encapsulation), tính kế thừa (inheritance), tính đa hình (polymorphism); và kỹ thuật nạp chồng phương thức/phép toán (operator overloading). Sinh viên được hướng dẫn quy trình phân tích, thiết kế lớp (class), khởi tạo đối tượng (object), xây dựng các kiểu dữ liệu tùy biến và ứng dụng các cấu trúc trừu tượng (như khuôn hình/generics). Đặc biệt, học phần tích hợp sâu xu hướng Vibe Coding (AI-Driven Development): huấn luyện sinh viên năng lực đóng vai trò là kiến trúc sư hệ thống, tập trung vào tư duy thiết kế mô hình hướng đối tượng, cấu trúc thực thể và ra lệnh (prompting) cho các trợ lý AI sinh mã nguồn Python. Đồng thời, nâng cao kỹ năng đọc hiểu, thẩm định, tối ưu hóa và tái cấu trúc (refactoring) các đoạn mã OOP phức tạp do AI tạo ra để xây dựng phần mềm chuẩn hóa và bền vững\n[1] Trường Đại học Bách Khoa Hà Nội (2024), Giáo trình Lập trình hướng đối tượng với Python, Nhà xuất bản Bách Khoa Hà Nội. (Trang bị toàn diện về tư duy thiết kế lớp, đối tượng và 4 tính chất cốt lõi của OOP trên nền tảng Python).\n[2] Nguyễn Khắc Nhiên (2023), Lập trình hướng đối tượng và cấu trúc dữ liệu bằng Python, Nhà xuất bản Thông tin và Truyền thông. (Cung cấp các bài tập lớn về phân tích hệ thống và triển khai ứng dụng hướng đối tượng).\n111170\tHệ quản trị CSDL\nHọc phần này trang bị cho sinh viên các kiến thức cơ bản về quản trị một hệ thống cơ sở dữ liệu bao gồm : Thiết lập và quản trị cơ sở dữ liệu ; Tạo và phân quyền người dùng ; Sao lưu và phục hồi dữ liệu ; Thực hiện hàm, thủ tục truy xuất dữ liệu theo yêu cầu (sử dụng ngôn ngữ T-SQL) ; Trigger trong Sql Server.\n[1].  Hệ quản trị Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Database Management System, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2022\n111171\tLập trình Front-End\nChuyển từ tư duy trang web tĩnh sang ứng dụng web đơn trang (SPA). Sinh viên làm quen với các Framework hiện đại (React/Next.js hoặc Vue), học cách quản lý trạng thái ứng dụng (State Management), chia nhỏ giao diện thành các thành phần (Component-based) và tối ưu hóa hiệu suất hiển thị.\n[1].  Alex Banks & Eve Porcello, Learning React: Modern Patterns for Developing React Apps, O'Reilly Media, 2022.\n[2]. Online Textbook: http://w3schools.com, Refsnes Data\n111173\tKiến tập\nHọc phần này là cơ hội để sinh viên thực hành vận dụng những kiến thức (lý thuyết, thực hành) mà mình đã học tại trường vào giải quyết những vấn đề thực tiễn trong lĩnh vực công nghệ thông tin tại đơn vị, Tổ chức và doanh nghiệp. Sinh viên sẽ được rèn luyện kỹ năng thực hành, lập trình, kỹ năng giải quyết vấn đề, kỹ năng vận dụng các giải pháp CNTT phù hợp để giải quyết vấn đề thực tiễn. Ngoài ra, sinh viên còn được rèn luyện các kỹ năng mềm như làm việc nhóm, kỹ năng giao tiếp và kỹ năng trình bày.\nĐây là lần thực tập giữa kỳ của sinh viên, giúp sinh viên rút ra được những công việc mà doanh nghiệp hiện đang thực hiện theo với chuyên ngành sinh viên được đào tạo. Từ đó, giúp sinh viên định hướng cho công việc trong tương lai.\n[1]. Tài liệu cần thiết cho công việc do cán bộ hướng dẫn tại đơn vị thực tập cung cấp.\n[2]. Tài liệu hướng dẫn trình bày báo cáo thực tập của khoa Công nghệ thông tin"
+      "references": "[1]. Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Fundamental of database, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2024"
     },
     {
       "stt": 17,
@@ -666,9 +685,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 30,
       "practiceHours": 30,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần giới thiệu cho sinh viên kiến trúc, thành phần và hoạt động của Router, Switch. Nắm rõ các loại địa chỉ IPv4 và IPv6. Cơ bản về an toàn mạng. Hoạt động cấu hình căn bản của LAN Switch, Router. Hiểu về xây dựng hệ thống mạng vừa và nhỏ.\n\nMỗi sinh viên được cấp tài khoản trên hệ thống của Cisco để tham khảo tài liệu, trao đổi nội dung học phần, cuối mỗi chương sinh viên được làm các câu hỏi, bài tập trắc nghiệm kiểm tra lý thuyết online, hướng dẫn xây dựng lab, thực hành cấu hình triển khai gỡ lỗi.",
+      "references": "[1]. CCNA Routing and Switching ver 7.0, Cisco Networking Academy, 2024 (Online: netacad.com)\n[2]. Other supplemental materials: Materials (Curriculums, Labs, Assessments, Quizzes…) on netacad.com of Cisco"
     },
     {
       "stt": 18,
@@ -692,9 +711,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 30,
       "exerciseHours": 105,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Trang bị những kiến thức cơ sở các loại đường truyền mạng LAN, các thiết bị mạng LAN, cách chọn thiết bị mạng LAN, đường truyền mạng LAN, các bước thiết kế và thi công hệ thống mạng LAN, kết nối thiết bị mạng LAN, thiết kế IP cho mạng và kiểm thử mạng LAN. Học theo chương trình CCNA",
+      "references": "[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 <https://developer.android.com/guide>"
     },
     {
       "stt": 19,
@@ -718,9 +737,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần trang bị cho sinh viên các nguyên lý cốt lõi của phương pháp luận lập trình hướng đối tượng (OOP) sử dụng ngôn ngữ Python, bao gồm: sự khác biệt giữa lập trình hướng đối tượng và lập trình thủ tục; các cột trụ chính của OOP như tính đóng gói (encapsulation), tính kế thừa (inheritance), tính đa hình (polymorphism); và kỹ thuật nạp chồng phương thức/phép toán (operator overloading). Sinh viên được hướng dẫn quy trình phân tích, thiết kế lớp (class), khởi tạo đối tượng (object), xây dựng các kiểu dữ liệu tùy biến và ứng dụng các cấu trúc trừu tượng (như khuôn hình/generics). Đặc biệt, học phần tích hợp sâu xu hướng Vibe Coding (AI-Driven Development): huấn luyện sinh viên năng lực đóng vai trò là kiến trúc sư hệ thống, tập trung vào tư duy thiết kế mô hình hướng đối tượng, cấu trúc thực thể và ra lệnh (prompting) cho các trợ lý AI sinh mã nguồn Python. Đồng thời, nâng cao kỹ năng đọc hiểu, thẩm định, tối ưu hóa và tái cấu trúc (refactoring) các đoạn mã OOP phức tạp do AI tạo ra để xây dựng phần mềm chuẩn hóa và bền vững",
+      "references": "[1] Trường Đại học Bách Khoa Hà Nội (2024), Giáo trình Lập trình hướng đối tượng với Python, Nhà xuất bản Bách Khoa Hà Nội. (Trang bị toàn diện về tư duy thiết kế lớp, đối tượng và 4 tính chất cốt lõi của OOP trên nền tảng Python).\n[2] Nguyễn Khắc Nhiên (2023), Lập trình hướng đối tượng và cấu trúc dữ liệu bằng Python, Nhà xuất bản Thông tin và Truyền thông. (Cung cấp các bài tập lớn về phân tích hệ thống và triển khai ứng dụng hướng đối tượng)."
     },
     {
       "stt": 20,
@@ -744,9 +763,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần này trang bị cho sinh viên các kiến thức cơ bản về quản trị một hệ thống cơ sở dữ liệu bao gồm : Thiết lập và quản trị cơ sở dữ liệu ; Tạo và phân quyền người dùng ; Sao lưu và phục hồi dữ liệu ; Thực hiện hàm, thủ tục truy xuất dữ liệu theo yêu cầu (sử dụng ngôn ngữ T-SQL) ; Trigger trong Sql Server.",
+      "references": "[1].  Hệ quản trị Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Database Management System, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2022"
     },
     {
       "stt": 21,
@@ -770,9 +789,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Chuyển từ tư duy trang web tĩnh sang ứng dụng web đơn trang (SPA). Sinh viên làm quen với các Framework hiện đại (React/Next.js hoặc Vue), học cách quản lý trạng thái ứng dụng (State Management), chia nhỏ giao diện thành các thành phần (Component-based) và tối ưu hóa hiệu suất hiển thị.",
+      "references": "[1].  Alex Banks & Eve Porcello, Learning React: Modern Patterns for Developing React Apps, O'Reilly Media, 2022.\n[2]. Online Textbook: http://w3schools.com, Refsnes Data"
     },
     {
       "stt": 22,
@@ -796,9 +815,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 30,
       "practiceHours": 0,
       "exerciseHours": 70,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần này là cơ hội để sinh viên thực hành vận dụng những kiến thức (lý thuyết, thực hành) mà mình đã học tại trường vào giải quyết những vấn đề thực tiễn trong lĩnh vực công nghệ thông tin tại đơn vị, Tổ chức và doanh nghiệp. Sinh viên sẽ được rèn luyện kỹ năng thực hành, lập trình, kỹ năng giải quyết vấn đề, kỹ năng vận dụng các giải pháp CNTT phù hợp để giải quyết vấn đề thực tiễn. Ngoài ra, sinh viên còn được rèn luyện các kỹ năng mềm như làm việc nhóm, kỹ năng giao tiếp và kỹ năng trình bày.\n\nĐây là lần thực tập giữa kỳ của sinh viên, giúp sinh viên rút ra được những công việc mà doanh nghiệp hiện đang thực hiện theo với chuyên ngành sinh viên được đào tạo. Từ đó, giúp sinh viên định hướng cho công việc trong tương lai.",
+      "references": "[1]. Tài liệu cần thiết cho công việc do cán bộ hướng dẫn tại đơn vị thực tập cung cấp.\n[2]. Tài liệu hướng dẫn trình bày báo cáo thực tập của khoa Công nghệ thông tin"
     },
     {
       "stt": 23,
@@ -928,7 +947,7 @@ window.CURRICULUM_DATA = {
       "exerciseHours": 90,
       "hasSummary": true,
       "summary": "Học phần Phân tích thiết kế hệ thống hướng quan hệ là một học phần trong lĩnh vực Khoa học máy tính, tập trung vào việc học cách phân tích, thiết kế và triển khai các hệ thống hướng quan hệ. Học phần này cung cấp cho sinh viên kiến thức và kỹ năng để phân tích và thiết kế các hệ thống phức tạp sử dụng cơ sở dữ liệu quan hệ.\n\nTrong khóa học Phân tích thiết kế hệ thống hướng quan hệ, sinh viên sẽ học các kỹ năng như: phân tích yêu cầu hệ thống, thiết kế cơ sở dữ liệu, sử dụng các công cụ mô hình hóa dữ liệu, thiết kế và triển khai các ứng dụng sử dụng cơ sở dữ liệu quan hệ, quản lý và bảo trì các cơ sở dữ liệu.\n\nSinh viên sẽ được học các phương pháp, kỹ thuật và công cụ để phân tích yêu cầu hệ thống, thiết kế cơ sở dữ liệu, xây dựng các mô hình dữ liệu, và triển khai các ứng dụng sử dụng cơ sở dữ liệu quan hệ. Sinh viên sẽ được học cách sử dụng các ngôn ngữ lập trình để thiết kế và triển khai các ứng dụng sử dụng cơ sở dữ liệu quan hệ như SQL, PHP và các công cụ tương tự.",
-      "references": "[1]. Phân tích thiết kế hệ thống cơ sở dữ liệu\" của Trần Ngọc Minh - Xuất bản bởi Nhà xuất bản Đại học Quốc gia TPHCM vào năm 2022.\n[2]. Phân tích thiết kế hệ thống thông tin quản lý của Lê Thị Thanh Thuỷ - Xuất bản bởi Nhà xuất bản Giáo dục vào năm 2024.\n[3]. Phân tích thiết kế hệ thống thông tin\" của Nguyễn Thị Ngọc Anh - Xuất bản bởi Nhà xuất bản Đại học Khoa học Tự nhiên, Hà Nội vào năm 2024\n111181\tLập trình giao tiếp thiết bị\nTrước hết học phần sẽ trang bị cho sinh viên một số kiến thức cơ bản linh kiện điện tử và lĩnh vực điện tử chuyên nghiệp, từ đó tạo cho sinh viên có cái nhìn tổng quan về lập trình nhúng. Sau đó, học phần sẽ giới thiệu các KIT phát triển, sử dụng KIT Arduino để học lập trình. Ghép nối được các bài học này sinh viên xây dựng được một hệ thống hoàn chỉnh (điều khiển thiết bị điện, thu thập nhiệt độ, độ ẩm, thu thập dữ liệu,…) phục vụ cho các học phần sau.\n[1]. “Computer as Components: Principles of Embedded Computing System Design”, Wayne Wolf, 1st Edition, MORGAN KAUFMANN PUBLISHERS, INC. 2022.\n[2]. Arduino Cookbook, Michael Margolis, 2022.\n111182\tLập trình ứng dụng di động\nHọc phần nhằm cung cấp cho sinh viên những kiến thức cơ bản về lập trình ứng dụng trên thiết bị di động với nền tảng hệ điều hành Android, nắm được quy trình, các kiến thức, kỹ năng cần thiết đề phát triển ứng dụng trên nền tảng Android.\n[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 https://developer.android.com/guide\n111184\tLập trình ứng dụng web\nHọc phần tổng lực nhằm kết nối toàn bộ các mảnh ghép lại với nhau. Sinh viên học cách tích hợp Frontend và Backend thành một sản phẩm thương mại hoàn chỉnh. Nội dung tập trung vào: Bảo mật, Tối ưu hóa SEO, Triển khai hệ thống (Deployment), CI/CD và quy trình vận hành sản phẩm thực tế trên Cloud.\n[1]. Online Textbook: http://w3schools.com.\n[2]. Shama Hoque, Full-Stack React Projects, Packt Publishing, 2nd ed, 2022\n[3]. Vercel/Next.js Docs, Deployment and Optimization Best Practices. [Online]. Available: https://nextjs.org/docs/deployment"
+      "references": "[1]. Phân tích thiết kế hệ thống cơ sở dữ liệu\" của Trần Ngọc Minh - Xuất bản bởi Nhà xuất bản Đại học Quốc gia TPHCM vào năm 2022.\n[2]. Phân tích thiết kế hệ thống thông tin quản lý của Lê Thị Thanh Thuỷ - Xuất bản bởi Nhà xuất bản Giáo dục vào năm 2024.\n[3]. Phân tích thiết kế hệ thống thông tin\" của Nguyễn Thị Ngọc Anh - Xuất bản bởi Nhà xuất bản Đại học Khoa học Tự nhiên, Hà Nội vào năm 2024"
     },
     {
       "stt": 28,
@@ -952,9 +971,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Trước hết học phần sẽ trang bị cho sinh viên một số kiến thức cơ bản linh kiện điện tử và lĩnh vực điện tử chuyên nghiệp, từ đó tạo cho sinh viên có cái nhìn tổng quan về lập trình nhúng. Sau đó, học phần sẽ giới thiệu các KIT phát triển, sử dụng KIT Arduino để học lập trình. Ghép nối được các bài học này sinh viên xây dựng được một hệ thống hoàn chỉnh (điều khiển thiết bị điện, thu thập nhiệt độ, độ ẩm, thu thập dữ liệu,…) phục vụ cho các học phần sau.",
+      "references": "[1]. “Computer as Components: Principles of Embedded Computing System Design”, Wayne Wolf, 1st Edition, MORGAN KAUFMANN PUBLISHERS, INC. 2022.\n[2]. Arduino Cookbook, Michael Margolis, 2022."
     },
     {
       "stt": 29,
@@ -978,9 +997,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần nhằm cung cấp cho sinh viên những kiến thức cơ bản về lập trình ứng dụng trên thiết bị di động với nền tảng hệ điều hành Android, nắm được quy trình, các kiến thức, kỹ năng cần thiết đề phát triển ứng dụng trên nền tảng Android.",
+      "references": "[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 https://developer.android.com/guide"
     },
     {
       "stt": 30,
@@ -1004,9 +1023,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần tổng lực nhằm kết nối toàn bộ các mảnh ghép lại với nhau. Sinh viên học cách tích hợp Frontend và Backend thành một sản phẩm thương mại hoàn chỉnh. Nội dung tập trung vào: Bảo mật, Tối ưu hóa SEO, Triển khai hệ thống (Deployment), CI/CD và quy trình vận hành sản phẩm thực tế trên Cloud.",
+      "references": "[1]. Online Textbook: http://w3schools.com.\n[2]. Shama Hoque, Full-Stack React Projects, Packt Publishing, 2nd ed, 2022\n[3]. Vercel/Next.js Docs, Deployment and Optimization Best Practices. [Online]. Available: https://nextjs.org/docs/deployment"
     },
     {
       "stt": 31,
@@ -1110,7 +1129,7 @@ window.CURRICULUM_DATA = {
       "exerciseHours": 105,
       "hasSummary": true,
       "summary": "Học phần Quản trị website trên VPS (Virtual Private Server) là một học phần trong lĩnh vực Khoa học máy tính, tập trung vào việc học cách quản lý và triển khai các website trên môi trường VPS. Học phần này cung cấp cho sinh viên kiến thức và kỹ năng để quản lý các server VPS, cài đặt và cấu hình các ứng dụng web, cập nhật và bảo trì các website.\n\nTrong khóa học Quản trị website trên VPS, sinh viên sẽ học các kỹ năng như: cài đặt và cấu hình các ứng dụng web trên VPS, quản lý các tài khoản và phân quyền trên VPS, cập nhật và bảo trì các website trên VPS, cấu hình bảo mật và tối ưu hóa hiệu suất trên VPS. Sinh viên sẽ được học cách sử dụng các công cụ quản lý VPS như cPanel, Plesk và các công cụ quản lý dòng lệnh để quản lý và triển khai các website trên VPS",
-      "references": "[1]. Virtual Private Server (VPS) Hosting: A Complete Guide của Hemant Beniwal - Xuất bản bởi Hemant Beniwal vào năm 2022.\n[2]. VPS Mastery: Build a Secure PHP Web Server with Ubuntu của Andrei Bunghez - Xuất bản bởi Packt Publishing vào năm 2022.\n111189\tPhát triển ứng dụng\nHọc phần phát triển ứng dụng trang bị cho sinh viên những kiến thức về quy trình phát triển một ứng dụng thực tế. Từ việc khảo sát, lấy yêu cầu khách hàng, phân tích yêu cầu, phân tích và thiết kế hệ thống, xây dựng và triển khai ứng dụng.\nVận dụng các kỹ năng kết hợp với kiến thức về quản lý dự án, phân tích thiết kế để tạo ra các tài liệu theo chuẩn CMMI bao gồm: Tài liệu phân tích yêu cầu khách hàng, tài liệu phân tích các yêu cầu phần mềm, tài liệu phân tích cấu hình, tài liệu quản lý rủi ro, tài liệu kế hoạch dự án, tài liệu về ước lượng sản phẩm, tài liệu về kiểm tra các thành phần, kiểm tra hệ thống. kiểm tra tích hợp sản phẩm, tài liệu quản lý chất lượng sản phẩm, tài liệu bàn giao sản phẩm.\nXây dựng, lập trình dựa trên các tài liệu kể trên theo đúng chu kỳ phát triển phần mềm.\n[1]. Software Development A Practical Approach, Hans-Petter Halvorsen, 2022\n[2]. A Beginner's Guide to Agile Business Analysis, Ahmed Fawzy, 2022\n111241\tPhân tích và thiết kế hệ thống thông tin\nHọc phần trang bị cho sinh viên các kiến thức và kỹ năng cốt lõi để khảo sát, phân tích, thiết kế và triển khai một hệ thống thông tin (HTTT) trong doanh nghiệp. Sinh viên sẽ được học cách tiếp cận hệ thống theo phương pháp truyền thống (Structured Analysis) và phương pháp hướng đối tượng (Object-Oriented Analysis and Design - OOAD) sử dụng ngôn ngữ mô hình hóa thống nhất UML. Học phần cũng hướng dẫn cách xác định yêu cầu người dùng, thiết kế giao diện (UI/UX), thiết kế cơ sở dữ liệu và kiến trúc hệ thống, đồng thời tích hợp các nguyên lý Agile/Scrum trong phát triển dự án phần mềm hiện đại.\nTài liệu chính: Dennis, A., Wixom, B. H., & Roth, R. M. (2024). System Analysis and Design (8th Edition). Wiley.\nKendall, K. E., & Kendall, J. E. (2018). Systems Analysis and Design (10th Edition). Pearson.\n111242\tPhân tích dữ liệu thông minh\nHọc phần giới thiệu các nguyên lý, thuật toán và kỹ thuật cốt lõi trong khai phá dữ liệu (Data Mining) và học máy (Machine Learning) để biến đổi dữ liệu thô thành tri thức kinh doanh có giá trị. Nội dung tập trung vào các bài toán phân lớp (Classification), phân cụm (Clustering), khai phá luật kết hợp (Association Rule Mining), và dự báo (Regression). Sinh viên sẽ thực hành trên các bộ dữ liệu thực tế bằng các công cụ mạnh mẽ, học cách đánh giá mô hình và tối ưu hóa thuật toán để giải quyết các bài toán tối ưu trong thực tiễn.\nTài liệu chính: Han, J., Kamber, M., & Jian, P. (2022). Data Mining: Concepts and Techniques (3rd Edition). Morgan Kaufmann.\nJames, G., Witten, D., Hastie, T., & Tibshirani, R. (2024). An Introduction to Statistical Learning: with Applications in R/Python. Springer.\nTan, P. N., Steinbach, M., Karpatne, A., & Kumar, V. (2018). Introduction to Data Mining (2nd Edition). Pearson."
+      "references": "[1]. Virtual Private Server (VPS) Hosting: A Complete Guide của Hemant Beniwal - Xuất bản bởi Hemant Beniwal vào năm 2022.\n[2]. VPS Mastery: Build a Secure PHP Web Server with Ubuntu của Andrei Bunghez - Xuất bản bởi Packt Publishing vào năm 2022."
     },
     {
       "stt": 35,
@@ -1134,9 +1153,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 15,
       "practiceHours": 45,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần phát triển ứng dụng trang bị cho sinh viên những kiến thức về quy trình phát triển một ứng dụng thực tế. Từ việc khảo sát, lấy yêu cầu khách hàng, phân tích yêu cầu, phân tích và thiết kế hệ thống, xây dựng và triển khai ứng dụng.\n\nVận dụng các kỹ năng kết hợp với kiến thức về quản lý dự án, phân tích thiết kế để tạo ra các tài liệu theo chuẩn CMMI bao gồm: Tài liệu phân tích yêu cầu khách hàng, tài liệu phân tích các yêu cầu phần mềm, tài liệu phân tích cấu hình, tài liệu quản lý rủi ro, tài liệu kế hoạch dự án, tài liệu về ước lượng sản phẩm, tài liệu về kiểm tra các thành phần, kiểm tra hệ thống. kiểm tra tích hợp sản phẩm, tài liệu quản lý chất lượng sản phẩm, tài liệu bàn giao sản phẩm.\n\nXây dựng, lập trình dựa trên các tài liệu kể trên theo đúng chu kỳ phát triển phần mềm.",
+      "references": "[1]. Software Development A Practical Approach, Hans-Petter Halvorsen, 2022\n[2]. A Beginner's Guide to Agile Business Analysis, Ahmed Fawzy, 2022"
     },
     {
       "stt": 36,
@@ -1160,9 +1179,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 30,
       "practiceHours": 30,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần trang bị cho sinh viên các kiến thức và kỹ năng cốt lõi để khảo sát, phân tích, thiết kế và triển khai một hệ thống thông tin (HTTT) trong doanh nghiệp. Sinh viên sẽ được học cách tiếp cận hệ thống theo phương pháp truyền thống (Structured Analysis) và phương pháp hướng đối tượng (Object-Oriented Analysis and Design - OOAD) sử dụng ngôn ngữ mô hình hóa thống nhất UML. Học phần cũng hướng dẫn cách xác định yêu cầu người dùng, thiết kế giao diện (UI/UX), thiết kế cơ sở dữ liệu và kiến trúc hệ thống, đồng thời tích hợp các nguyên lý Agile/Scrum trong phát triển dự án phần mềm hiện đại.",
+      "references": "Tài liệu chính: Dennis, A., Wixom, B. H., & Roth, R. M. (2024). System Analysis and Design (8th Edition). Wiley.\nKendall, K. E., & Kendall, J. E. (2018). Systems Analysis and Design (10th Edition). Pearson."
     },
     {
       "stt": 37,
@@ -1186,9 +1205,9 @@ window.CURRICULUM_DATA = {
       "theoryHours": 30,
       "practiceHours": 30,
       "exerciseHours": 90,
-      "hasSummary": false,
-      "summary": "",
-      "references": ""
+      "hasSummary": true,
+      "summary": "Học phần giới thiệu các nguyên lý, thuật toán và kỹ thuật cốt lõi trong khai phá dữ liệu (Data Mining) và học máy (Machine Learning) để biến đổi dữ liệu thô thành tri thức kinh doanh có giá trị. Nội dung tập trung vào các bài toán phân lớp (Classification), phân cụm (Clustering), khai phá luật kết hợp (Association Rule Mining), và dự báo (Regression). Sinh viên sẽ thực hành trên các bộ dữ liệu thực tế bằng các công cụ mạnh mẽ, học cách đánh giá mô hình và tối ưu hóa thuật toán để giải quyết các bài toán tối ưu trong thực tiễn.",
+      "references": "Tài liệu chính: Han, J., Kamber, M., & Jian, P. (2022). Data Mining: Concepts and Techniques (3rd Edition). Morgan Kaufmann.\nJames, G., Witten, D., Hastie, T., & Tibshirani, R. (2024). An Introduction to Statistical Learning: with Applications in R/Python. Springer.\nTan, P. N., Steinbach, M., Karpatne, A., & Kumar, V. (2018). Introduction to Data Mining (2nd Edition). Pearson."
     },
     {
       "stt": 38,
@@ -6072,7 +6091,43 @@ window.CURRICULUM_DATA = {
       "code": "111166",
       "title": "Cơ sở dữ liệu",
       "description": "Học phần giới thiệu về sự cần thiết trong việc tổ chức và quản lý cơ sở dữ liệu, đặc biệt áp dụng trong công nghệ. Cơ bản về cơ sở dữ liệu, hệ thống quản lý cơ sở dữ liệu và mô hình dữ liệu. Các khái niệm phụ thuộc vào dữ liệu, phụ thuộc chức năng và chuẩn hóa dữ liệu để có thể thiết kế một cơ sở dữ liệu phù hợp; Khóa học cũng giới thiệu việc sử dụng ngôn ngữ truy vấn có cấu trúc (SQL) để thực hiện dữ liệu truy vấn ở mức cơ bản.",
-      "references": "[1]. Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Fundamental of database, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2024\n111165\tMạng máy tính nâng cao\nHọc phần giới thiệu cho sinh viên kiến trúc, thành phần và hoạt động của Router, Switch. Nắm rõ các loại địa chỉ IPv4 và IPv6. Cơ bản về an toàn mạng. Hoạt động cấu hình căn bản của LAN Switch, Router. Hiểu về xây dựng hệ thống mạng vừa và nhỏ.\nMỗi sinh viên được cấp tài khoản trên hệ thống của Cisco để tham khảo tài liệu, trao đổi nội dung học phần, cuối mỗi chương sinh viên được làm các câu hỏi, bài tập trắc nghiệm kiểm tra lý thuyết online, hướng dẫn xây dựng lab, thực hành cấu hình triển khai gỡ lỗi.\n[1]. CCNA Routing and Switching ver 7.0, Cisco Networking Academy, 2024 (Online: netacad.com)\n[2]. Other supplemental materials: Materials (Curriculums, Labs, Assessments, Quizzes…) on netacad.com of Cisco\n111175\tDịch vụ mạng\nTrang bị những kiến thức cơ sở các loại đường truyền mạng LAN, các thiết bị mạng LAN, cách chọn thiết bị mạng LAN, đường truyền mạng LAN, các bước thiết kế và thi công hệ thống mạng LAN, kết nối thiết bị mạng LAN, thiết kế IP cho mạng và kiểm thử mạng LAN. Học theo chương trình CCNA\n[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 <https://developer.android.com/guide>\n111172\tLập trình hướng đối tượng\nHọc phần trang bị cho sinh viên các nguyên lý cốt lõi của phương pháp luận lập trình hướng đối tượng (OOP) sử dụng ngôn ngữ Python, bao gồm: sự khác biệt giữa lập trình hướng đối tượng và lập trình thủ tục; các cột trụ chính của OOP như tính đóng gói (encapsulation), tính kế thừa (inheritance), tính đa hình (polymorphism); và kỹ thuật nạp chồng phương thức/phép toán (operator overloading). Sinh viên được hướng dẫn quy trình phân tích, thiết kế lớp (class), khởi tạo đối tượng (object), xây dựng các kiểu dữ liệu tùy biến và ứng dụng các cấu trúc trừu tượng (như khuôn hình/generics). Đặc biệt, học phần tích hợp sâu xu hướng Vibe Coding (AI-Driven Development): huấn luyện sinh viên năng lực đóng vai trò là kiến trúc sư hệ thống, tập trung vào tư duy thiết kế mô hình hướng đối tượng, cấu trúc thực thể và ra lệnh (prompting) cho các trợ lý AI sinh mã nguồn Python. Đồng thời, nâng cao kỹ năng đọc hiểu, thẩm định, tối ưu hóa và tái cấu trúc (refactoring) các đoạn mã OOP phức tạp do AI tạo ra để xây dựng phần mềm chuẩn hóa và bền vững\n[1] Trường Đại học Bách Khoa Hà Nội (2024), Giáo trình Lập trình hướng đối tượng với Python, Nhà xuất bản Bách Khoa Hà Nội. (Trang bị toàn diện về tư duy thiết kế lớp, đối tượng và 4 tính chất cốt lõi của OOP trên nền tảng Python).\n[2] Nguyễn Khắc Nhiên (2023), Lập trình hướng đối tượng và cấu trúc dữ liệu bằng Python, Nhà xuất bản Thông tin và Truyền thông. (Cung cấp các bài tập lớn về phân tích hệ thống và triển khai ứng dụng hướng đối tượng).\n111170\tHệ quản trị CSDL\nHọc phần này trang bị cho sinh viên các kiến thức cơ bản về quản trị một hệ thống cơ sở dữ liệu bao gồm : Thiết lập và quản trị cơ sở dữ liệu ; Tạo và phân quyền người dùng ; Sao lưu và phục hồi dữ liệu ; Thực hiện hàm, thủ tục truy xuất dữ liệu theo yêu cầu (sử dụng ngôn ngữ T-SQL) ; Trigger trong Sql Server.\n[1].  Hệ quản trị Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Database Management System, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2022\n111171\tLập trình Front-End\nChuyển từ tư duy trang web tĩnh sang ứng dụng web đơn trang (SPA). Sinh viên làm quen với các Framework hiện đại (React/Next.js hoặc Vue), học cách quản lý trạng thái ứng dụng (State Management), chia nhỏ giao diện thành các thành phần (Component-based) và tối ưu hóa hiệu suất hiển thị.\n[1].  Alex Banks & Eve Porcello, Learning React: Modern Patterns for Developing React Apps, O'Reilly Media, 2022.\n[2]. Online Textbook: http://w3schools.com, Refsnes Data\n111173\tKiến tập\nHọc phần này là cơ hội để sinh viên thực hành vận dụng những kiến thức (lý thuyết, thực hành) mà mình đã học tại trường vào giải quyết những vấn đề thực tiễn trong lĩnh vực công nghệ thông tin tại đơn vị, Tổ chức và doanh nghiệp. Sinh viên sẽ được rèn luyện kỹ năng thực hành, lập trình, kỹ năng giải quyết vấn đề, kỹ năng vận dụng các giải pháp CNTT phù hợp để giải quyết vấn đề thực tiễn. Ngoài ra, sinh viên còn được rèn luyện các kỹ năng mềm như làm việc nhóm, kỹ năng giao tiếp và kỹ năng trình bày.\nĐây là lần thực tập giữa kỳ của sinh viên, giúp sinh viên rút ra được những công việc mà doanh nghiệp hiện đang thực hiện theo với chuyên ngành sinh viên được đào tạo. Từ đó, giúp sinh viên định hướng cho công việc trong tương lai.\n[1]. Tài liệu cần thiết cho công việc do cán bộ hướng dẫn tại đơn vị thực tập cung cấp.\n[2]. Tài liệu hướng dẫn trình bày báo cáo thực tập của khoa Công nghệ thông tin"
+      "references": "[1]. Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Fundamental of database, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2024"
+    },
+    "111165": {
+      "code": "111165",
+      "title": "Mạng máy tính nâng cao",
+      "description": "Học phần giới thiệu cho sinh viên kiến trúc, thành phần và hoạt động của Router, Switch. Nắm rõ các loại địa chỉ IPv4 và IPv6. Cơ bản về an toàn mạng. Hoạt động cấu hình căn bản của LAN Switch, Router. Hiểu về xây dựng hệ thống mạng vừa và nhỏ.\n\nMỗi sinh viên được cấp tài khoản trên hệ thống của Cisco để tham khảo tài liệu, trao đổi nội dung học phần, cuối mỗi chương sinh viên được làm các câu hỏi, bài tập trắc nghiệm kiểm tra lý thuyết online, hướng dẫn xây dựng lab, thực hành cấu hình triển khai gỡ lỗi.",
+      "references": "[1]. CCNA Routing and Switching ver 7.0, Cisco Networking Academy, 2024 (Online: netacad.com)\n[2]. Other supplemental materials: Materials (Curriculums, Labs, Assessments, Quizzes…) on netacad.com of Cisco"
+    },
+    "111175": {
+      "code": "111175",
+      "title": "Dịch vụ mạng",
+      "description": "Trang bị những kiến thức cơ sở các loại đường truyền mạng LAN, các thiết bị mạng LAN, cách chọn thiết bị mạng LAN, đường truyền mạng LAN, các bước thiết kế và thi công hệ thống mạng LAN, kết nối thiết bị mạng LAN, thiết kế IP cho mạng và kiểm thử mạng LAN. Học theo chương trình CCNA",
+      "references": "[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 <https://developer.android.com/guide>"
+    },
+    "111172": {
+      "code": "111172",
+      "title": "Lập trình hướng đối tượng",
+      "description": "Học phần trang bị cho sinh viên các nguyên lý cốt lõi của phương pháp luận lập trình hướng đối tượng (OOP) sử dụng ngôn ngữ Python, bao gồm: sự khác biệt giữa lập trình hướng đối tượng và lập trình thủ tục; các cột trụ chính của OOP như tính đóng gói (encapsulation), tính kế thừa (inheritance), tính đa hình (polymorphism); và kỹ thuật nạp chồng phương thức/phép toán (operator overloading). Sinh viên được hướng dẫn quy trình phân tích, thiết kế lớp (class), khởi tạo đối tượng (object), xây dựng các kiểu dữ liệu tùy biến và ứng dụng các cấu trúc trừu tượng (như khuôn hình/generics). Đặc biệt, học phần tích hợp sâu xu hướng Vibe Coding (AI-Driven Development): huấn luyện sinh viên năng lực đóng vai trò là kiến trúc sư hệ thống, tập trung vào tư duy thiết kế mô hình hướng đối tượng, cấu trúc thực thể và ra lệnh (prompting) cho các trợ lý AI sinh mã nguồn Python. Đồng thời, nâng cao kỹ năng đọc hiểu, thẩm định, tối ưu hóa và tái cấu trúc (refactoring) các đoạn mã OOP phức tạp do AI tạo ra để xây dựng phần mềm chuẩn hóa và bền vững",
+      "references": "[1] Trường Đại học Bách Khoa Hà Nội (2024), Giáo trình Lập trình hướng đối tượng với Python, Nhà xuất bản Bách Khoa Hà Nội. (Trang bị toàn diện về tư duy thiết kế lớp, đối tượng và 4 tính chất cốt lõi của OOP trên nền tảng Python).\n[2] Nguyễn Khắc Nhiên (2023), Lập trình hướng đối tượng và cấu trúc dữ liệu bằng Python, Nhà xuất bản Thông tin và Truyền thông. (Cung cấp các bài tập lớn về phân tích hệ thống và triển khai ứng dụng hướng đối tượng)."
+    },
+    "111170": {
+      "code": "111170",
+      "title": "Hệ quản trị CSDL",
+      "description": "Học phần này trang bị cho sinh viên các kiến thức cơ bản về quản trị một hệ thống cơ sở dữ liệu bao gồm : Thiết lập và quản trị cơ sở dữ liệu ; Tạo và phân quyền người dùng ; Sao lưu và phục hồi dữ liệu ; Thực hiện hàm, thủ tục truy xuất dữ liệu theo yêu cầu (sử dụng ngôn ngữ T-SQL) ; Trigger trong Sql Server.",
+      "references": "[1].  Hệ quản trị Cơ sở dữ liệu. Tài liệu nội bộ Khoa CNTT-LHU. 2024 (Database Management System, Internal materials of Faculty of Information Engineering Technology, 2024)\n[2]. SQL Server technical documentation. Microsoft Documentation . 2022"
+    },
+    "111171": {
+      "code": "111171",
+      "title": "Lập trình Front-End",
+      "description": "Chuyển từ tư duy trang web tĩnh sang ứng dụng web đơn trang (SPA). Sinh viên làm quen với các Framework hiện đại (React/Next.js hoặc Vue), học cách quản lý trạng thái ứng dụng (State Management), chia nhỏ giao diện thành các thành phần (Component-based) và tối ưu hóa hiệu suất hiển thị.",
+      "references": "[1].  Alex Banks & Eve Porcello, Learning React: Modern Patterns for Developing React Apps, O'Reilly Media, 2022.\n[2]. Online Textbook: http://w3schools.com, Refsnes Data"
+    },
+    "111173": {
+      "code": "111173",
+      "title": "Kiến tập",
+      "description": "Học phần này là cơ hội để sinh viên thực hành vận dụng những kiến thức (lý thuyết, thực hành) mà mình đã học tại trường vào giải quyết những vấn đề thực tiễn trong lĩnh vực công nghệ thông tin tại đơn vị, Tổ chức và doanh nghiệp. Sinh viên sẽ được rèn luyện kỹ năng thực hành, lập trình, kỹ năng giải quyết vấn đề, kỹ năng vận dụng các giải pháp CNTT phù hợp để giải quyết vấn đề thực tiễn. Ngoài ra, sinh viên còn được rèn luyện các kỹ năng mềm như làm việc nhóm, kỹ năng giao tiếp và kỹ năng trình bày.\n\nĐây là lần thực tập giữa kỳ của sinh viên, giúp sinh viên rút ra được những công việc mà doanh nghiệp hiện đang thực hiện theo với chuyên ngành sinh viên được đào tạo. Từ đó, giúp sinh viên định hướng cho công việc trong tương lai.",
+      "references": "[1]. Tài liệu cần thiết cho công việc do cán bộ hướng dẫn tại đơn vị thực tập cung cấp.\n[2]. Tài liệu hướng dẫn trình bày báo cáo thực tập của khoa Công nghệ thông tin"
     },
     "111183": {
       "code": "111183",
@@ -6102,7 +6157,25 @@ window.CURRICULUM_DATA = {
       "code": "111179",
       "title": "Phân tích thiết kế hệ thống hướng quan hệ",
       "description": "Học phần Phân tích thiết kế hệ thống hướng quan hệ là một học phần trong lĩnh vực Khoa học máy tính, tập trung vào việc học cách phân tích, thiết kế và triển khai các hệ thống hướng quan hệ. Học phần này cung cấp cho sinh viên kiến thức và kỹ năng để phân tích và thiết kế các hệ thống phức tạp sử dụng cơ sở dữ liệu quan hệ.\n\nTrong khóa học Phân tích thiết kế hệ thống hướng quan hệ, sinh viên sẽ học các kỹ năng như: phân tích yêu cầu hệ thống, thiết kế cơ sở dữ liệu, sử dụng các công cụ mô hình hóa dữ liệu, thiết kế và triển khai các ứng dụng sử dụng cơ sở dữ liệu quan hệ, quản lý và bảo trì các cơ sở dữ liệu.\n\nSinh viên sẽ được học các phương pháp, kỹ thuật và công cụ để phân tích yêu cầu hệ thống, thiết kế cơ sở dữ liệu, xây dựng các mô hình dữ liệu, và triển khai các ứng dụng sử dụng cơ sở dữ liệu quan hệ. Sinh viên sẽ được học cách sử dụng các ngôn ngữ lập trình để thiết kế và triển khai các ứng dụng sử dụng cơ sở dữ liệu quan hệ như SQL, PHP và các công cụ tương tự.",
-      "references": "[1]. Phân tích thiết kế hệ thống cơ sở dữ liệu\" của Trần Ngọc Minh - Xuất bản bởi Nhà xuất bản Đại học Quốc gia TPHCM vào năm 2022.\n[2]. Phân tích thiết kế hệ thống thông tin quản lý của Lê Thị Thanh Thuỷ - Xuất bản bởi Nhà xuất bản Giáo dục vào năm 2024.\n[3]. Phân tích thiết kế hệ thống thông tin\" của Nguyễn Thị Ngọc Anh - Xuất bản bởi Nhà xuất bản Đại học Khoa học Tự nhiên, Hà Nội vào năm 2024\n111181\tLập trình giao tiếp thiết bị\nTrước hết học phần sẽ trang bị cho sinh viên một số kiến thức cơ bản linh kiện điện tử và lĩnh vực điện tử chuyên nghiệp, từ đó tạo cho sinh viên có cái nhìn tổng quan về lập trình nhúng. Sau đó, học phần sẽ giới thiệu các KIT phát triển, sử dụng KIT Arduino để học lập trình. Ghép nối được các bài học này sinh viên xây dựng được một hệ thống hoàn chỉnh (điều khiển thiết bị điện, thu thập nhiệt độ, độ ẩm, thu thập dữ liệu,…) phục vụ cho các học phần sau.\n[1]. “Computer as Components: Principles of Embedded Computing System Design”, Wayne Wolf, 1st Edition, MORGAN KAUFMANN PUBLISHERS, INC. 2022.\n[2]. Arduino Cookbook, Michael Margolis, 2022.\n111182\tLập trình ứng dụng di động\nHọc phần nhằm cung cấp cho sinh viên những kiến thức cơ bản về lập trình ứng dụng trên thiết bị di động với nền tảng hệ điều hành Android, nắm được quy trình, các kiến thức, kỹ năng cần thiết đề phát triển ứng dụng trên nền tảng Android.\n[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 https://developer.android.com/guide\n111184\tLập trình ứng dụng web\nHọc phần tổng lực nhằm kết nối toàn bộ các mảnh ghép lại với nhau. Sinh viên học cách tích hợp Frontend và Backend thành một sản phẩm thương mại hoàn chỉnh. Nội dung tập trung vào: Bảo mật, Tối ưu hóa SEO, Triển khai hệ thống (Deployment), CI/CD và quy trình vận hành sản phẩm thực tế trên Cloud.\n[1]. Online Textbook: http://w3schools.com.\n[2]. Shama Hoque, Full-Stack React Projects, Packt Publishing, 2nd ed, 2022\n[3]. Vercel/Next.js Docs, Deployment and Optimization Best Practices. [Online]. Available: https://nextjs.org/docs/deployment"
+      "references": "[1]. Phân tích thiết kế hệ thống cơ sở dữ liệu\" của Trần Ngọc Minh - Xuất bản bởi Nhà xuất bản Đại học Quốc gia TPHCM vào năm 2022.\n[2]. Phân tích thiết kế hệ thống thông tin quản lý của Lê Thị Thanh Thuỷ - Xuất bản bởi Nhà xuất bản Giáo dục vào năm 2024.\n[3]. Phân tích thiết kế hệ thống thông tin\" của Nguyễn Thị Ngọc Anh - Xuất bản bởi Nhà xuất bản Đại học Khoa học Tự nhiên, Hà Nội vào năm 2024"
+    },
+    "111181": {
+      "code": "111181",
+      "title": "Lập trình giao tiếp thiết bị",
+      "description": "Trước hết học phần sẽ trang bị cho sinh viên một số kiến thức cơ bản linh kiện điện tử và lĩnh vực điện tử chuyên nghiệp, từ đó tạo cho sinh viên có cái nhìn tổng quan về lập trình nhúng. Sau đó, học phần sẽ giới thiệu các KIT phát triển, sử dụng KIT Arduino để học lập trình. Ghép nối được các bài học này sinh viên xây dựng được một hệ thống hoàn chỉnh (điều khiển thiết bị điện, thu thập nhiệt độ, độ ẩm, thu thập dữ liệu,…) phục vụ cho các học phần sau.",
+      "references": "[1]. “Computer as Components: Principles of Embedded Computing System Design”, Wayne Wolf, 1st Edition, MORGAN KAUFMANN PUBLISHERS, INC. 2022.\n[2]. Arduino Cookbook, Michael Margolis, 2022."
+    },
+    "111182": {
+      "code": "111182",
+      "title": "Lập trình ứng dụng di động",
+      "description": "Học phần nhằm cung cấp cho sinh viên những kiến thức cơ bản về lập trình ứng dụng trên thiết bị di động với nền tảng hệ điều hành Android, nắm được quy trình, các kiến thức, kỹ năng cần thiết đề phát triển ứng dụng trên nền tảng Android.",
+      "references": "[1]. Textbook: Java Programming for Android Developers For Dummies, 2nd Edition, 2022.\n[2]. Developer Guides, Google Inc., 2024 https://developer.android.com/guide"
+    },
+    "111184": {
+      "code": "111184",
+      "title": "Lập trình ứng dụng web",
+      "description": "Học phần tổng lực nhằm kết nối toàn bộ các mảnh ghép lại với nhau. Sinh viên học cách tích hợp Frontend và Backend thành một sản phẩm thương mại hoàn chỉnh. Nội dung tập trung vào: Bảo mật, Tối ưu hóa SEO, Triển khai hệ thống (Deployment), CI/CD và quy trình vận hành sản phẩm thực tế trên Cloud.",
+      "references": "[1]. Online Textbook: http://w3schools.com.\n[2]. Shama Hoque, Full-Stack React Projects, Packt Publishing, 2nd ed, 2022\n[3]. Vercel/Next.js Docs, Deployment and Optimization Best Practices. [Online]. Available: https://nextjs.org/docs/deployment"
     },
     "111185": {
       "code": "111185",
@@ -6126,7 +6199,25 @@ window.CURRICULUM_DATA = {
       "code": "111188",
       "title": "Quản trị website trên VPS.",
       "description": "Học phần Quản trị website trên VPS (Virtual Private Server) là một học phần trong lĩnh vực Khoa học máy tính, tập trung vào việc học cách quản lý và triển khai các website trên môi trường VPS. Học phần này cung cấp cho sinh viên kiến thức và kỹ năng để quản lý các server VPS, cài đặt và cấu hình các ứng dụng web, cập nhật và bảo trì các website.\n\nTrong khóa học Quản trị website trên VPS, sinh viên sẽ học các kỹ năng như: cài đặt và cấu hình các ứng dụng web trên VPS, quản lý các tài khoản và phân quyền trên VPS, cập nhật và bảo trì các website trên VPS, cấu hình bảo mật và tối ưu hóa hiệu suất trên VPS. Sinh viên sẽ được học cách sử dụng các công cụ quản lý VPS như cPanel, Plesk và các công cụ quản lý dòng lệnh để quản lý và triển khai các website trên VPS",
-      "references": "[1]. Virtual Private Server (VPS) Hosting: A Complete Guide của Hemant Beniwal - Xuất bản bởi Hemant Beniwal vào năm 2022.\n[2]. VPS Mastery: Build a Secure PHP Web Server with Ubuntu của Andrei Bunghez - Xuất bản bởi Packt Publishing vào năm 2022.\n111189\tPhát triển ứng dụng\nHọc phần phát triển ứng dụng trang bị cho sinh viên những kiến thức về quy trình phát triển một ứng dụng thực tế. Từ việc khảo sát, lấy yêu cầu khách hàng, phân tích yêu cầu, phân tích và thiết kế hệ thống, xây dựng và triển khai ứng dụng.\nVận dụng các kỹ năng kết hợp với kiến thức về quản lý dự án, phân tích thiết kế để tạo ra các tài liệu theo chuẩn CMMI bao gồm: Tài liệu phân tích yêu cầu khách hàng, tài liệu phân tích các yêu cầu phần mềm, tài liệu phân tích cấu hình, tài liệu quản lý rủi ro, tài liệu kế hoạch dự án, tài liệu về ước lượng sản phẩm, tài liệu về kiểm tra các thành phần, kiểm tra hệ thống. kiểm tra tích hợp sản phẩm, tài liệu quản lý chất lượng sản phẩm, tài liệu bàn giao sản phẩm.\nXây dựng, lập trình dựa trên các tài liệu kể trên theo đúng chu kỳ phát triển phần mềm.\n[1]. Software Development A Practical Approach, Hans-Petter Halvorsen, 2022\n[2]. A Beginner's Guide to Agile Business Analysis, Ahmed Fawzy, 2022\n111241\tPhân tích và thiết kế hệ thống thông tin\nHọc phần trang bị cho sinh viên các kiến thức và kỹ năng cốt lõi để khảo sát, phân tích, thiết kế và triển khai một hệ thống thông tin (HTTT) trong doanh nghiệp. Sinh viên sẽ được học cách tiếp cận hệ thống theo phương pháp truyền thống (Structured Analysis) và phương pháp hướng đối tượng (Object-Oriented Analysis and Design - OOAD) sử dụng ngôn ngữ mô hình hóa thống nhất UML. Học phần cũng hướng dẫn cách xác định yêu cầu người dùng, thiết kế giao diện (UI/UX), thiết kế cơ sở dữ liệu và kiến trúc hệ thống, đồng thời tích hợp các nguyên lý Agile/Scrum trong phát triển dự án phần mềm hiện đại.\nTài liệu chính: Dennis, A., Wixom, B. H., & Roth, R. M. (2024). System Analysis and Design (8th Edition). Wiley.\nKendall, K. E., & Kendall, J. E. (2018). Systems Analysis and Design (10th Edition). Pearson.\n111242\tPhân tích dữ liệu thông minh\nHọc phần giới thiệu các nguyên lý, thuật toán và kỹ thuật cốt lõi trong khai phá dữ liệu (Data Mining) và học máy (Machine Learning) để biến đổi dữ liệu thô thành tri thức kinh doanh có giá trị. Nội dung tập trung vào các bài toán phân lớp (Classification), phân cụm (Clustering), khai phá luật kết hợp (Association Rule Mining), và dự báo (Regression). Sinh viên sẽ thực hành trên các bộ dữ liệu thực tế bằng các công cụ mạnh mẽ, học cách đánh giá mô hình và tối ưu hóa thuật toán để giải quyết các bài toán tối ưu trong thực tiễn.\nTài liệu chính: Han, J., Kamber, M., & Jian, P. (2022). Data Mining: Concepts and Techniques (3rd Edition). Morgan Kaufmann.\nJames, G., Witten, D., Hastie, T., & Tibshirani, R. (2024). An Introduction to Statistical Learning: with Applications in R/Python. Springer.\nTan, P. N., Steinbach, M., Karpatne, A., & Kumar, V. (2018). Introduction to Data Mining (2nd Edition). Pearson."
+      "references": "[1]. Virtual Private Server (VPS) Hosting: A Complete Guide của Hemant Beniwal - Xuất bản bởi Hemant Beniwal vào năm 2022.\n[2]. VPS Mastery: Build a Secure PHP Web Server with Ubuntu của Andrei Bunghez - Xuất bản bởi Packt Publishing vào năm 2022."
+    },
+    "111189": {
+      "code": "111189",
+      "title": "Phát triển ứng dụng",
+      "description": "Học phần phát triển ứng dụng trang bị cho sinh viên những kiến thức về quy trình phát triển một ứng dụng thực tế. Từ việc khảo sát, lấy yêu cầu khách hàng, phân tích yêu cầu, phân tích và thiết kế hệ thống, xây dựng và triển khai ứng dụng.\n\nVận dụng các kỹ năng kết hợp với kiến thức về quản lý dự án, phân tích thiết kế để tạo ra các tài liệu theo chuẩn CMMI bao gồm: Tài liệu phân tích yêu cầu khách hàng, tài liệu phân tích các yêu cầu phần mềm, tài liệu phân tích cấu hình, tài liệu quản lý rủi ro, tài liệu kế hoạch dự án, tài liệu về ước lượng sản phẩm, tài liệu về kiểm tra các thành phần, kiểm tra hệ thống. kiểm tra tích hợp sản phẩm, tài liệu quản lý chất lượng sản phẩm, tài liệu bàn giao sản phẩm.\n\nXây dựng, lập trình dựa trên các tài liệu kể trên theo đúng chu kỳ phát triển phần mềm.",
+      "references": "[1]. Software Development A Practical Approach, Hans-Petter Halvorsen, 2022\n[2]. A Beginner's Guide to Agile Business Analysis, Ahmed Fawzy, 2022"
+    },
+    "111241": {
+      "code": "111241",
+      "title": "Phân tích và thiết kế hệ thống thông tin",
+      "description": "Học phần trang bị cho sinh viên các kiến thức và kỹ năng cốt lõi để khảo sát, phân tích, thiết kế và triển khai một hệ thống thông tin (HTTT) trong doanh nghiệp. Sinh viên sẽ được học cách tiếp cận hệ thống theo phương pháp truyền thống (Structured Analysis) và phương pháp hướng đối tượng (Object-Oriented Analysis and Design - OOAD) sử dụng ngôn ngữ mô hình hóa thống nhất UML. Học phần cũng hướng dẫn cách xác định yêu cầu người dùng, thiết kế giao diện (UI/UX), thiết kế cơ sở dữ liệu và kiến trúc hệ thống, đồng thời tích hợp các nguyên lý Agile/Scrum trong phát triển dự án phần mềm hiện đại.",
+      "references": "Tài liệu chính: Dennis, A., Wixom, B. H., & Roth, R. M. (2024). System Analysis and Design (8th Edition). Wiley.\nKendall, K. E., & Kendall, J. E. (2018). Systems Analysis and Design (10th Edition). Pearson."
+    },
+    "111242": {
+      "code": "111242",
+      "title": "Phân tích dữ liệu thông minh",
+      "description": "Học phần giới thiệu các nguyên lý, thuật toán và kỹ thuật cốt lõi trong khai phá dữ liệu (Data Mining) và học máy (Machine Learning) để biến đổi dữ liệu thô thành tri thức kinh doanh có giá trị. Nội dung tập trung vào các bài toán phân lớp (Classification), phân cụm (Clustering), khai phá luật kết hợp (Association Rule Mining), và dự báo (Regression). Sinh viên sẽ thực hành trên các bộ dữ liệu thực tế bằng các công cụ mạnh mẽ, học cách đánh giá mô hình và tối ưu hóa thuật toán để giải quyết các bài toán tối ưu trong thực tiễn.",
+      "references": "Tài liệu chính: Han, J., Kamber, M., & Jian, P. (2022). Data Mining: Concepts and Techniques (3rd Edition). Morgan Kaufmann.\nJames, G., Witten, D., Hastie, T., & Tibshirani, R. (2024). An Introduction to Statistical Learning: with Applications in R/Python. Springer.\nTan, P. N., Steinbach, M., Karpatne, A., & Kumar, V. (2018). Introduction to Data Mining (2nd Edition). Pearson."
     },
     "111243": {
       "code": "111243",
@@ -6749,6 +6840,20 @@ window.CURRICULUM_DATA = {
       "exerciseHours": 90,
       "note": "",
       "semester": "Học kỳ 5"
+    },
+    "Môn tự chọn (Chọn 1 trong 2 môn)": {
+      "code": "Môn tự chọn (Chọn 1 trong 2 môn)",
+      "name": "",
+      "credits": 0,
+      "theoryCredits": 0,
+      "practiceCredits": 0,
+      "exerciseCredits": 0,
+      "totalHours": 0,
+      "theoryHours": 0,
+      "practiceHours": 0,
+      "exerciseHours": 0,
+      "note": "",
+      "semester": "Học kỳ 7"
     },
     "111241": {
       "code": "111241",

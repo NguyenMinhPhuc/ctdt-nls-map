@@ -1,9 +1,62 @@
 const data = window.CURRICULUM_DATA;
+const cloneData = value => JSON.parse(JSON.stringify(value));
+const ORIGINAL_CURRICULUM = {
+  matrix6: cloneData(data.matrix6 || []),
+  matrix24: cloneData(data.matrix24 || []),
+  cloMappings: cloneData(data.cloMappings || []),
+  courseSummaries: cloneData(data.courseSummaries || {})
+};
+const PROGRAM_STORAGE_ID = (data.metadata?.program || 'ctdt')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+const LOCAL_STORAGE_CURRICULUM_KEY = `curriculum_edits_${PROGRAM_STORAGE_ID}`;
+const LEGACY_SUMMARIES_KEY = 'custom_course_summaries_2026';
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+}
+
+function getCurriculumEdits() {
+  try {
+    const edits = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CURRICULUM_KEY) || '{}');
+    if (edits && typeof edits === 'object' && edits.courses && typeof edits.courses === 'object') return edits;
+  } catch (error) {
+    console.error('Không đọc được dữ liệu chỉnh sửa CTĐT đã lưu:', error);
+  }
+  return { version: 1, courses: {} };
+}
+
+function persistCurriculumEdits(edits, successMessage = '') {
+  edits.version = 1;
+  edits.program = data.metadata?.program || '';
+  edits.updatedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(LOCAL_STORAGE_CURRICULUM_KEY, JSON.stringify(edits));
+  } catch (error) {
+    console.error('Không thể lưu dữ liệu chỉnh sửa CTĐT:', error);
+    showToast('Không thể lưu chỉnh sửa. Hãy xuất bản sao lưu JSON và kiểm tra dung lượng trình duyệt.', 'error');
+    return false;
+  }
+  if (successMessage) showToast(successMessage, 'success');
+  return true;
+}
+
+function getCourseSummary(code) {
+  return data.courseSummaries[code] || {
+    code,
+    title: data.matrix6.find(course => course.maMH === code)?.tenMH || code,
+    description: '',
+    references: ''
+  };
+}
 
 let currentProgram = 'chinhquy'; // 'chinhquy' | 'tuxa'
 let currentTuxaTrack = 'tich_hop'; // 'tich_hop' (Default)
 let currentPlanSemester = 'all';
 let currentPlanSearch = '';
+let courseEditorDirty = false;
 
 function getActiveSummaries() {
   if (currentProgram === 'tuxa' && data.tuxa && data.tuxa.courseSummaries) {
@@ -40,10 +93,10 @@ function switchProgramMode(mode) {
       btnTx.className = 'px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-emerald-600 text-white shadow-md shadow-emerald-600/30 flex items-center space-x-1.5';
     }
     if (badgeEl) {
-      badgeEl.textContent = 'Hệ ĐTTX Tích Hợp - 150 TC';
+      badgeEl.textContent = data.metadata.distanceLearningBadge || data.metadata.distanceLearningLabel || 'Đào tạo từ xa';
       badgeEl.className = 'hidden md:inline-flex text-xs bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800';
     }
-    showToast('Đã chuyển sang: Hệ ĐTTX Tích hợp 3 Hướng (150 Tín chỉ)', 'info');
+    showToast(`Đã chuyển sang: ${data.metadata.distanceLearningLabel || 'Đào tạo từ xa'}`, 'info');
   } else {
     if (btnCq) {
       btnCq.className = 'px-3 py-1.5 rounded-md text-xs font-bold transition-all bg-sky-600 text-white shadow-md shadow-sky-600/30 flex items-center space-x-1.5';
@@ -52,10 +105,10 @@ function switchProgramMode(mode) {
       btnTx.className = 'px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white transition-all flex items-center space-x-1.5';
     }
     if (badgeEl) {
-      badgeEl.textContent = 'Khóa 2026 - 2030';
+      badgeEl.textContent = data.metadata.programBadge || data.metadata.program || '';
       badgeEl.className = 'hidden md:inline-flex text-xs bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800';
     }
-    showToast('Đã chuyển sang: Hệ Chính quy (Khóa 2026 - 2030)', 'info');
+    showToast(`Đã chuyển sang: ${data.metadata.modeLabel || data.metadata.program}`, 'info');
   }
 
   selectedSummaryCode = null;
@@ -86,27 +139,24 @@ function renderBM03PlanTable() {
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center space-x-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2">
-              <i class="fa-solid fa-layer-group"></i> Hệ Đào Tạo Từ Xa (ĐTTX) - Chuẩn 150 Tín Chỉ
+              <i class="fa-solid fa-layer-group"></i> ${data.metadata.distanceLearningBadge || data.metadata.distanceLearningLabel || 'Hệ đào tạo từ xa'}
             </div>
             <h2 class="text-xl sm:text-2xl font-black tracking-tight flex items-center gap-2">
-              <i class="fa-solid fa-cubes-stacked text-emerald-400"></i> KẾ HOẠCH ĐÀO TẠO BM03 TÍCH HỢP 3 HƯỚNG CHUYÊN SÂU
+              <i class="fa-solid fa-cubes-stacked text-emerald-400"></i> ${data.metadata.distanceLearningHeading || 'KẾ HOẠCH ĐÀO TẠO TỪ XA'}
             </h2>
             <p class="text-xs sm:text-sm text-slate-200 mt-2 max-w-4xl leading-relaxed">
-              Chương trình đào tạo từ xa 150 tín chỉ tích hợp trọn vẹn cả 3 mũi nhọn công nghệ: 
-              <strong class="text-sky-300">Lập trình phát triển ứng dụng (Vibe Coding)</strong>, 
-              <strong class="text-emerald-300">Mạng máy tính (Cisco NetAcad CCNA & CyberOps & DevNet)</strong> và 
-              <strong class="text-amber-300">Phân tích số liệu (Data Warehouse, Power BI PL-300 & GenAI)</strong>.
+              ${data.metadata.distanceLearningDescription || ''}
             </p>
           </div>
           <div class="flex items-center space-x-2 flex-wrap gap-2">
-            <a href="BM03-Ke hoach dao tao_CNTT-2026_TuXa_TichHop.xlsx" download class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
+            ${data.metadata.downloads?.distanceLearningPlan ? `<a href="${data.metadata.downloads.distanceLearningPlan}" download class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
               <i class="fa-solid fa-file-excel"></i>
               <span>Xuất File Excel BM03 Tích Hợp</span>
-            </a>
-            <a href="2026-CNTT-TuXa-TichHop-Tom tat hoc phan.docx" download class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
+            </a>` : ''}
+            ${data.metadata.downloads?.distanceLearningSummary ? `<a href="${data.metadata.downloads.distanceLearningSummary}" download class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
               <i class="fa-solid fa-file-word"></i>
               <span>Xuất Tóm Tắt Học Phần (.docx)</span>
-            </a>
+            </a>` : ''}
           </div>
         </div>
       `;
@@ -116,26 +166,25 @@ function renderBM03PlanTable() {
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div class="inline-flex items-center space-x-2 bg-sky-500/20 text-sky-200 border border-sky-400/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2">
-              <i class="fa-solid fa-graduation-cap"></i> Hệ Chính Quy Khóa 2026 - 2030
+              <i class="fa-solid fa-graduation-cap"></i> ${data.metadata.modeLabel || data.metadata.program}
             </div>
             <h2 class="text-xl sm:text-2xl font-black tracking-tight">
-              KẾ HOẠCH ĐÀO TẠO BM03 CHUẨN - NGÀNH CÔNG NGHỆ THÔNG TIN
+              ${data.metadata.coursePlanHeading || `KẾ HOẠCH ĐÀO TẠO BM03 - ${data.metadata.program}`}
             </h2>
             <p class="text-xs sm:text-sm text-slate-200 mt-2 max-w-4xl leading-relaxed">
-              Toàn bộ kế hoạch đào tạo 8 học kỳ theo học chế tín chỉ niên khóa 2026 - 2030 theo biểu mẫu BM03 quy định của Trường Đại học Lạc Hồng.
+              ${data.metadata.coursePlanDescription || ''}
             </p>
           </div>
-          <div class="flex items-center space-x-2">
+          ${data.tuxa ? `<div class="flex items-center space-x-2">
             <button onclick="switchProgramMode('tuxa')" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center space-x-1.5 shadow-md">
               <i class="fa-solid fa-laptop-code"></i>
-              <span>Xem CTDT Từ Xa Tích Hợp (150 TC)</span>
+              <span>Xem ${data.metadata.distanceLearningLabel || 'chương trình từ xa'}</span>
             </button>
-          </div>
+          </div>` : ''}
         </div>
       `;
     }
   }
-
   // Get Semesters Data
   let semestersList = [];
 
@@ -143,7 +192,7 @@ function renderBM03PlanTable() {
     semestersList = data.tuxa.curriculum_by_track['tich_hop'] || [];
   } else if (data.coursePlan) {
     const grouped = {};
-    for (let i = 1; i <= 8; i++) {
+    for (let i = 1; i <= (data.metadata.semesterCount || 8); i++) {
       grouped[`Học kỳ ${i}`] = [];
     }
     Object.values(data.coursePlan).forEach(c => {
@@ -309,16 +358,16 @@ function renderBM03PlanTable() {
         <div>
           <span class="text-xs uppercase font-extrabold text-emerald-700 dark:text-emerald-400 tracking-wider">Tổng kết kế hoạch đào tạo toàn khóa</span>
           <h4 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white mt-0.5">
-            TỔNG CỘNG TOÀN KHÓA 8 HỌC KỲ: <span class="text-emerald-600 dark:text-emerald-400">${grandTotalCredits} TÍN CHỈ</span>
+            TỔNG CỘNG TOÀN KHÓA${data.metadata.semesterCount ? ` ${data.metadata.semesterCount} HỌC KỲ` : ''}: <span class="text-emerald-600 dark:text-emerald-400">${grandTotalCredits} TÍN CHỈ</span>
           </h4>
           <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
-            Tổng số giờ: <strong>${grandTotalHours} tiết quy chuẩn</strong> (1 TC = 50 tiết). Đảm bảo chuẩn 150 tín chỉ theo quy định của Bộ Giáo dục & Đào tạo.
+            Tổng số giờ: <strong>${grandTotalHours} tiết quy chuẩn</strong> (1 TC = ${data.metadata.creditHoursPerCredit || 50} tiết). ${data.metadata.targetCredits ? `Mục tiêu chương trình: ${data.metadata.targetCredits} tín chỉ.` : ''}
           </p>
         </div>
         <div class="flex items-center space-x-3">
-          <a href="${currentProgram === 'tuxa' ? 'BM03-Ke hoach dao tao_CNTT-2026_TuXa_TichHop.xlsx' : 'BM03-Ke hoach dao tao_CNTT-2026_guiDaotao.xlsx'}" download class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center space-x-2 shadow-lg shadow-emerald-600/30">
+          <a href="${(data.metadata.downloads || {})[currentProgram === 'tuxa' ? 'distanceLearningPlan' : 'coursePlan'] || '#'}" ${((data.metadata.downloads || {})[currentProgram === 'tuxa' ? 'distanceLearningPlan' : 'coursePlan']) ? 'download' : 'hidden'} class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center space-x-2 shadow-lg shadow-emerald-600/30">
             <i class="fa-solid fa-download"></i>
-            <span>Tải Bảng BM03 ${currentProgram === 'tuxa' ? 'Từ Xa Tích Hợp' : 'Chính Quy'}</span>
+            <span>Tải Bảng BM03 ${currentProgram === 'tuxa' ? (data.metadata.distanceLearningPlanLabel || data.metadata.distanceLearningLabel || 'Từ xa') : (data.metadata.coursePlanDownloadLabel || 'Chính quy')}</span>
           </a>
         </div>
       </div>
@@ -485,6 +534,7 @@ function renderMatrix6Table() {
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-sky-50/60 dark:hover:bg-sky-950/20 transition-colors cursor-pointer group';
     tr.onclick = () => openCourseModal(row.maMH);
+    tr.dataset.courseCode = row.maMH;
     tr.dataset.block = row.khoiKT;
     tr.dataset.search = (row.maMH + ' ' + row.tenMH + ' ' + row.khoiKT).toLowerCase();
 
@@ -509,15 +559,56 @@ function renderMatrix6Table() {
       <td class="py-2.5 px-3 text-center text-xs font-mono text-slate-500 dark:text-slate-400">${row.cacMien}</td>
       <td class="py-2.5 px-3 text-center">${getLevelBadge(row.mucDoMax)}</td>
       <td class="py-2.5 px-3 text-center">
-        <button class="p-1.5 text-sky-500 hover:text-sky-700 hover:bg-sky-100 dark:hover:bg-sky-900/60 rounded-md">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <button onclick="event.stopPropagation(); editCourseInWorkbench('${row.maMH}')" title="Chỉnh sửa map, CLO và tóm tắt học phần" class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 rounded-md">
+          <i class="fa-solid fa-pen-to-square"></i>
         </button>
       </td>
     `;
     tbody.appendChild(tr);
   });
+  updateMatrix6Totals();
   const counter = document.getElementById('matrix6Counter');
   if (counter) counter.textContent = `${data.matrix6.length} môn học`;
+}
+
+function updateMatrix6Totals() {
+  const foot = document.getElementById('matrix6TableFoot');
+  const body = document.getElementById('matrix6TableBody');
+  if (!foot || !body) return;
+  const visibleRows = [...body.querySelectorAll('tr[data-course-code]')]
+    .filter(row => row.style.display !== 'none');
+  const columns = ['m1', 'm2', 'm3', 'm4', 'm5', 'm6'];
+  const domainCounts = columns.map(column => visibleRows.reduce((count, row) => {
+    const course = data.matrix6.find(item => item.maMH === row.dataset.courseCode);
+    return count + (course?.[column] && course[column] !== '-' ? 1 : 0);
+  }, 0));
+  const mappedTotal = domainCounts.reduce((sum, count) => sum + count, 0);
+  const lowValueThreshold = getLowPositiveValueThreshold(domainCounts);
+  foot.innerHTML = `<tr class="border-t-2 border-slate-300 dark:border-slate-500">
+    <td colspan="5" class="py-3 px-4 text-right">Số học phần có giá trị trong từng miền <span class="font-normal text-slate-500">(${visibleRows.length} học phần đang hiển thị)</span><span class="block text-[10px] font-normal text-slate-500">Đỏ: 0 · Cam: nhóm 25% giá trị dương thấp nhất</span></td>
+    ${domainCounts.map((count, index) => `<td class="py-3 px-2 text-center ${getTotalEmphasisClass(count, lowValueThreshold)}" title="${getTotalEmphasisTitle(count, lowValueThreshold)}">${count}</td>`).join('')}
+    <td colspan="3" class="py-3 px-3 text-center">Tổng lượt ánh xạ: <span class="${mappedTotal === 0 ? getTotalEmphasisClass(mappedTotal, lowValueThreshold) : ''}">${mappedTotal}</span></td>
+  </tr>`;
+}
+
+function getLowPositiveValueThreshold(values) {
+  const positiveValues = values.filter(value => value > 0).sort((a, b) => a - b);
+  if (positiveValues.length === 0) return null;
+  return positiveValues[Math.ceil(positiveValues.length * 0.25) - 1];
+}
+
+function getTotalEmphasisClass(value, lowValueThreshold) {
+  if (value === 0) return 'rounded-md bg-rose-200 px-2 py-1 font-black text-rose-900 ring-2 ring-rose-500 dark:bg-rose-900 dark:text-white dark:ring-rose-400';
+  if (lowValueThreshold !== null && value <= lowValueThreshold) {
+    return 'rounded-md bg-amber-100 px-2 py-1 font-extrabold text-amber-900 ring-2 ring-amber-400 dark:bg-amber-900/70 dark:text-amber-100 dark:ring-amber-500';
+  }
+  return '';
+}
+
+function getTotalEmphasisTitle(value, lowValueThreshold) {
+  if (value === 0) return 'Không có học phần ánh xạ vào tiêu chí này';
+  if (lowValueThreshold !== null && value <= lowValueThreshold) return 'Thuộc nhóm 25% giá trị dương thấp nhất';
+  return '';
 }
 
 // Filter Matrix 6
@@ -537,6 +628,7 @@ function filterMatrix6() {
       r.style.display = 'none';
     }
   });
+  updateMatrix6Totals();
   const counter = document.getElementById('matrix6Counter');
   if (counter) counter.textContent = `${visible} / ${data.matrix6.length} môn học`;
 }
@@ -552,6 +644,7 @@ function renderMatrix24Table() {
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-sky-50/60 dark:hover:bg-sky-950/20 transition-colors divide-x divide-slate-100 dark:divide-slate-800 text-center';
     tr.dataset.search = (row.maMH + ' ' + row.tenMH + ' ' + row.khoiKT).toLowerCase();
+    tr.dataset.courseCode = row.maMH;
 
     let cellsHtml = `
       <td class="py-2 px-2 text-slate-400 font-mono sticky-col-1 bg-white dark:bg-slate-800">${idx + 1}</td>
@@ -575,15 +668,33 @@ function renderMatrix24Table() {
           '6': 'text-rose-600 bg-rose-100 dark:bg-rose-950 dark:text-rose-400'
         };
         const cClass = colorMap[domainPrefix] || 'text-sky-600 bg-sky-100';
-        checkHtml = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-xs ${cClass} matrix-cell" title="${code}: Ánh xạ đạt chuẩn">✓</span>`;
+        checkHtml = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-xs ${cClass} matrix-cell">${isCheck ? '✓' : ''}</span>`;
       }
       
-      cellsHtml += `<td class="py-1 px-1 ${bgClass}">${checkHtml}</td>`;
+      cellsHtml += `<td class="py-1 px-1 ${bgClass}"><button type="button" onclick="toggleMappedCompetency('${row.maMH}', '${code}')" title="Bật/tắt ${code} cho ${row.maMH}" aria-label="Bật/tắt ánh xạ ${code}" class="min-w-7 min-h-7 rounded hover:ring-2 hover:ring-sky-400">${checkHtml}</button></td>`;
     });
 
     tr.innerHTML = cellsHtml;
     tbody.appendChild(tr);
   });
+  updateMatrix24Totals();
+}
+
+function updateMatrix24Totals() {
+  const foot = document.getElementById('matrix24TableFoot');
+  const body = document.getElementById('matrix24TableBody');
+  if (!foot || !body) return;
+  const visibleRows = [...body.querySelectorAll('tr[data-course-code]')]
+    .filter(row => row.style.display !== 'none');
+  const counts = data.nltpCodes.map(code => visibleRows.reduce((count, row) => {
+    const course = data.matrix24.find(item => item.maMH === row.dataset.courseCode);
+    return count + (course?.mapping?.[code] ? 1 : 0);
+  }, 0));
+  const lowValueThreshold = getLowPositiveValueThreshold(counts);
+  foot.innerHTML = `<tr class="border-t-2 border-slate-300 dark:border-slate-500">
+    <td colspan="3" class="py-3 px-3 text-right">Số học phần có ánh xạ <span class="font-normal text-slate-500">(${visibleRows.length} học phần đang hiển thị)</span><span class="block text-[10px] font-normal text-slate-500">Đỏ: 0 · Cam: nhóm 25% giá trị dương thấp nhất</span></td>
+    ${counts.map(count => `<td class="py-3 px-1 text-center"><span class="${getTotalEmphasisClass(count, lowValueThreshold)}" title="${getTotalEmphasisTitle(count, lowValueThreshold)}">${count}</span></td>`).join('')}
+  </tr>`;
 }
 
 // Filter Matrix 24
@@ -597,6 +708,7 @@ function filterMatrix24() {
       r.style.display = 'none';
     }
   });
+  updateMatrix24Totals();
 }
 
 // Render CLO Details Table
@@ -633,11 +745,185 @@ function renderCLOTable() {
       <td class="py-2.5 px-4 text-xs text-slate-700 dark:text-slate-200 leading-relaxed">${m.noiDungCLO}</td>
       <td class="py-2.5 px-2 text-center font-mono text-xs font-semibold text-amber-600 dark:text-amber-400">${m.pi}</td>
       <td class="py-2.5 px-3 text-xs text-slate-500 dark:text-slate-400">${m.danhGia}</td>
+      <td class="py-2.5 px-2 text-center"><button onclick="editCourseInWorkbench('${m.maMH}')" class="rounded px-2 py-1 text-emerald-700 hover:bg-emerald-100 dark:text-emerald-300" title="Chỉnh sửa CLO và map"><i class="fa-solid fa-pen-to-square"></i></button></td>
     `;
     tbody.appendChild(tr);
   });
   const counter = document.getElementById('cloCounter');
   if (counter) counter.textContent = `${data.cloMappings.length} dòng ánh xạ`;
+}
+
+function renderCoursePiMatrix() {
+  const table = document.getElementById('coursePiMatrix');
+  if (!table) return;
+
+  const groups = new Map();
+  const mappedClosByCourse = new Map();
+  data.cloMappings.forEach(mapping => {
+    const courseCode = String(mapping.maMH || '').trim();
+    const clo = String(mapping.clo || '').trim();
+    const pi = String(mapping.pi || '').trim();
+    if (!courseCode || !clo || !pi) return;
+
+    if (!mappedClosByCourse.has(courseCode)) mappedClosByCourse.set(courseCode, new Set());
+    mappedClosByCourse.get(courseCode).add(clo);
+
+    const piMatch = pi.match(/^PI\s*(\d+)\s*\.\s*(\d+)$/i);
+    const piLabel = piMatch ? `PI ${piMatch[1]}.${piMatch[2]}` : pi;
+    const ploMatch = piLabel.match(/(\d+)\s*\./);
+    const plo = ploMatch ? `PLO ${ploMatch[1]}` : 'PLO chưa xác định';
+    if (!groups.has(plo)) groups.set(plo, new Map());
+    const pis = groups.get(plo);
+    if (!pis.has(piLabel)) pis.set(piLabel, new Map());
+    const courses = pis.get(piLabel);
+    if (!courses.has(courseCode)) courses.set(courseCode, new Set());
+    courses.get(courseCode).add(clo);
+  });
+
+  const compareLabels = (a, b) => a.localeCompare(b, 'vi', { numeric: true, sensitivity: 'base' });
+  const ploGroups = [...groups.entries()].sort(([a], [b]) => compareLabels(a, b));
+  const piColumns = ploGroups.flatMap(([plo, pis]) =>
+    [...pis.keys()].sort(compareLabels).map(pi => ({ plo, pi }))
+  );
+
+  const courses = new Map();
+  data.matrix6.forEach(course => {
+    courses.set(course.maMH, { code: course.maMH, title: course.tenMH });
+  });
+  data.cloMappings.forEach(mapping => {
+    if (mapping.maMH && !courses.has(mapping.maMH)) {
+      courses.set(mapping.maMH, { code: mapping.maMH, title: mapping.tenMH || mapping.maMH });
+    }
+  });
+  const courseRows = [...courses.values()].sort((a, b) => compareLabels(a.code, b.code));
+  const courseCloCounts = courseRows.map(course => mappedClosByCourse.get(course.code)?.size || 0);
+  const lowCloCountThreshold = getLowPositiveValueThreshold(courseCloCounts);
+  const piTotals = new Map(piColumns.map(({ pi }) => [pi, 0]));
+  const piCourseCounts = new Map(piColumns.map(({ pi }) => [pi, new Set()]));
+
+  const headerGroups = ploGroups.map(([plo, pis]) => `
+    <th colspan="${pis.size}" class="border-l border-slate-300 dark:border-slate-500 py-2 px-3 text-center font-bold">${escapeHtml(plo)}</th>
+  `).join('');
+  const headerPis = piColumns.map(({ pi }) => `
+    <th class="border-l border-slate-200 dark:border-slate-600 py-2 px-3 text-center min-w-[90px] font-semibold">${escapeHtml(pi)}</th>
+  `).join('');
+  const rowsHtml = courseRows.map((course, index) => {
+    const cloCount = mappedClosByCourse.get(course.code)?.size || 0;
+    const cells = piColumns.map(({ plo, pi }) => {
+      const clos = groups.get(plo)?.get(pi)?.get(course.code);
+      if (!clos?.size) return '<td class="border-l border-slate-100 dark:border-slate-700 px-3 py-2 text-center text-slate-300 dark:text-slate-600">—</td>';
+      piTotals.set(pi, piTotals.get(pi) + clos.size);
+      piCourseCounts.get(pi).add(course.code);
+      const labels = [...clos].sort(compareLabels);
+      return `<td class="border-l border-slate-100 dark:border-slate-700 px-3 py-2 text-center font-mono font-semibold text-sky-700 dark:text-sky-300">${labels.map(escapeHtml).join('<br>')}</td>`;
+    }).join('');
+    return `<tr class="hover:bg-sky-50/60 dark:hover:bg-sky-950/20">
+      <td class="sticky left-0 z-20 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-center font-mono text-slate-400">${index + 1}</td>
+      <th scope="row" style="left:52px" class="sticky z-10 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-left font-medium">
+        <span class="block min-w-[210px]">${escapeHtml(course.title)}</span>
+        <span class="font-mono text-[11px] text-slate-400">${escapeHtml(course.code)}</span>
+      </th>
+      <td class="border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-center font-bold ${getTotalEmphasisClass(cloCount, lowCloCountThreshold)}" title="${escapeHtml(getTotalEmphasisTitle(cloCount, lowCloCountThreshold))}">${cloCount}</td>
+      ${cells}
+    </tr>`;
+  }).join('');
+
+  const columnCount = Math.max(piColumns.length, 1);
+  const mappedCourseCount = courseCloCounts.filter(count => count > 0).length;
+  const totalCourseCloMappings = courseCloCounts.reduce((total, count) => total + count, 0);
+  const totalCloPiMappings = [...piTotals.values()].reduce((total, count) => total + count, 0);
+  const ploReviewRows = ploGroups.map(([plo, pis]) => {
+    const pisInPlo = [...pis.keys()];
+    const ploCloCount = pisInPlo.reduce((total, pi) => total + piTotals.get(pi), 0);
+    const ploCourses = new Set(pisInPlo.flatMap(pi => [...piCourseCounts.get(pi)]));
+    return { plo, piCount: pis.size, cloCount: ploCloCount, courseCount: ploCourses.size };
+  });
+  const piReviewRows = piColumns.map(({ plo, pi }) => ({
+    plo,
+    pi,
+    cloCount: piTotals.get(pi),
+    courseCount: piCourseCounts.get(pi).size
+  }));
+  const unMappedCourses = courseRows.filter(course => !mappedClosByCourse.get(course.code)?.size);
+  const minPiCount = piReviewRows.length ? Math.min(...piReviewRows.map(item => item.cloCount)) : 0;
+  const maxPiCount = piReviewRows.length ? Math.max(...piReviewRows.map(item => item.cloCount)) : 0;
+  const leastCoveredPis = piReviewRows.filter(item => item.cloCount === minPiCount).map(item => item.pi);
+  const mostCoveredPis = piReviewRows.filter(item => item.cloCount === maxPiCount).map(item => item.pi);
+
+  table.innerHTML = `
+    <thead class="sticky top-0 z-20 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200">
+      <tr>
+        <th rowspan="2" class="sticky left-0 z-30 bg-slate-100 dark:bg-slate-700 border-r border-b border-slate-300 dark:border-slate-500 px-3 py-2 text-center min-w-[52px]">STT</th>
+        <th rowspan="2" style="left:52px" class="sticky z-30 bg-slate-100 dark:bg-slate-700 border-r border-b border-slate-300 dark:border-slate-500 px-3 py-2 text-left min-w-[230px]">Môn học</th>
+        <th rowspan="2" class="border-r border-b border-slate-300 dark:border-slate-500 px-3 py-2 text-center min-w-[100px]">Số CLO đã map</th>
+        ${headerGroups || `<th rowspan="2" class="border-b border-slate-300 dark:border-slate-500 px-3 py-2 text-center">Chưa có PI</th>`}
+      </tr>
+      <tr>${headerPis}</tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+      ${rowsHtml || `<tr><td colspan="${columnCount + 2}" class="px-4 py-8 text-center text-slate-500">Chưa có học phần để hiển thị.</td></tr>`}
+    </tbody>
+    <tfoot class="sticky bottom-0 z-20 bg-slate-100 dark:bg-slate-700 font-bold text-slate-800 dark:text-slate-100">
+      <tr class="border-t-2 border-slate-300 dark:border-slate-500">
+        <th scope="row" colspan="3" class="sticky left-0 z-10 bg-slate-100 dark:bg-slate-700 px-3 py-3 text-right">Số CLO đã map theo PI</th>
+        ${piColumns.map(({ pi }) => `<td class="border-l border-slate-200 dark:border-slate-600 px-3 py-3 text-center">${piTotals.get(pi)}</td>`).join('')}
+        ${piColumns.length ? '' : '<td class="px-3 py-3 text-center">0</td>'}
+      </tr>
+    </tfoot>
+  `;
+
+  const review = document.getElementById('coursePiReview');
+  if (!review) return;
+  const coveragePercent = courseRows.length ? Math.round(mappedCourseCount / courseRows.length * 100) : 0;
+  const piRowsHtml = piReviewRows.map(item => {
+    const share = totalCloPiMappings ? (item.cloCount / totalCloPiMappings * 100).toFixed(1) : '0.0';
+    const isLow = item.cloCount > 0 && item.cloCount === minPiCount && minPiCount < maxPiCount;
+    return `<tr class="border-b border-slate-100 dark:border-slate-700">
+      <td class="px-3 py-2">${escapeHtml(item.plo)}</td>
+      <th scope="row" class="px-3 py-2 text-left font-mono">${escapeHtml(item.pi)}</th>
+      <td class="px-3 py-2 text-center ${isLow ? 'font-bold text-amber-700 dark:text-amber-300' : ''}">${item.cloCount}</td>
+      <td class="px-3 py-2 text-center">${item.courseCount}</td>
+      <td class="px-3 py-2 text-right">${share}%</td>
+    </tr>`;
+  }).join('');
+  review.innerHTML = `
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-magnifying-glass-chart mt-0.5 text-indigo-600 dark:text-indigo-400"></i>
+        <div>
+          <h2 class="font-bold text-slate-900 dark:text-white">Rà soát mức độ ánh xạ chuẩn đầu ra CTĐT</h2>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Tổng hợp mức độ phân bố CLO theo PI từ dữ liệu đang nạp; đây là chỉ báo rà soát, không thay thế chuẩn PLO/PI chính thức của chương trình.</p>
+        </div>
+      </div>
+      <div class="mt-4 grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <div class="rounded-lg bg-sky-50 dark:bg-sky-950/40 p-3"><span class="text-xs text-slate-600 dark:text-slate-300">Môn có CLO đã map</span><strong class="mt-1 block text-xl text-sky-700 dark:text-sky-300">${mappedCourseCount} / ${courseRows.length}</strong><span class="text-[11px] text-slate-500">${coveragePercent}% số môn</span></div>
+        <div class="rounded-lg bg-emerald-50 dark:bg-emerald-950/40 p-3"><span class="text-xs text-slate-600 dark:text-slate-300">CLO duy nhất theo môn</span><strong class="mt-1 block text-xl text-emerald-700 dark:text-emerald-300">${totalCourseCloMappings}</strong></div>
+        <div class="rounded-lg bg-indigo-50 dark:bg-indigo-950/40 p-3"><span class="text-xs text-slate-600 dark:text-slate-300">Lượt ánh xạ CLO–PI</span><strong class="mt-1 block text-xl text-indigo-700 dark:text-indigo-300">${totalCloPiMappings}</strong></div>
+        <div class="rounded-lg bg-violet-50 dark:bg-violet-950/40 p-3"><span class="text-xs text-slate-600 dark:text-slate-300">PI có dữ liệu ánh xạ</span><strong class="mt-1 block text-xl text-violet-700 dark:text-violet-300">${piColumns.length}</strong><span class="text-[11px] text-slate-500">thuộc ${ploGroups.length} PLO</span></div>
+      </div>
+      <div class="mt-4 grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
+          <table class="w-full text-xs text-slate-700 dark:text-slate-300">
+            <thead class="bg-slate-100 dark:bg-slate-700"><tr><th class="px-3 py-2 text-left">PLO</th><th class="px-3 py-2 text-center">Số PI</th><th class="px-3 py-2 text-center">Lượt CLO–PI</th><th class="px-3 py-2 text-center">Số môn có map</th></tr></thead>
+            <tbody>${ploReviewRows.map(item => `<tr class="border-b border-slate-100 dark:border-slate-700"><th scope="row" class="px-3 py-2 text-left">${escapeHtml(item.plo)}</th><td class="px-3 py-2 text-center">${item.piCount}</td><td class="px-3 py-2 text-center">${item.cloCount}</td><td class="px-3 py-2 text-center">${item.courseCount}</td></tr>`).join('') || '<tr><td colspan="4" class="px-3 py-4 text-center text-slate-500">Chưa có PI để tổng hợp.</td></tr>'}</tbody>
+          </table>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700 max-h-[360px]">
+          <table class="w-full text-xs text-slate-700 dark:text-slate-300">
+            <thead class="sticky top-0 bg-slate-100 dark:bg-slate-700"><tr><th class="px-3 py-2 text-left">PLO</th><th class="px-3 py-2 text-left">PI</th><th class="px-3 py-2 text-center">CLO map</th><th class="px-3 py-2 text-center">Số môn</th><th class="px-3 py-2 text-right">Tỷ trọng</th></tr></thead>
+            <tbody>${piRowsHtml || '<tr><td colspan="5" class="px-3 py-4 text-center text-slate-500">Chưa có PI để tổng hợp.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="mt-4 rounded-lg ${unMappedCourses.length ? 'bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-200' : 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200'} p-3 text-xs">
+        ${unMappedCourses.length
+          ? `<strong>Cần rà soát ${unMappedCourses.length} môn chưa có CLO được map:</strong> ${unMappedCourses.map(course => `${escapeHtml(course.code)} – ${escapeHtml(course.title)}`).join('; ')}.`
+          : '<strong>Không có môn nào thiếu CLO đã map</strong> trong dữ liệu hiện tại.'}
+        ${piReviewRows.length && minPiCount < maxPiCount ? `<span class="mt-1 block">PI có lượt map thấp nhất: <strong>${leastCoveredPis.map(escapeHtml).join(', ')}</strong> (${minPiCount}); cao nhất: <strong>${mostCoveredPis.map(escapeHtml).join(', ')}</strong> (${maxPiCount}). Nên đối chiếu với mức độ quan trọng và kế hoạch đánh giá của từng PLO.</span>` : ''}
+        <span class="mt-1 block text-[11px] opacity-80">Các PI chưa xuất hiện trong nguồn ánh xạ không thể được xác định nếu danh mục PI chuẩn chưa được cung cấp riêng.</span>
+      </div>
+    </div>
+  `;
 }
 
 // Filter CLO Table
@@ -756,33 +1042,654 @@ function filterEvidences() {
 // COURSE SUMMARIES EDITING & DOCX EXPORT
 // ==========================================
 
-const LOCAL_STORAGE_SUMMARIES_KEY = 'custom_course_summaries_2026';
-
 function initCustomSummaries() {
   if (!window.ORIGINAL_COURSE_SUMMARIES && typeof data !== 'undefined' && data.courseSummaries) {
-    window.ORIGINAL_COURSE_SUMMARIES = JSON.parse(JSON.stringify(data.courseSummaries));
+    window.ORIGINAL_COURSE_SUMMARIES = cloneData(ORIGINAL_CURRICULUM.courseSummaries);
   }
-  
-  const saved = getCustomSummaries();
-  Object.keys(saved).forEach(code => {
-    if (data.courseSummaries[code]) {
-      if (saved[code].description !== undefined) data.courseSummaries[code].description = saved[code].description;
-      if (saved[code].references !== undefined) data.courseSummaries[code].references = saved[code].references;
+
+  const edits = getCurriculumEdits();
+  let migratedLegacySummaries = false;
+  if (Object.keys(edits.courses).length === 0 && PROGRAM_STORAGE_ID.includes('cong_nghe_thong_tin')) {
+    try {
+      const legacySummaries = JSON.parse(localStorage.getItem(LEGACY_SUMMARIES_KEY) || '{}');
+      Object.entries(legacySummaries).forEach(([code, summary]) => {
+        edits.courses[code] = { ...(edits.courses[code] || {}), summary: summary };
+        migratedLegacySummaries = true;
+      });
+    } catch (error) {
+      console.error('Không đọc được bản tóm tắt học phần cũ:', error);
     }
-    const m6 = data.matrix6.find(c => c.maMH === code);
-    if (m6) {
-      if (saved[code].description !== undefined) m6.summary = saved[code].description;
-      if (saved[code].references !== undefined) m6.references = saved[code].references;
+  }
+
+  Object.entries(edits.courses).forEach(([code, courseEdit]) => {
+    const map6 = data.matrix6.find(course => course.maMH === code);
+    const map24 = data.matrix24.find(course => course.maMH === code);
+    if (map6 && courseEdit.matrix6) Object.assign(map6, courseEdit.matrix6);
+    if (map24 && courseEdit.competencies) Object.assign(map24.mapping, courseEdit.competencies);
+    if (courseEdit.cloMappings) {
+      data.cloMappings = data.cloMappings.filter(mapping => mapping.maMH !== code).concat(cloneData(courseEdit.cloMappings));
+    }
+    if (courseEdit.summary) {
+      const summary = getCourseSummary(code);
+      Object.assign(summary, courseEdit.summary);
+      data.courseSummaries[code] = summary;
+      if (map6) {
+        map6.summary = summary.description || '';
+        map6.references = summary.references || '';
+        map6.hasSummary = Boolean(map6.summary || map6.references);
+      }
     }
   });
+
+  if (migratedLegacySummaries && persistCurriculumEdits(edits)) {
+    try {
+      localStorage.removeItem(LEGACY_SUMMARIES_KEY);
+    } catch (error) {
+      console.error('Không thể xóa bản tóm tắt học phần cũ sau khi chuyển đổi:', error);
+    }
+  }
+  data.cloMappings.sort((a, b) => String(a.maMH).localeCompare(String(b.maMH)) || String(a.clo).localeCompare(String(b.clo)));
 }
 
 function getCustomSummaries() {
-  try {
-    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_SUMMARIES_KEY) || '{}');
-  } catch (e) {
-    return {};
+  return Object.fromEntries(Object.entries(getCurriculumEdits().courses)
+    .filter(([, edit]) => edit.summary)
+    .map(([code, edit]) => [code, edit.summary]));
+}
+
+function getCourseAnalysis(code) {
+  const map6 = data.matrix6.find(course => course.maMH === code);
+  const map24 = data.matrix24.find(course => course.maMH === code);
+  const clos = data.cloMappings.filter(mapping => mapping.maMH === code);
+  const mappedDomains = ['I', 'II', 'III', 'IV', 'V', 'VI']
+    .filter((domain, index) => map6?.[`m${index + 1}`] && map6[`m${index + 1}`] !== '-');
+  const selectedCompetencies = data.competencies
+    .filter(competency => map24?.mapping?.[competency.code]);
+  const competencyDomains = [...new Set(selectedCompetencies.map(item => item.domainCode))];
+  const cloDomains = [...new Set(clos.map(mapping => mapping.mienNLS))];
+  const selectedCodes = new Set(selectedCompetencies.map(item => item.code));
+  const cloCodes = new Set(clos.map(mapping => mapping.maNLTP));
+  const summary = getCourseSummary(code);
+  const issues = [];
+
+  if (mappedDomains.length === 0) issues.push('Chưa ánh xạ miền NLS ở ma trận 6 miền.');
+  mappedDomains.filter(domain => !cloDomains.includes(domain))
+    .forEach(domain => issues.push(`Miền ${domain} trong ma trận 6 miền chưa có CLO tương ứng.`));
+  cloDomains.filter(domain => !mappedDomains.includes(domain))
+    .forEach(domain => issues.push(`CLO thuộc miền ${domain} nhưng ma trận 6 miền chưa đánh dấu.`));
+  selectedCompetencies.filter(item => !cloCodes.has(item.code))
+    .forEach(item => issues.push(`NLTP ${item.code} đã chọn nhưng chưa được gắn với CLO.`));
+  clos.filter(mapping => mapping.maNLTP && !selectedCodes.has(mapping.maNLTP))
+    .forEach(mapping => issues.push(`${mapping.clo || 'CLO'} ánh xạ NLTP ${mapping.maNLTP} nhưng ma trận 24 chưa chọn.`));
+  clos.filter(mapping => {
+    const competency = data.competencies.find(item => item.code === mapping.maNLTP);
+    return competency && competency.domainCode !== mapping.mienNLS;
+  }).forEach(mapping => issues.push(`${mapping.clo || 'CLO'} có miền NLS không khớp với NLTP ${mapping.maNLTP}.`));
+  const cloIds = clos.map(mapping => mapping.clo).filter(Boolean);
+  if (new Set(cloIds).size !== cloIds.length) issues.push('Có mã CLO bị trùng trong học phần.');
+  if (!String(summary.description || '').trim()) issues.push('Chưa có mục tiêu/tóm tắt học phần.');
+
+  return {
+    code,
+    title: map6?.tenMH || clos[0]?.tenMH || code,
+    map6: mappedDomains,
+    map24: selectedCompetencies,
+    cloDomains,
+    cloCount: clos.length,
+    summary,
+    issues
+  };
+}
+
+function refreshAfterCurriculumEdit() {
+  refreshDashboardSummary();
+  renderOverviewTable();
+  renderMatrix6Table();
+  renderMatrix24Table();
+  renderCLOTable();
+  renderCoursePiMatrix();
+  renderEvidenceCards();
+  renderSummaryList();
+  if (selectedSummaryCode && getActiveSummaries()[selectedSummaryCode]) {
+    selectSummaryCourse(selectedSummaryCode, false);
   }
+  renderCourseAnalysisIssues();
+  initCharts(true);
+}
+
+function renderCLOEditorRow(mapping = {}) {
+  const domainOptions = Object.entries(data.domains).map(([code, name]) =>
+    `<option value="${escapeHtml(code)}" ${mapping.mienNLS === code ? 'selected' : ''}>${escapeHtml(code)} - ${escapeHtml(name)}</option>`
+  ).join('');
+  const competencyOptions = data.competencies.map(item =>
+    `<option value="${escapeHtml(item.code)}" ${mapping.maNLTP === item.code ? 'selected' : ''}>${escapeHtml(item.code)} - ${escapeHtml(item.name)}</option>`
+  ).join('');
+  const levelOptions = Array.from({ length: 6 }, (_, index) => `Mức ${index + 1}`).map(level =>
+    `<option value="${level}" ${mapping.mucDoNLS === level ? 'selected' : ''}>${level}</option>`
+  ).join('');
+  return `
+    <article class="clo-editor-row rounded-xl border border-slate-200 dark:border-slate-700 p-3 space-y-2" data-original-clo="${escapeHtml(mapping.clo || '')}">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <label class="text-[11px] font-semibold">Miền NLS
+          <select data-clo-field="mienNLS" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">${domainOptions}</select>
+        </label>
+        <label class="text-[11px] font-semibold">NLTP
+          <select data-clo-field="maNLTP" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">${competencyOptions}</select>
+        </label>
+        <div class="grid grid-cols-[1fr_1fr_auto] gap-2">
+          <label class="text-[11px] font-semibold">Mã CLO
+            <input data-clo-field="clo" value="${escapeHtml(mapping.clo || '')}" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">
+          </label>
+          <label class="text-[11px] font-semibold">Mức NLS
+            <select data-clo-field="mucDoNLS" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">${levelOptions}</select>
+          </label>
+          <button type="button" onclick="removeCLOEditorRow(this)" class="mt-5 px-2 text-rose-600" title="Xóa dòng CLO"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>
+      <label class="block text-[11px] font-semibold">Nội dung chuẩn đầu ra
+        <textarea data-clo-field="noiDungCLO" rows="2" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">${escapeHtml(mapping.noiDungCLO || '')}</textarea>
+      </label>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <label class="text-[11px] font-semibold">PI
+          <input data-clo-field="pi" value="${escapeHtml(mapping.pi || '')}" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">
+        </label>
+        <label class="text-[11px] font-semibold">Phương pháp đánh giá
+          <input data-clo-field="danhGia" value="${escapeHtml(mapping.danhGia || '')}" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">
+        </label>
+      </div>
+      <label class="block text-[11px] font-semibold">Ghi chú
+        <input data-clo-field="ghiChu" value="${escapeHtml(mapping.ghiChu || '')}" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">
+      </label>
+    </article>
+  `;
+}
+
+function renderCurriculumEditor() {
+  const select = document.getElementById('editCourseSelect');
+  const editor = document.getElementById('curriculumCourseEditor');
+  if (!select || !editor) return;
+  const courses = data.matrix6;
+  const selectedCode = select.value || courses[0]?.maMH;
+  if (!selectedCode) {
+    editor.innerHTML = '<p class="text-sm text-slate-500">Chưa có học phần để chỉnh sửa.</p>';
+    return;
+  }
+  if (!select.options.length) {
+    select.innerHTML = courses.map(course =>
+      `<option value="${escapeHtml(course.maMH)}">${escapeHtml(course.maMH)} — ${escapeHtml(course.tenMH)}</option>`
+    ).join('');
+  }
+  select.value = selectedCode;
+  select.dataset.previousValue = selectedCode;
+  const map6 = courses.find(course => course.maMH === selectedCode);
+  const map24 = data.matrix24.find(course => course.maMH === selectedCode);
+  const summary = getCourseSummary(selectedCode);
+  const clos = data.cloMappings.filter(mapping => mapping.maMH === selectedCode);
+  const analysis = getCourseAnalysis(selectedCode);
+  const levels = ['-', 'Mức 1', 'Mức 2', 'Mức 3', 'Mức 4', 'Mức 5', 'Mức 6'];
+  const domainsHtml = Object.entries(data.domains).map(([domain, name], index) => {
+    const level = String(map6?.[`m${index + 1}`] || '-').match(/Mức\s+\d+/)?.[0] || '-';
+    return `
+      <label class="block text-xs font-semibold">${escapeHtml(domain)} · ${escapeHtml(name)}
+        <select data-map-domain="${index + 1}" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-2">
+          ${levels.map(option => `<option value="${option}" ${option === level ? 'selected' : ''}>${option}</option>`).join('')}
+        </select>
+      </label>
+    `;
+  }).join('');
+  const competenciesHtml = data.competencies.map(item => `
+    <label class="flex items-start gap-2 rounded-lg bg-slate-50 dark:bg-slate-900/70 p-2 text-xs">
+      <input type="checkbox" data-editor-competency="${escapeHtml(item.code)}" ${map24?.mapping?.[item.code] ? 'checked' : ''} class="mt-0.5 accent-sky-600">
+      <span><strong>${escapeHtml(item.code)}</strong> · ${escapeHtml(item.name)}</span>
+    </label>
+  `).join('');
+
+  editor.innerHTML = `
+    <div class="space-y-5">
+      <div class="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200 dark:border-slate-700 pb-4">
+        <div><h3 class="text-lg font-bold">${escapeHtml(map6?.tenMH || selectedCode)}</h3>
+          <p class="text-xs text-slate-500">${escapeHtml(selectedCode)} · ${escapeHtml(map6?.khoiKT || '')} · ${map6?.soTC ?? ''} TC</p></div>
+        <span class="rounded-full px-3 py-1 text-xs ${analysis.issues.length ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">${analysis.issues.length ? `${analysis.issues.length} lưu ý cần rà soát` : 'Chưa phát hiện lệch theo các kiểm tra cơ bản'}</span>
+      </div>
+      <section class="space-y-2">
+        <h4 class="font-bold text-sm">Ma trận 6 miền — mức độ dự kiến</h4>
+        <p class="text-xs text-slate-500">Chọn “-” nếu học phần không đóng góp vào miền đó. Mức độ là đánh giá của người biên soạn, không phải kết luận tự động.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">${domainsHtml}</div>
+      </section>
+      <section class="space-y-2">
+        <h4 class="font-bold text-sm">Ma trận 24 năng lực thành phần</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">${competenciesHtml}</div>
+      </section>
+      <section class="space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div><h4 class="font-bold text-sm">Chuẩn đầu ra CLO, PI và đánh giá</h4><p class="text-xs text-slate-500">Chỉnh nội dung và liên kết CLO ↔ miền/NLTP. Thêm hoặc xóa CLO theo đề cương đã rà soát.</p></div>
+          <button type="button" onclick="addCLOEditorRow()" class="rounded-lg bg-sky-100 text-sky-800 px-3 py-2 text-xs font-semibold"><i class="fa-solid fa-plus mr-1"></i>Thêm CLO</button>
+        </div>
+        <div id="courseCLOEditor" class="space-y-3">${clos.map(mapping => renderCLOEditorRow(mapping)).join('') || '<p id="emptyCLOMessage" class="text-xs text-slate-500">Chưa có CLO ánh xạ.</p>'}</div>
+      </section>
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <label class="text-xs font-bold">Mục tiêu / tóm tắt học phần
+          <textarea id="editCourseSummary" rows="6" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-3 text-xs font-normal">${escapeHtml(summary.description || '')}</textarea>
+        </label>
+        <label class="text-xs font-bold">Tài liệu tham khảo
+          <textarea id="editCourseReferences" rows="6" class="mt-1 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-3 text-xs font-normal">${escapeHtml(summary.references || '')}</textarea>
+        </label>
+      </section>
+      <div class="flex justify-end">
+        <div class="flex items-center gap-3">
+          <span id="courseEditorDirtyLabel" class="text-xs text-slate-500">Đã lưu hoặc chưa có thay đổi</span>
+          <button type="button" onclick="saveCurriculumCourseEdits()" class="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 text-sm font-bold"><i class="fa-solid fa-floppy-disk mr-2"></i>Lưu và phân tích lại</button>
+        </div>
+      </div>
+    </div>
+  `;
+  courseEditorDirty = false;
+  editor.querySelectorAll('input, select, textarea').forEach(input => {
+    input.addEventListener('input', markCourseEditorDirty);
+    input.addEventListener('change', markCourseEditorDirty);
+  });
+  renderCourseAnalysisIssues(analysis);
+}
+
+function markCourseEditorDirty() {
+  courseEditorDirty = true;
+  const label = document.getElementById('courseEditorDirtyLabel');
+  if (label) {
+    label.textContent = 'Có thay đổi chưa lưu';
+    label.className = 'text-xs font-bold text-amber-700';
+  }
+}
+
+function changeEditorCourse(select) {
+  if (courseEditorDirty && !confirm('Bạn có thay đổi chưa lưu. Bỏ các thay đổi đó và chuyển học phần?')) {
+    select.value = select.dataset.previousValue || data.matrix6[0]?.maMH || '';
+    return;
+  }
+  select.dataset.previousValue = select.value;
+  renderCurriculumEditor();
+}
+
+function getIssueReviewAction(issue) {
+  if (issue.includes('Chưa ánh xạ miền NLS')) {
+    return 'Đối chiếu nội dung học phần và CLO với ma trận 6 miền; chọn miền phù hợp hoặc ghi nhận rõ học phần không đóng góp trực tiếp.';
+  }
+  if (issue.includes('chưa có CLO tương ứng') || issue.includes('ma trận 6 miền chưa đánh dấu')) {
+    return 'So sánh miền đang đánh dấu ở ma trận 6 miền với miền NLS của từng CLO; cập nhật một trong hai phía nếu chưa khớp.';
+  }
+  if (issue.includes('đã chọn nhưng chưa được gắn với CLO')) {
+    return 'Tìm hoặc bổ sung CLO thể hiện NLTP này; nếu không có đóng góp trong học phần, bỏ chọn NLTP ở ma trận 24.';
+  }
+  if (issue.includes('ma trận 24 chưa chọn')) {
+    return 'Kiểm tra NLTP ghi trong CLO và dấu chọn tại ma trận 24; bật NLTP nếu CLO có đánh giá năng lực này, hoặc điều chỉnh liên kết CLO.';
+  }
+  if (issue.includes('miền NLS không khớp với NLTP')) {
+    return 'Kiểm tra mã NLTP trong khung năng lực và miền NLS của CLO; chọn lại miền hoặc NLTP đúng.';
+  }
+  if (issue.includes('mã CLO bị trùng')) {
+    return 'Đảm bảo mỗi CLO trong học phần có một mã duy nhất và cập nhật các PI/đánh giá theo mã đã sửa.';
+  }
+  if (issue.includes('Chưa có mục tiêu/tóm tắt')) {
+    return 'Bổ sung mục tiêu hoặc tóm tắt học phần từ đề cương đã được bộ môn thống nhất.';
+  }
+  return 'Đối chiếu thông tin học phần trong ma trận và đề cương nguồn, sau đó cập nhật dữ liệu nếu cần.';
+}
+
+function openCourseAnalysisIssue(code) {
+  const select = document.getElementById('editCourseSelect');
+  if (!select) return;
+  if (courseEditorDirty && select.value !== code && !confirm('Bạn có thay đổi chưa lưu. Bỏ các thay đổi đó và mở học phần được chọn?')) return;
+  select.value = code;
+  select.dataset.previousValue = code;
+  renderCurriculumEditor();
+  switchTab('curriculumEdits');
+  document.getElementById('courseAnalysisResults')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderCourseAnalysisIssues(analysis = null) {
+  const target = document.getElementById('courseAnalysisResults');
+  if (!target) return;
+  const summaries = data.matrix6.map(course => getCourseAnalysis(course.maMH));
+  const allIssues = summaries.flatMap(item => item.issues.map(issue => ({ ...item, issue })));
+  const issueCount = allIssues.length;
+  const active = analysis || summaries.find(item => item.code === document.getElementById('editCourseSelect')?.value);
+  const recommendations = data.evidences.filter(item => item.maHP === active?.code);
+  const issueList = active?.issues.length
+    ? `<ol class="mt-3 space-y-3">${active.issues.map((issue, index) => `
+      <li class="rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50/70 dark:bg-amber-950/20 p-3">
+        <p class="font-bold text-amber-950 dark:text-amber-100">${index + 1}. ${escapeHtml(issue)}</p>
+        <p class="mt-1 text-slate-600 dark:text-slate-300"><strong>Việc cần đối chiếu:</strong> ${escapeHtml(getIssueReviewAction(issue))}</p>
+      </li>`).join('')}</ol>`
+    : '<p class="mt-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 p-3">Chưa phát hiện điểm lệch trong các quy tắc kiểm tra cấu trúc cơ bản. Đây không phải kết luận học thuật; bộ môn vẫn cần xem xét CLO có phù hợp nội dung và cách đánh giá hay không.</p>';
+  const curriculumIssueDetails = allIssues.length ? `
+    <details id="allCurriculumIssues" class="mt-3 rounded-xl border border-amber-200 dark:border-amber-900">
+      <summary class="cursor-pointer list-none p-4 font-bold text-amber-900 dark:text-amber-200">
+        <i class="fa-solid fa-list-check mr-2"></i>Xem chi tiết ${issueCount} mục cần rà soát trên toàn CTĐT
+        <span class="ml-2 text-xs font-normal text-slate-500">Mỗi dòng nêu học phần, vấn đề và việc cần đối chiếu</span>
+      </summary>
+      <div class="overflow-x-auto border-t border-amber-200 dark:border-amber-900">
+        <table class="w-full min-w-[700px] text-left">
+          <thead class="bg-amber-50 dark:bg-amber-950/40">
+            <tr><th class="p-3">#</th><th class="p-3">Học phần</th><th class="p-3">Lưu ý phát hiện</th><th class="p-3">Việc cần đối chiếu</th><th class="p-3">Thao tác</th></tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+            ${allIssues.map((item, index) => `<tr>
+              <td class="p-3 align-top">${index + 1}</td>
+              <td class="p-3 align-top"><strong>${escapeHtml(item.code)}</strong><br>${escapeHtml(item.title)}</td>
+              <td class="p-3 align-top">${escapeHtml(item.issue)}</td>
+              <td class="p-3 align-top">${escapeHtml(getIssueReviewAction(item.issue))}</td>
+              <td class="p-3 align-top"><button type="button" onclick="openCourseAnalysisIssue('${escapeHtml(item.code)}')" class="whitespace-nowrap rounded-lg bg-sky-600 px-3 py-2 text-xs font-bold text-white hover:bg-sky-700">Mở học phần</button></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </details>` : `
+    <details id="allCurriculumIssues" class="mt-3 rounded-xl border border-emerald-200 dark:border-emerald-900">
+      <summary class="cursor-pointer list-none p-4 font-bold text-emerald-800 dark:text-emerald-200">Toàn CTĐT chưa có lưu ý cấu trúc tự động</summary>
+      <p class="border-t border-emerald-200 p-4">Các phép kiểm tra cấu trúc không phát hiện vấn đề. Vẫn cần thẩm định học thuật đối với mức độ đóng góp, nội dung CLO và phương pháp đánh giá.</p>
+    </details>`;
+  const recommendationHtml = recommendations.length ? `
+    <div class="mt-3 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 p-3">
+      <strong>Gợi ý NLS có sẵn trong dữ liệu nguồn (tham khảo)</strong>
+      ${recommendations.map(item => `<p class="mt-2"><strong>${escapeHtml(item.mienCanBoSung)} · ${escapeHtml(item.maNLTP)}</strong><br>${escapeHtml(item.noiDungCanBoSung)}<br><span class="text-slate-500">Hoạt động: ${escapeHtml(item.hoatDongDayHoc)} · Minh chứng: ${escapeHtml(item.cachLayMinhChung)}</span></p>`).join('')}
+    </div>` : '';
+  target.innerHTML = `
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="rounded-xl bg-sky-50 dark:bg-sky-950/40 p-3"><span class="text-xs">Miền NLS đang phủ</span><strong class="block text-xl">${new Set(data.matrix6.flatMap(course => getCourseAnalysis(course.maMH).map6)).size} / ${Object.keys(data.domains).length}</strong></div>
+      <div class="rounded-xl bg-indigo-50 dark:bg-indigo-950/40 p-3"><span class="text-xs">NLTP có ít nhất một học phần</span><strong class="block text-xl">${new Set(data.matrix24.flatMap(course => Object.entries(course.mapping || {}).filter(([, selected]) => selected).map(([code]) => code))).size} / ${data.competencies.length}</strong></div>
+      <div class="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 p-3"><span class="text-xs">Số CLO đã ánh xạ</span><strong class="block text-xl">${data.cloMappings.length}</strong></div>
+      <button type="button" onclick="document.getElementById('allCurriculumIssues')?.scrollIntoView({behavior:'smooth',block:'start'}); document.getElementById('allCurriculumIssues')?.setAttribute('open','')" class="rounded-xl bg-amber-50 dark:bg-amber-950/40 p-3 text-left hover:ring-2 hover:ring-amber-300">
+        <span class="text-xs">Mục cần rà soát trên toàn CTĐT</span><strong class="block text-xl">${issueCount}</strong><span class="text-[11px] underline">Xem danh sách chi tiết</span>
+      </button>
+    </div>
+    <div class="mt-3 rounded-xl border border-slate-200 dark:border-slate-700 p-4 text-xs">
+      <strong>${escapeHtml(active?.code || '')} · ${escapeHtml(active?.title || '')}: ${active?.issues.length || 0} lưu ý</strong>
+      <p class="mt-1 text-slate-500">Danh sách dưới đây nêu lý do cảnh báo và gợi ý cụ thể để đối chiếu. Cảnh báo là kiểm tra cấu trúc tự động, không đồng nghĩa dữ liệu chắc chắn sai.</p>
+      ${issueList}
+      ${recommendationHtml}
+    </div>
+    ${curriculumIssueDetails}
+  `;
+}
+
+function refreshDashboardSummary() {
+  const courseCount = data.matrix6.length;
+  const cloCount = data.cloMappings.length;
+  const coveredDomains = new Set(data.matrix6.flatMap(course => getCourseAnalysis(course.maMH).map6)).size;
+  const coveredCompetencies = new Set(data.matrix24.flatMap(course =>
+    Object.entries(course.mapping || {}).filter(([, mapped]) => mapped).map(([competency]) => competency)
+  )).size;
+  const title = document.getElementById('dashboard-title');
+  const description = document.getElementById('dashboard-description');
+  if (title) title.textContent = data.metadata?.program || 'Chương trình đào tạo';
+  if (description) {
+    description.innerHTML = `Dữ liệu đang có <strong>${courseCount} học phần</strong>, <strong>${cloCount} CLO</strong>, phủ <strong>${coveredDomains}/${Object.keys(data.domains).length} miền NLS</strong> và <strong>${coveredCompetencies}/${data.competencies.length} NLTP</strong>. Số liệu được cập nhật sau mỗi lần lưu chỉnh sửa.`;
+  }
+  const values = {
+    'dashboard-course-count': courseCount,
+    'dashboard-clo-count': cloCount,
+    'dashboard-domain-count': `${coveredDomains} / ${Object.keys(data.domains).length}`,
+    'dashboard-competency-count': `${coveredCompetencies} / ${data.competencies.length}`,
+    'dashboard-evidence-count': data.evidences.length
+  };
+  Object.entries(values).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  });
+  const status = document.getElementById('dashboard-analysis-status');
+  if (status) {
+    status.innerHTML = `<i class="fa-solid ${coveredDomains === Object.keys(data.domains).length && coveredCompetencies === data.competencies.length ? 'fa-circle-check' : 'fa-triangle-exclamation'} mr-1.5"></i>${coveredDomains === Object.keys(data.domains).length && coveredCompetencies === data.competencies.length ? 'Đã phủ đủ miền/NLTP · cần duyệt chuyên môn' : 'Còn miền/NLTP chưa được phủ'}`;
+    status.className = `inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${coveredDomains === Object.keys(data.domains).length && coveredCompetencies === data.competencies.length ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'}`;
+  }
+}
+
+function addCLOEditorRow() {
+  const container = document.getElementById('courseCLOEditor');
+  document.getElementById('emptyCLOMessage')?.remove();
+  if (container) container.insertAdjacentHTML('beforeend', renderCLOEditorRow({ mienNLS: 'I', maNLTP: data.competencies[0]?.code, mucDoNLS: 'Mức 1' }));
+  markCourseEditorDirty();
+}
+
+function removeCLOEditorRow(button) {
+  button.closest('.clo-editor-row')?.remove();
+  const container = document.getElementById('courseCLOEditor');
+  if (container && !container.querySelector('.clo-editor-row')) {
+    container.innerHTML = '<p id="emptyCLOMessage" class="text-xs text-slate-500">Chưa có CLO ánh xạ.</p>';
+  }
+  markCourseEditorDirty();
+}
+
+function saveCurriculumCourseEdits() {
+  const code = document.getElementById('editCourseSelect')?.value;
+  const map6 = data.matrix6.find(course => course.maMH === code);
+  const map24 = data.matrix24.find(course => course.maMH === code);
+  if (!code || !map6 || !map24) {
+    showToast('Không tìm thấy học phần cần lưu.', 'error');
+    return;
+  }
+
+  const editedClos = [...document.querySelectorAll('.clo-editor-row')].map(row => {
+    const value = field => row.querySelector(`[data-clo-field="${field}"]`)?.value.trim() || '';
+    const competency = data.competencies.find(item => item.code === value('maNLTP'));
+    return {
+      stt: 0, tenMH: map6.tenMH, maMH: code, soTC: map6.soTC, khoiKT: map6.khoiKT,
+      mienNLS: value('mienNLS'), maNLTP: value('maNLTP'), tenNLTP: competency?.name || '',
+      mucDoNLS: value('mucDoNLS'), clo: value('clo'), noiDungCLO: value('noiDungCLO'),
+      pi: value('pi'), danhGia: value('danhGia'),
+      ghiChu: value('ghiChu')
+    };
+  });
+  if (editedClos.some(mapping => !mapping.mienNLS || !mapping.maNLTP || !mapping.clo || !mapping.noiDungCLO)) {
+    showToast('Mỗi CLO cần có miền NLS, mã NLTP, mã CLO và nội dung.', 'error');
+    return;
+  }
+  const duplicateClos = editedClos.map(mapping => mapping.clo);
+  if (new Set(duplicateClos).size !== duplicateClos.length) {
+    showToast('Mã CLO đang bị trùng. Hãy kiểm tra trước khi lưu.', 'error');
+    return;
+  }
+
+  const domainCodes = Object.keys(data.domains);
+  const mapChanges = {};
+  domainCodes.forEach((domain, index) => {
+    const selectedLevel = document.querySelector(`[data-map-domain="${index + 1}"]`)?.value || '-';
+    const cloCount = editedClos.filter(mapping => mapping.mienNLS === domain).length;
+    mapChanges[`m${index + 1}`] = selectedLevel === '-' ? '-' : `${selectedLevel}${cloCount ? ` (${cloCount} CLO)` : ''}`;
+  });
+  const numericLevels = Object.values(mapChanges).map(value => Number(value.match(/Mức\s+(\d+)/)?.[1] || 0));
+  mapChanges.cacMien = domainCodes.filter((domain, index) => mapChanges[`m${index + 1}`] !== '-').join(', ');
+  mapChanges.mucDoMax = `Mức ${Math.max(0, ...numericLevels)}`;
+  if (mapChanges.mucDoMax === 'Mức 0') mapChanges.mucDoMax = '-';
+
+  const competencyChanges = {};
+  document.querySelectorAll('[data-editor-competency]').forEach(input => {
+    competencyChanges[input.dataset.editorCompetency] = input.checked;
+  });
+  const edits = getCurriculumEdits();
+  const previous = edits.courses[code] || {};
+  const previousMap6 = cloneData(map6);
+  const previousMap24 = cloneData(map24.mapping);
+  const previousClos = data.cloMappings.filter(mapping => mapping.maMH === code);
+  const previousSummary = data.courseSummaries[code] ? cloneData(data.courseSummaries[code]) : null;
+  const summary = {
+    code,
+    title: map6.tenMH,
+    description: document.getElementById('editCourseSummary')?.value.trim() || '',
+    references: document.getElementById('editCourseReferences')?.value.trim() || ''
+  };
+  data.matrix6[data.matrix6.indexOf(map6)] = { ...map6, ...mapChanges, summary: summary.description, references: summary.references, hasSummary: Boolean(summary.description || summary.references) };
+  map24.mapping = { ...map24.mapping, ...competencyChanges };
+  data.cloMappings = data.cloMappings.filter(mapping => mapping.maMH !== code)
+    .concat(editedClos.map((mapping, index) => ({ ...mapping, stt: index + 1 })));
+  data.cloMappings.sort((a, b) => String(a.maMH).localeCompare(String(b.maMH)) || String(a.clo).localeCompare(String(b.clo)));
+  data.courseSummaries[code] = summary;
+  edits.courses[code] = { ...previous, matrix6: mapChanges, competencies: competencyChanges, cloMappings: editedClos, summary };
+  if (!persistCurriculumEdits(edits, `Đã lưu và phân tích lại học phần ${code}.`)) {
+    Object.assign(map6, previousMap6);
+    map24.mapping = previousMap24;
+    data.cloMappings = data.cloMappings.filter(mapping => mapping.maMH !== code).concat(previousClos);
+    if (previousSummary) data.courseSummaries[code] = previousSummary;
+    else delete data.courseSummaries[code];
+    return;
+  }
+  refreshAfterCurriculumEdit();
+  renderCurriculumEditor();
+}
+
+function editCourseInWorkbench(code) {
+  const select = document.getElementById('editCourseSelect');
+  if (!select) return;
+  if (courseEditorDirty) {
+    if (select.value === code) {
+      switchTab('curriculumEdits');
+      return;
+    }
+    if (!confirm('Bạn có thay đổi chưa lưu. Bỏ các thay đổi đó và chuyển học phần?')) return;
+  }
+  select.value = code;
+  select.dataset.previousValue = code;
+  renderCurriculumEditor();
+  switchTab('curriculumEdits');
+}
+
+function toggleMappedCompetency(code, competencyCode) {
+  const course = data.matrix24.find(item => item.maMH === code);
+  if (!course) return;
+  course.mapping[competencyCode] = !course.mapping[competencyCode];
+  const edits = getCurriculumEdits();
+  edits.courses[code] = {
+    ...(edits.courses[code] || {}),
+    competencies: { ...(edits.courses[code]?.competencies || {}), [competencyCode]: course.mapping[competencyCode] }
+  };
+  if (!persistCurriculumEdits(edits)) {
+    course.mapping[competencyCode] = !course.mapping[competencyCode];
+    return;
+  }
+  const editorCheckbox = [...document.querySelectorAll('[data-editor-competency]')]
+    .find(input => input.dataset.editorCompetency === competencyCode);
+  if (editorCheckbox && document.getElementById('editCourseSelect')?.value === code) {
+    editorCheckbox.checked = course.mapping[competencyCode];
+  }
+  refreshDashboardSummary();
+  renderOverviewTable();
+  renderMatrix24Table();
+  renderCourseAnalysisIssues();
+  initCharts(true);
+}
+
+function exportCurriculumEditsJson() {
+  const payload = {
+    schemaVersion: 1,
+    program: data.metadata?.program || '',
+    exportedAt: new Date().toISOString(),
+    edits: getCurriculumEdits()
+  };
+  downloadBlob(JSON.stringify(payload, null, 2), `${PROGRAM_STORAGE_ID}_ban_sao_chinh_sua.json`, 'application/json');
+}
+
+function importCurriculumEdits(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(String(reader.result || ''));
+      if (payload.program !== (data.metadata?.program || '') || !payload.edits?.courses) {
+        throw new Error('File không đúng ngành hoặc không đúng định dạng bản sao chỉnh sửa.');
+      }
+      const edits = { version: 1, courses: payload.edits.courses };
+      if (!persistCurriculumEdits(edits, 'Đã nhập bản chỉnh sửa.')) return;
+      window.location.reload();
+    } catch (error) {
+      console.error('Không thể nhập bản chỉnh sửa:', error);
+      showToast(error.message || 'Không thể đọc file chỉnh sửa.', 'error');
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.onerror = () => showToast('Không thể đọc file đã chọn.', 'error');
+  reader.readAsText(file, 'utf-8');
+}
+
+function escapeReportText(value) {
+  return escapeHtml(value).replace(/\n/g, '<br>');
+}
+
+function exportCurriculumReport() {
+  const sections = data.matrix6.map(course => {
+    const code = course.maMH;
+    const original6 = ORIGINAL_CURRICULUM.matrix6.find(item => item.maMH === code) || {};
+    const original24 = ORIGINAL_CURRICULUM.matrix24.find(item => item.maMH === code) || { mapping: {} };
+    const originalCLOs = ORIGINAL_CURRICULUM.cloMappings.filter(item => item.maMH === code);
+    const originalSummary = ORIGINAL_CURRICULUM.courseSummaries[code] || {};
+    const current = getCourseAnalysis(code);
+    const selected = current.map24.map(item => item.code).join(', ') || 'Chưa đánh dấu';
+    const originalSelected = data.competencies.filter(item => original24.mapping?.[item.code]).map(item => item.code).join(', ') || 'Chưa đánh dấu';
+    const currentCLOs = data.cloMappings.filter(item => item.maMH === code);
+    const oldCloById = new Map(originalCLOs.map(item => [item.clo, item]));
+    const newCloById = new Map(currentCLOs.map(item => [item.clo, item]));
+    const cloIds = [...new Set([...oldCloById.keys(), ...newCloById.keys()])].sort((a, b) => String(a).localeCompare(String(b), 'vi', { numeric: true }));
+    const cloTable = cloIds.length ? `
+      <table><thead><tr><th>CLO</th><th>Miền / NLTP (gốc → mới)</th><th>Mức (gốc → mới)</th><th>Nội dung CLO (gốc → mới)</th><th>PI / Đánh giá</th><th>Trạng thái</th></tr></thead>
+      <tbody>${cloIds.map(id => {
+        const before = oldCloById.get(id);
+        const after = newCloById.get(id);
+        return `<tr><td>${escapeHtml(id)}</td>
+          <td>${escapeHtml(before ? `${before.mienNLS} / ${before.maNLTP}` : '—')} → ${escapeHtml(after ? `${after.mienNLS} / ${after.maNLTP}` : 'Đã xóa')}</td>
+          <td>${escapeHtml(before?.mucDoNLS || '—')} → ${escapeHtml(after?.mucDoNLS || 'Đã xóa')}</td>
+          <td><strong>Gốc:</strong><br>${escapeReportText(before?.noiDungCLO || '—')}<hr><strong>Mới:</strong><br>${escapeReportText(after?.noiDungCLO || 'Đã xóa')}</td>
+          <td><strong>Gốc:</strong> ${escapeHtml(before?.pi || '—')} · ${escapeReportText(before?.danhGia || '—')}<hr><strong>Mới:</strong> ${escapeHtml(after?.pi || (before ? 'Đã xóa' : '—'))} · ${escapeReportText(after?.danhGia || (before ? 'Đã xóa' : '—'))}</td>
+          <td>${!before ? 'Thêm mới' : !after ? 'Đã xóa' : ['mienNLS', 'maNLTP', 'mucDoNLS', 'clo', 'noiDungCLO', 'pi', 'danhGia', 'ghiChu'].every(field => (before[field] || '') === (after[field] || '')) ? 'Không đổi' : 'Đã chỉnh sửa'}</td></tr>`;
+      }).join('')}</tbody></table>
+    ` : '<p>Chưa khai báo CLO ánh xạ.</p>';
+    const beforeDomains = ['I', 'II', 'III', 'IV', 'V', 'VI'].filter((_, index) => original6[`m${index + 1}`] && original6[`m${index + 1}`] !== '-');
+    const beforeCompetencies = data.competencies.filter(item => original24.mapping?.[item.code]).map(item => item.code);
+    const currentLevels = ['I', 'II', 'III', 'IV', 'V', 'VI'].map((domain, index) =>
+      `${domain}: ${String(course[`m${index + 1}`] || '-')}`
+    ).join(' · ');
+    const originalLevels = ['I', 'II', 'III', 'IV', 'V', 'VI'].map((domain, index) =>
+      `${domain}: ${String(original6[`m${index + 1}`] || '-')}`
+    ).join(' · ');
+    const recommendations = data.evidences.filter(item => item.maHP === code);
+    const oldSummaryDescription = originalSummary.description || '';
+    const oldSummaryReferences = originalSummary.references || '';
+    const issues = current.issues.length ? `<ul>${current.issues.map(issue => `<li>${escapeHtml(issue)}</li>`).join('')}</ul>` : '<p>Không có cảnh báo cấu trúc theo các kiểm tra cơ bản; vẫn cần thẩm định chuyên môn.</p>';
+    return `<section class="course">
+      <h2>${escapeHtml(code)} — ${escapeHtml(course.tenMH)}</h2>
+      <p class="muted">${escapeHtml(course.khoiKT)} · ${course.soTC ?? ''} tín chỉ</p>
+      <table><tbody>
+        <tr><th>Miền NLS / mức độ</th><td><strong>Gốc:</strong> ${escapeHtml(beforeDomains.join(', ') || 'Chưa đánh dấu')}<br><small>${escapeHtml(originalLevels)}</small><hr><strong>Sau rà soát:</strong> ${escapeHtml(current.map6.join(', ') || 'Chưa đánh dấu')}<br><small>${escapeHtml(currentLevels)}</small></td></tr>
+        <tr><th>NLTP</th><td><strong>Gốc:</strong> ${escapeHtml(beforeCompetencies.join(', ') || originalSelected)}<br><strong>Sau rà soát:</strong> ${escapeHtml(current.map24.map(item => item.code).join(', ') || selected)}</td></tr>
+        <tr><th>Số CLO ánh xạ</th><td>${originalCLOs.length} → ${currentCLOs.length}</td></tr>
+        <tr><th>Mục tiêu / tóm tắt</th><td><strong>Gốc:</strong><br>${escapeReportText(oldSummaryDescription) || '<em>Chưa có</em>'}<hr><strong>Sau rà soát:</strong><br>${escapeReportText(current.summary.description) || '<em>Chưa có</em>'}</td></tr>
+        <tr><th>Tài liệu tham khảo</th><td><strong>Gốc:</strong><br>${escapeReportText(oldSummaryReferences) || '<em>Chưa có</em>'}<hr><strong>Sau rà soát:</strong><br>${escapeReportText(current.summary.references) || '<em>Chưa có</em>'}</td></tr>
+      </tbody></table>
+      <h3>CLO và nội dung đề xuất hiện tại</h3>${cloTable}
+      ${recommendations.length ? `<h3>Gợi ý bổ sung từ dữ liệu nguồn (tham khảo)</h3>${recommendations.map(item => `<p><strong>${escapeHtml(item.mienCanBoSung)} · ${escapeHtml(item.maNLTP)}</strong><br>${escapeReportText(item.noiDungCanBoSung)}<br>Hoạt động: ${escapeReportText(item.hoatDongDayHoc)}<br>Minh chứng: ${escapeReportText(item.cachLayMinhChung)}</p>`).join('')}` : ''}
+      <h3>Kết quả rà soát tự động · ${current.issues.length} lưu ý</h3>${issues}
+      <p class="muted">Bản báo cáo phản ánh dữ liệu đã lưu trên trình duyệt tại thời điểm xuất. Các lưu ý là quy tắc kiểm tra cấu trúc để hỗ trợ rà soát, không thay thế thẩm định học thuật.</p>
+    </section>`;
+  }).join('');
+  const report = `<!doctype html><html lang="vi"><meta charset="utf-8"><title>Báo cáo rà soát CTĐT</title>
+    <style>body{font:14px Arial,sans-serif;max-width:1100px;margin:32px auto;color:#1e293b;line-height:1.5}h1{color:#0f3b68}.course{page-break-before:always;margin:32px 0}table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #cbd5e1;padding:8px;text-align:left;vertical-align:top}th{background:#f1f5f9;width:190px}.muted{color:#64748b;font-size:12px}hr{border:0;border-top:1px solid #cbd5e1;margin:8px 0}@media print{body{margin:0 auto}.course{page-break-before:always}}</style>
+    <body><h1>BÁO CÁO TỔNG HỢP RÀ SOÁT VÀ ĐỀ XUẤT CẬP NHẬT ĐỀ CƯƠNG</h1>
+    <p><strong>${escapeHtml(data.metadata?.university || '')} · ${escapeHtml(data.metadata?.faculty || '')}</strong></p>
+    <p>${escapeHtml(data.metadata?.program || '')}</p><p>Thời điểm xuất: ${new Date().toLocaleString('vi-VN')}</p>
+    <p>Báo cáo thể hiện ánh xạ gốc và dữ liệu sau rà soát, CLO, nội dung học phần và các lưu ý cần chuyên gia xem xét. Mở file bằng trình duyệt, dùng In → Lưu thành PDF để chia sẻ hoặc lưu hồ sơ.</p>
+    ${sections}</body></html>`;
+  downloadBlob(report, `${PROGRAM_STORAGE_ID}_bao_cao_ra_soat_de_cuong.html`, 'text/html;charset=utf-8');
+}
+
+function resetCurriculumEdits() {
+  if (!confirm('Khôi phục toàn bộ ma trận, CLO và tóm tắt học phần về dữ liệu ban đầu? Thao tác này xóa các chỉnh sửa đã lưu trên trình duyệt.')) return;
+  try {
+    localStorage.removeItem(LOCAL_STORAGE_CURRICULUM_KEY);
+    localStorage.removeItem(LEGACY_SUMMARIES_KEY);
+  } catch (error) {
+    console.error('Không thể xóa dữ liệu chỉnh sửa:', error);
+    showToast('Không thể khôi phục dữ liệu. Hãy kiểm tra quyền lưu trữ của trình duyệt.', 'error');
+    return;
+  }
+  window.location.reload();
 }
 
 function showToast(message, type = 'success') {
@@ -1019,6 +1926,9 @@ function saveCurrentSummary(code) {
 
   const desc = descEl.value.trim();
   const refs = refsEl.value.trim();
+  const oldSummary = data.courseSummaries[code] ? cloneData(data.courseSummaries[code]) : null;
+  const map6 = data.matrix6.find(c => c.maMH === code);
+  const oldMapSummary = map6 ? { summary: map6.summary, references: map6.references, hasSummary: map6.hasSummary } : null;
 
   // Save to memory
   if (data.courseSummaries[code]) {
@@ -1029,24 +1939,36 @@ function saveCurrentSummary(code) {
   if (m6) {
     m6.summary = desc;
     m6.references = refs;
+    m6.hasSummary = Boolean(desc || refs);
   }
 
   // Save to localStorage
   const custom = getCustomSummaries();
   custom[code] = { description: desc, references: refs, updatedAt: new Date().toISOString() };
-  localStorage.setItem(LOCAL_STORAGE_SUMMARIES_KEY, JSON.stringify(custom));
+  const edits = getCurriculumEdits();
+  edits.courses[code] = { ...(edits.courses[code] || {}), summary: custom[code] };
+  if (!persistCurriculumEdits(edits)) {
+    if (oldSummary) data.courseSummaries[code] = oldSummary;
+    else delete data.courseSummaries[code];
+    if (map6 && oldMapSummary) Object.assign(map6, oldMapSummary);
+    return;
+  }
 
   showToast(`Đã lưu thành công tóm tắt & tài liệu học phần ${code}!`, 'success');
   renderSummaryList();
   selectSummaryCourse(code, false);
+  refreshAfterCurriculumEdit();
 }
 
 function resetCurrentSummary(code) {
   if (!confirm(`Bạn có chắc muốn khôi phục tóm tắt và tài liệu học phần ${code} về bản gốc ban đầu?`)) return;
 
-  const custom = getCustomSummaries();
-  delete custom[code];
-  localStorage.setItem(LOCAL_STORAGE_SUMMARIES_KEY, JSON.stringify(custom));
+  const edits = getCurriculumEdits();
+  if (edits.courses[code]) {
+    delete edits.courses[code].summary;
+    if (Object.keys(edits.courses[code]).length === 0) delete edits.courses[code];
+  }
+  if (!persistCurriculumEdits(edits)) return;
 
   if (window.ORIGINAL_COURSE_SUMMARIES && window.ORIGINAL_COURSE_SUMMARIES[code]) {
     const orig = window.ORIGINAL_COURSE_SUMMARIES[code];
@@ -1058,33 +1980,54 @@ function resetCurrentSummary(code) {
     if (m6) {
       m6.summary = orig.description;
       m6.references = orig.references;
+      m6.hasSummary = Boolean(m6.summary || m6.references);
+    }
+  } else {
+    delete data.courseSummaries[code];
+    const m6 = data.matrix6.find(c => c.maMH === code);
+    if (m6) {
+      m6.summary = '';
+      m6.references = '';
+      m6.hasSummary = false;
     }
   }
 
   showToast(`Đã khôi phục nội dung gốc học phần ${code}!`, 'success');
   renderSummaryList();
   selectSummaryCourse(code, false);
+  refreshAfterCurriculumEdit();
 }
 
 function resetAllSummaries() {
   if (!confirm('Bạn có chắc chắn muốn khôi phục toàn bộ các môn học về nội dung gốc ban đầu trong file Word đề cương? Mọi nội dung đã chỉnh sửa sẽ bị xóa.')) return;
 
-  localStorage.removeItem(LOCAL_STORAGE_SUMMARIES_KEY);
+  const edits = getCurriculumEdits();
+  Object.keys(edits.courses).forEach(code => {
+    delete edits.courses[code].summary;
+    if (Object.keys(edits.courses[code]).length === 0) delete edits.courses[code];
+  });
+  if (!persistCurriculumEdits(edits)) return;
+  try {
+    localStorage.removeItem(LEGACY_SUMMARIES_KEY);
+  } catch (error) {
+    console.error('Không thể xóa bản tóm tắt học phần cũ:', error);
+  }
   if (window.ORIGINAL_COURSE_SUMMARIES) {
-    data.courseSummaries = JSON.parse(JSON.stringify(window.ORIGINAL_COURSE_SUMMARIES));
+    data.courseSummaries = cloneData(window.ORIGINAL_COURSE_SUMMARIES);
     data.matrix6.forEach(c => {
-      if (data.courseSummaries[c.maMH]) {
-        c.summary = data.courseSummaries[c.maMH].description;
-        c.references = data.courseSummaries[c.maMH].references;
-      }
+      c.summary = data.courseSummaries[c.maMH]?.description || '';
+      c.references = data.courseSummaries[c.maMH]?.references || '';
+      c.hasSummary = Boolean(c.summary || c.references);
     });
   }
 
   showToast('Đã khôi phục toàn bộ đề cương các môn về bản gốc ban đầu!', 'success');
   renderSummaryList();
   if (selectedSummaryCode) {
-    selectSummaryCourse(selectedSummaryCode, false);
+    if (data.courseSummaries[selectedSummaryCode]) selectSummaryCourse(selectedSummaryCode, false);
+    else selectedSummaryCode = null;
   }
+  refreshAfterCurriculumEdit();
 }
 
 // DOCX EXPORT LOGIC MATCHING TEMPLATE
@@ -1111,12 +2054,11 @@ async function exportToDocx(singleCode = null) {
   }
 
   const children = [
-    // Header matching 2026-CNTT-Tóm tắt học phần.docx
     new Paragraph({
-      children: [new TextRun({ text: 'TRƯỜNG ĐẠI HỌC LẠC HỒNG', font: 'Times New Roman', size: 26 })]
+      children: [new TextRun({ text: data.metadata.university, font: 'Times New Roman', size: 26 })]
     }),
     new Paragraph({
-      children: [new TextRun({ text: 'KHOA CÔNG NGHỆ THÔNG TIN', bold: true, font: 'Times New Roman', size: 26 })]
+      children: [new TextRun({ text: data.metadata.faculty, bold: true, font: 'Times New Roman', size: 26 })]
     }),
     new Paragraph({ text: '' }),
     new Paragraph({
@@ -1125,7 +2067,7 @@ async function exportToDocx(singleCode = null) {
     }),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: 'NGÀNH: CÔNG NGHỆ THÔNG TIN', bold: true, font: 'Times New Roman', size: 26 })]
+      children: [new TextRun({ text: data.metadata.program, bold: true, font: 'Times New Roman', size: 26 })]
     }),
     new Paragraph({ text: '' })
   ];
@@ -1223,7 +2165,8 @@ async function exportToDocx(singleCode = null) {
     });
 
     const blob = await Packer.toBlob(doc);
-    const fileName = singleCode ? `2026-CNTT-Tóm tắt học phần_${singleCode}.docx` : '2026-CNTT-Tóm tắt học phần.docx';
+    const programFileName = (data.metadata.program || 'CTDT').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '');
+    const fileName = singleCode ? `${programFileName}_Tom_tat_hoc_phan_${singleCode}.docx` : `${programFileName}_Tom_tat_hoc_phan.docx`;
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1268,7 +2211,7 @@ function exportSummariesJSON() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = '2026-CNTT-TomTatHocPhan_Backup.json';
+  a.download = `${data.metadata.program || 'CTDT'}_TomTatHocPhan_Backup.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -1444,7 +2387,7 @@ function switchModalTab(tab) {
           <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Giáo trình & Tài liệu tham khảo:
         </h4>
         <div class="bg-slate-50 dark:bg-slate-900/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-mono whitespace-pre-line">
-          ${summary.references || 'Tài liệu học tập và bài giảng chuẩn của Khoa CNTT - Đại học Lạc Hồng.'}
+          ${summary.references || `Tài liệu học tập và bài giảng chuẩn của ${data.metadata.faculty} - ${data.metadata.university}.`}
         </div>
       </div>
     `;
@@ -1554,8 +2497,8 @@ function exportCurrentData() {
   }
 }
 
-function downloadBlob(content, filename) {
-  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+function downloadBlob(content, filename, mimeType = 'text/csv;charset=utf-8;') {
+  const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -1793,14 +2736,57 @@ document.getElementById('courseModal').addEventListener('click', (e) => {
 
 // On Load Initialization
 window.addEventListener('DOMContentLoaded', () => {
+  const metadata = data.metadata || {};
+  document.title = `Bản Đồ CTĐT ${metadata.program || ''} & Khung Năng Lực Số`;
+  const universityEl = document.getElementById('header-university');
+  const facultyEl = document.getElementById('header-faculty');
+  const badgeEl = document.getElementById('header-program-badge');
+  const modeLabel = document.getElementById('btn-prog-chinhquy-label');
+  const distanceModeLabel = document.getElementById('btn-prog-tuxa-label');
+  if (universityEl) universityEl.textContent = metadata.university || '';
+  if (facultyEl) facultyEl.textContent = metadata.faculty || '';
+  if (badgeEl) badgeEl.textContent = metadata.programBadge || metadata.program || '';
+  if (modeLabel) modeLabel.textContent = metadata.modeLabel || metadata.program || 'Chương trình chính quy';
+  if (distanceModeLabel) distanceModeLabel.textContent = metadata.distanceLearningLabel || 'Chương trình từ xa';
+
+  const hasDistanceLearning = Boolean(data.tuxa);
+  const distanceButton = document.getElementById('btn-prog-tuxa');
+  const distanceDownloads = document.getElementById('distance-learning-downloads');
+  const distancePlanLink = document.getElementById('distance-learning-plan-link');
+  const distanceSummaryLink = document.getElementById('distance-learning-summary-link');
+  const distancePlanLabel = document.getElementById('distance-learning-plan-label');
+  const distanceSummaryLabel = document.getElementById('distance-learning-summary-label');
+  if (distanceButton) distanceButton.hidden = !hasDistanceLearning;
+  if (distanceDownloads) distanceDownloads.hidden = !hasDistanceLearning;
+  if (distancePlanLink && metadata.downloads?.distanceLearningPlan) {
+    distancePlanLink.href = metadata.downloads.distanceLearningPlan;
+  }
+  if (distanceSummaryLink && metadata.downloads?.distanceLearningSummary) {
+    distanceSummaryLink.href = metadata.downloads.distanceLearningSummary;
+  }
+  if (distancePlanLabel && metadata.distanceLearningPlanLabel) {
+    distancePlanLabel.textContent = `Tải BM03 ${metadata.distanceLearningPlanLabel} (.xlsx)`;
+  }
+  if (distanceSummaryLabel && metadata.distanceLearningSummaryLabel) {
+    distanceSummaryLabel.textContent = metadata.distanceLearningSummaryLabel;
+  }
+
   initCustomSummaries();
+  renderCurriculumEditor();
   renderBM03PlanTable();
   renderOverviewTable();
   renderMatrix6Table();
   renderMatrix24Table();
   renderCLOTable();
+  renderCoursePiMatrix();
   renderEvidenceCards();
   renderSummaryList();
   renderFrameworkTab();
   initCharts();
+});
+
+window.addEventListener('beforeunload', event => {
+  if (!courseEditorDirty) return;
+  event.preventDefault();
+  event.returnValue = '';
 });
