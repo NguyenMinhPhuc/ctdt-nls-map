@@ -221,9 +221,9 @@ function renderBM03PlanTable() {
 
   semestersList.forEach((sem, s_idx) => {
     let courses = sem.courses || [];
-    
+
     if (currentPlanSearch) {
-      courses = courses.filter(c => 
+      courses = courses.filter(c =>
         (c.code && c.code.toLowerCase().includes(currentPlanSearch)) ||
         (c.name && c.name.toLowerCase().includes(currentPlanSearch)) ||
         (c.note && c.note.toLowerCase().includes(currentPlanSearch))
@@ -395,7 +395,7 @@ function getLevelBadge(levelStr) {
   if (levelStr.includes('CLO')) {
     clos = `<span class="ml-1 text-[10px] opacity-80">${levelStr.substring(levelStr.indexOf('('))}</span>`;
   }
-  
+
   if (clean.includes('Mức 5')) {
     return `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800">Mức 5${clos}</span>`;
   } else if (clean.includes('Mức 4')) {
@@ -478,7 +478,7 @@ function renderOverviewTable() {
 
   data.matrix6.forEach(c => {
     ['I', 'II', 'III', 'IV', 'V', 'VI'].forEach((d, idx) => {
-      const val = c[`m${idx+1}`];
+      const val = c[`m${idx + 1}`];
       if (val && val !== '-') {
         counts[d].courses++;
       }
@@ -657,7 +657,7 @@ function renderMatrix24Table() {
       let domainPrefix = code.charAt(0);
       let bgClass = 'bg-white dark:bg-slate-800';
       let checkHtml = '<span class="text-slate-200 dark:text-slate-700">·</span>';
-      
+
       if (isCheck) {
         let colorMap = {
           '1': 'text-sky-600 bg-sky-100 dark:bg-sky-950 dark:text-sky-400',
@@ -670,7 +670,7 @@ function renderMatrix24Table() {
         const cClass = colorMap[domainPrefix] || 'text-sky-600 bg-sky-100';
         checkHtml = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full font-bold text-xs ${cClass} matrix-cell">${isCheck ? '✓' : ''}</span>`;
       }
-      
+
       cellsHtml += `<td class="py-1 px-1 ${bgClass}"><button type="button" onclick="toggleMappedCompetency('${row.maMH}', '${code}')" title="Bật/tắt ${code} cho ${row.maMH}" aria-label="Bật/tắt ánh xạ ${code}" class="min-w-7 min-h-7 rounded hover:ring-2 hover:ring-sky-400">${checkHtml}</button></td>`;
     });
 
@@ -753,13 +753,86 @@ function renderCLOTable() {
   if (counter) counter.textContent = `${data.cloMappings.length} dòng ánh xạ`;
 }
 
+let coursePiEditMode = false;
+let coursePiDraft = null;
+let coursePiDirtyCourses = new Set();
+
+function renderCoursePiEditToolbar() {
+  const toolbar = document.getElementById('coursePiEditToolbar');
+  if (!toolbar) return;
+  toolbar.innerHTML = coursePiEditMode
+    ? `<span class="mr-auto self-center text-xs text-slate-500">${coursePiDirtyCourses.size ? `Đã thay đổi ${coursePiDirtyCourses.size} môn, chưa lưu` : 'Chọn CLO tại ô PI cần ánh xạ'}</span>
+       <button type="button" onclick="cancelCoursePiEditMode()" class="rounded-lg border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700">Hủy</button>
+       <button id="coursePiSaveAllButton" type="button" onclick="saveAllCoursePiEdits()" ${coursePiDirtyCourses.size ? '' : 'disabled'} class="rounded-lg bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"><i class="fa-solid fa-floppy-disk mr-1"></i>Lưu toàn bộ</button>`
+    : `<button type="button" onclick="toggleCoursePiEditMode()" class="rounded-lg bg-sky-700 px-3 py-2 text-xs font-bold text-white hover:bg-sky-800"><i class="fa-solid fa-pen-to-square mr-1"></i>Chỉnh sửa toàn bộ map</button>`;
+}
+
+function toggleCoursePiEditMode() {
+  coursePiEditMode = true;
+  coursePiDraft = cloneData(data.cloMappings);
+  coursePiDirtyCourses = new Set();
+  renderCoursePiMatrix();
+}
+
+function cancelCoursePiEditMode() {
+  coursePiEditMode = false;
+  coursePiDraft = null;
+  coursePiDirtyCourses = new Set();
+  renderCoursePiMatrix();
+}
+
+function updateCoursePiDraft(input) {
+  const courseCode = input.dataset.editCourse;
+  const clo = input.dataset.editClo;
+  const pi = input.dataset.editPi;
+  const mapping = coursePiDraft?.find(item => item.maMH === courseCode && item.clo === clo);
+  if (!mapping) return;
+  mapping.pi = input.checked ? pi : (normalizeCoursePiLabel(mapping.pi) === pi ? '' : mapping.pi);
+  coursePiDirtyCourses.add(courseCode);
+
+  document.querySelectorAll('#coursePiMatrix input[data-edit-course]').forEach(checkbox => {
+    if (checkbox.dataset.editCourse === courseCode && checkbox.dataset.editClo === clo) {
+      checkbox.checked = Boolean(mapping.pi) && normalizeCoursePiLabel(mapping.pi) === checkbox.dataset.editPi;
+    }
+  });
+  const row = input.closest('tr');
+  const mappedCount = new Set(coursePiDraft.filter(item => item.maMH === courseCode && item.pi).map(item => item.clo)).size;
+  const countCell = row?.querySelector('[data-course-pi-total]');
+  if (countCell) countCell.textContent = mappedCount;
+  renderCoursePiEditToolbar();
+}
+
+function saveAllCoursePiEdits() {
+  if (!coursePiDirtyCourses.size) return;
+  const edits = getCurriculumEdits();
+  coursePiDirtyCourses.forEach(courseCode => {
+    const previous = edits.courses[courseCode] || {};
+    edits.courses[courseCode] = {
+      ...previous,
+      cloMappings: cloneData(coursePiDraft.filter(mapping => mapping.maMH === courseCode))
+    };
+  });
+  if (!persistCurriculumEdits(edits, 'Đã lưu toàn bộ ánh xạ CLO–PI.')) return;
+
+  data.cloMappings = data.cloMappings
+    .filter(mapping => !coursePiDirtyCourses.has(mapping.maMH))
+    .concat(coursePiDraft.filter(mapping => coursePiDirtyCourses.has(mapping.maMH)));
+  data.cloMappings.sort((a, b) => String(a.maMH).localeCompare(String(b.maMH)) || String(a.clo).localeCompare(String(b.clo)));
+  coursePiEditMode = false;
+  coursePiDraft = null;
+  coursePiDirtyCourses = new Set();
+  refreshAfterCurriculumEdit();
+}
+
 function renderCoursePiMatrix() {
   const table = document.getElementById('coursePiMatrix');
   if (!table) return;
+  renderCoursePiEditToolbar();
+  const displayedMappings = coursePiEditMode && coursePiDraft ? coursePiDraft : data.cloMappings;
 
   const groups = new Map();
   const mappedClosByCourse = new Map();
-  data.cloMappings.forEach(mapping => {
+  displayedMappings.forEach(mapping => {
     const courseCode = String(mapping.maMH || '').trim();
     const clo = String(mapping.clo || '').trim();
     const pi = String(mapping.pi || '').trim();
@@ -768,8 +841,7 @@ function renderCoursePiMatrix() {
     if (!mappedClosByCourse.has(courseCode)) mappedClosByCourse.set(courseCode, new Set());
     mappedClosByCourse.get(courseCode).add(clo);
 
-    const piMatch = pi.match(/^PI\s*(\d+)\s*\.\s*(\d+)$/i);
-    const piLabel = piMatch ? `PI ${piMatch[1]}.${piMatch[2]}` : pi;
+    const piLabel = normalizeCoursePiLabel(pi);
     const ploMatch = piLabel.match(/(\d+)\s*\./);
     const plo = ploMatch ? `PLO ${ploMatch[1]}` : 'PLO chưa xác định';
     if (!groups.has(plo)) groups.set(plo, new Map());
@@ -790,7 +862,7 @@ function renderCoursePiMatrix() {
   data.matrix6.forEach(course => {
     courses.set(course.maMH, { code: course.maMH, title: course.tenMH });
   });
-  data.cloMappings.forEach(mapping => {
+  displayedMappings.forEach(mapping => {
     if (mapping.maMH && !courses.has(mapping.maMH)) {
       courses.set(mapping.maMH, { code: mapping.maMH, title: mapping.tenMH || mapping.maMH });
     }
@@ -809,22 +881,33 @@ function renderCoursePiMatrix() {
   `).join('');
   const rowsHtml = courseRows.map((course, index) => {
     const cloCount = mappedClosByCourse.get(course.code)?.size || 0;
+    const courseClos = displayedMappings.filter(mapping => mapping.maMH === course.code);
     const cells = piColumns.map(({ plo, pi }) => {
       const clos = groups.get(plo)?.get(pi)?.get(course.code);
-      if (!clos?.size) return '<td class="border-l border-slate-100 dark:border-slate-700 px-3 py-2 text-center text-slate-300 dark:text-slate-600">—</td>';
-      piTotals.set(pi, piTotals.get(pi) + clos.size);
-      piCourseCounts.get(pi).add(course.code);
-      const labels = [...clos].sort(compareLabels);
-      return `<td class="border-l border-slate-100 dark:border-slate-700 px-3 py-2 text-center font-mono font-semibold text-sky-700 dark:text-sky-300">${labels.map(escapeHtml).join('<br>')}</td>`;
+      if (clos?.size) {
+        piTotals.set(pi, piTotals.get(pi) + clos.size);
+        piCourseCounts.get(pi).add(course.code);
+      }
+      const labels = clos?.size ? [...clos].sort(compareLabels) : [];
+      if (coursePiEditMode) {
+        const choices = courseClos.map(mapping => `
+          <label class="inline-flex cursor-pointer items-center gap-1 rounded px-1 py-0.5 font-mono text-[10px] hover:bg-sky-100 dark:hover:bg-sky-900/40" title="${escapeHtml(mapping.noiDungCLO || mapping.clo)}">
+            <input type="checkbox" data-edit-course="${escapeHtml(course.code)}" data-edit-clo="${escapeHtml(mapping.clo)}" data-edit-pi="${escapeHtml(pi)}" onchange="updateCoursePiDraft(this)" ${normalizeCoursePiLabel(mapping.pi || '') === pi ? 'checked' : ''} class="accent-sky-600">
+            <span>${escapeHtml(mapping.clo || 'CLO')}</span>
+          </label>`).join('');
+        return `<td class="border-l border-slate-100 px-2 py-1 text-center dark:border-slate-700"><div class="flex min-w-[92px] flex-col items-start">${choices || '<span class="px-2 text-slate-300">—</span>'}</div></td>`;
+      }
+      return `<td class="border-l border-slate-100 px-3 py-2 text-center font-mono font-semibold text-sky-700 dark:border-slate-700 dark:text-sky-300">${labels.length ? labels.map(escapeHtml).join('<br>') : '<span class="font-sans font-normal text-slate-300 dark:text-slate-600">—</span>'}</td>`;
     }).join('');
+    const piCells = piColumns.length ? cells : '<td class="border-l border-slate-100 dark:border-slate-700 px-3 py-2 text-center text-slate-400">Chưa có PI</td>';
     return `<tr class="hover:bg-sky-50/60 dark:hover:bg-sky-950/20">
       <td class="sticky left-0 z-20 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-center font-mono text-slate-400">${index + 1}</td>
       <th scope="row" style="left:52px" class="sticky z-10 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-left font-medium">
         <span class="block min-w-[210px]">${escapeHtml(course.title)}</span>
         <span class="font-mono text-[11px] text-slate-400">${escapeHtml(course.code)}</span>
       </th>
-      <td class="border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-center font-bold ${getTotalEmphasisClass(cloCount, lowCloCountThreshold)}" title="${escapeHtml(getTotalEmphasisTitle(cloCount, lowCloCountThreshold))}">${cloCount}</td>
-      ${cells}
+      <td data-course-pi-total class="border-r border-slate-200 dark:border-slate-600 px-3 py-2 text-center font-bold ${getTotalEmphasisClass(cloCount, lowCloCountThreshold)}" title="${escapeHtml(getTotalEmphasisTitle(cloCount, lowCloCountThreshold))}">${cloCount}</td>
+      ${piCells}
     </tr>`;
   }).join('');
 
@@ -861,7 +944,7 @@ function renderCoursePiMatrix() {
       <tr>${headerPis}</tr>
     </thead>
     <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-      ${rowsHtml || `<tr><td colspan="${columnCount + 2}" class="px-4 py-8 text-center text-slate-500">Chưa có học phần để hiển thị.</td></tr>`}
+      ${rowsHtml || `<tr><td colspan="${columnCount + 3}" class="px-4 py-8 text-center text-slate-500">Chưa có học phần để hiển thị.</td></tr>`}
     </tbody>
     <tfoot class="sticky bottom-0 z-20 bg-slate-100 dark:bg-slate-700 font-bold text-slate-800 dark:text-slate-100">
       <tr class="border-t-2 border-slate-300 dark:border-slate-500">
@@ -917,13 +1000,19 @@ function renderCoursePiMatrix() {
       </div>
       <div class="mt-4 rounded-lg ${unMappedCourses.length ? 'bg-rose-50 text-rose-800 dark:bg-rose-950/40 dark:text-rose-200' : 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200'} p-3 text-xs">
         ${unMappedCourses.length
-          ? `<strong>Cần rà soát ${unMappedCourses.length} môn chưa có CLO được map:</strong> ${unMappedCourses.map(course => `${escapeHtml(course.code)} – ${escapeHtml(course.title)}`).join('; ')}.`
-          : '<strong>Không có môn nào thiếu CLO đã map</strong> trong dữ liệu hiện tại.'}
+      ? `<strong>Cần rà soát ${unMappedCourses.length} môn chưa có CLO được map:</strong> ${unMappedCourses.map(course => `${escapeHtml(course.code)} – ${escapeHtml(course.title)}`).join('; ')}.`
+      : '<strong>Không có môn nào thiếu CLO đã map</strong> trong dữ liệu hiện tại.'}
         ${piReviewRows.length && minPiCount < maxPiCount ? `<span class="mt-1 block">PI có lượt map thấp nhất: <strong>${leastCoveredPis.map(escapeHtml).join(', ')}</strong> (${minPiCount}); cao nhất: <strong>${mostCoveredPis.map(escapeHtml).join(', ')}</strong> (${maxPiCount}). Nên đối chiếu với mức độ quan trọng và kế hoạch đánh giá của từng PLO.</span>` : ''}
         <span class="mt-1 block text-[11px] opacity-80">Các PI chưa xuất hiện trong nguồn ánh xạ không thể được xác định nếu danh mục PI chuẩn chưa được cung cấp riêng.</span>
       </div>
     </div>
   `;
+}
+
+function normalizeCoursePiLabel(value) {
+  const label = String(value || '').trim();
+  const match = label.match(/^PI\s*(\d+)\s*\.\s*(\d+)$/i);
+  return match ? `PI ${match[1]}.${match[2]}` : label;
 }
 
 // Filter CLO Table
@@ -1631,15 +1720,15 @@ function exportCurriculumReport() {
     const cloTable = cloIds.length ? `
       <table><thead><tr><th>CLO</th><th>Miền / NLTP (gốc → mới)</th><th>Mức (gốc → mới)</th><th>Nội dung CLO (gốc → mới)</th><th>PI / Đánh giá</th><th>Trạng thái</th></tr></thead>
       <tbody>${cloIds.map(id => {
-        const before = oldCloById.get(id);
-        const after = newCloById.get(id);
-        return `<tr><td>${escapeHtml(id)}</td>
+      const before = oldCloById.get(id);
+      const after = newCloById.get(id);
+      return `<tr><td>${escapeHtml(id)}</td>
           <td>${escapeHtml(before ? `${before.mienNLS} / ${before.maNLTP}` : '—')} → ${escapeHtml(after ? `${after.mienNLS} / ${after.maNLTP}` : 'Đã xóa')}</td>
           <td>${escapeHtml(before?.mucDoNLS || '—')} → ${escapeHtml(after?.mucDoNLS || 'Đã xóa')}</td>
           <td><strong>Gốc:</strong><br>${escapeReportText(before?.noiDungCLO || '—')}<hr><strong>Mới:</strong><br>${escapeReportText(after?.noiDungCLO || 'Đã xóa')}</td>
           <td><strong>Gốc:</strong> ${escapeHtml(before?.pi || '—')} · ${escapeReportText(before?.danhGia || '—')}<hr><strong>Mới:</strong> ${escapeHtml(after?.pi || (before ? 'Đã xóa' : '—'))} · ${escapeReportText(after?.danhGia || (before ? 'Đã xóa' : '—'))}</td>
           <td>${!before ? 'Thêm mới' : !after ? 'Đã xóa' : ['mienNLS', 'maNLTP', 'mucDoNLS', 'clo', 'noiDungCLO', 'pi', 'danhGia', 'ghiChu'].every(field => (before[field] || '') === (after[field] || '')) ? 'Không đổi' : 'Đã chỉnh sửa'}</td></tr>`;
-      }).join('')}</tbody></table>
+    }).join('')}</tbody></table>
     ` : '<p>Chưa khai báo CLO ánh xạ.</p>';
     const beforeDomains = ['I', 'II', 'III', 'IV', 'V', 'VI'].filter((_, index) => original6[`m${index + 1}`] && original6[`m${index + 1}`] !== '-');
     const beforeCompetencies = data.competencies.filter(item => original24.mapping?.[item.code]).map(item => item.code);
@@ -1705,7 +1794,7 @@ function showToast(message, type = 'success') {
   const isSuccess = type === 'success';
   const icon = isSuccess ? 'fa-circle-check text-emerald-500' : 'fa-circle-exclamation text-amber-500';
   const borderCol = isSuccess ? 'border-emerald-200 dark:border-emerald-800' : 'border-amber-200 dark:border-amber-800';
-  
+
   toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-xl shadow-xl border ${borderCol} text-xs font-medium transition-all transform duration-300 translate-y-2 opacity-0`;
   toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
   container.appendChild(toast);
@@ -1774,7 +1863,7 @@ function selectSummaryCourse(code, editMode = false) {
   selectedSummaryCode = code;
   isEditingSummaryMode = editMode;
   const activeSummaries = getActiveSummaries();
-    const item = activeSummaries[code];
+  const item = activeSummaries[code];
   const detailEl = document.getElementById('summaryDetailContainer');
   if (!item || !detailEl) return;
 
@@ -2244,7 +2333,7 @@ function renderFrameworkTab() {
 
     const card = document.createElement('div');
     card.className = 'bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden';
-    
+
     let compsHtml = comps.map(c => `
       <div class="p-4 bg-slate-50/70 dark:bg-slate-900/40 rounded-xl border border-slate-200/80 dark:border-slate-700/80 space-y-1">
         <div class="flex items-center space-x-2">
@@ -2404,7 +2493,7 @@ function switchModalTab(tab) {
 
     let rowsHtml = clos.map((c, i) => `
       <tr class="divide-x divide-slate-200 dark:divide-slate-700 text-xs">
-        <td class="p-2 text-center font-mono text-slate-400">${i+1}</td>
+        <td class="p-2 text-center font-mono text-slate-400">${i + 1}</td>
         <td class="p-2 text-center font-mono font-bold text-sky-600 dark:text-sky-400">${c.clo}</td>
         <td class="p-2.5 text-slate-800 dark:text-slate-200 leading-relaxed">${c.noiDungCLO}</td>
         <td class="p-2 text-center font-bold text-slate-700 dark:text-slate-300">${c.mienNLS} - ${c.maNLTP}</td>
@@ -2479,19 +2568,19 @@ function exportCurrentData() {
   if (currentTab === 'cloDetails') {
     csvContent += "STT,Mã Môn Học,Tên Môn Học,Số TC,Khối Kiến Thức,Miền NLS,Mã NLTP,Tên NLTP,Mức Độ NLS,CLO,Nội Dung CLO,PI,Phương Pháp Đánh Giá\n";
     data.cloMappings.forEach((m, idx) => {
-      csvContent += `"${idx+1}","${m.maMH}","${m.tenMH}","${m.soTC}","${m.khoiKT}","${m.mienNLS}","${m.maNLTP}","${m.tenNLTP}","${m.mucDoNLS}","${m.clo}","${m.noiDungCLO.replace(/"/g, '""')}","${m.pi}","${m.danhGia.replace(/"/g, '""')}"\n`;
+      csvContent += `"${idx + 1}","${m.maMH}","${m.tenMH}","${m.soTC}","${m.khoiKT}","${m.mienNLS}","${m.maNLTP}","${m.tenNLTP}","${m.mucDoNLS}","${m.clo}","${m.noiDungCLO.replace(/"/g, '""')}","${m.pi}","${m.danhGia.replace(/"/g, '""')}"\n`;
     });
     downloadBlob(csvContent, "Bang_Anh_Xa_Chi_Tiet_CLO_NLS.csv");
   } else if (currentTab === 'evidences') {
     csvContent += "STT,Mã HP,Tên Môn Học,Khối Kiến Thức,Miền NLS Cần Bổ Sung,Mã NLTP,Nội Dung Cần Bổ Sung,Hoạt Động Dạy Học,Cách Lấy Minh Chứng,Mức Độ Hướng Đến\n";
     data.evidences.forEach((ev, idx) => {
-      csvContent += `"${idx+1}","${ev.maHP}","${ev.tenHP}","${ev.khoiKT}","${ev.mienCanBoSung.replace(/"/g, '""')}","${ev.maNLTP}","${ev.noiDungCanBoSung.replace(/"/g, '""')}","${ev.hoatDongDayHoc.replace(/"/g, '""')}","${ev.cachLayMinhChung.replace(/"/g, '""')}","${ev.mucDoHuongDen}"\n`;
+      csvContent += `"${idx + 1}","${ev.maHP}","${ev.tenHP}","${ev.khoiKT}","${ev.mienCanBoSung.replace(/"/g, '""')}","${ev.maNLTP}","${ev.noiDungCanBoSung.replace(/"/g, '""')}","${ev.hoatDongDayHoc.replace(/"/g, '""')}","${ev.cachLayMinhChung.replace(/"/g, '""')}","${ev.mucDoHuongDen}"\n`;
     });
     downloadBlob(csvContent, "De_Xuat_Bo_Sung_Minh_Chung_NLS.csv");
   } else {
     csvContent += "STT,Mã MH,Tên Môn Học,Số TC,Khối KT,Miền I,Miền II,Miền III,Miền IV,Miền V,Miền VI,Các Miền Phủ,Mức Max\n";
     data.matrix6.forEach((r, idx) => {
-      csvContent += `"${idx+1}","${r.maMH}","${r.tenMH}","${r.soTC}","${r.khoiKT}","${r.m1}","${r.m2}","${r.m3}","${r.m4}","${r.m5}","${r.m6}","${r.cacMien}","${r.mucDoMax}"\n`;
+      csvContent += `"${idx + 1}","${r.maMH}","${r.tenMH}","${r.soTC}","${r.khoiKT}","${r.m1}","${r.m2}","${r.m3}","${r.m4}","${r.m5}","${r.m6}","${r.cacMien}","${r.mucDoMax}"\n`;
     });
     downloadBlob(csvContent, "Ma_Tran_Mon_Hoc_6_Mien_NLS.csv");
   }
